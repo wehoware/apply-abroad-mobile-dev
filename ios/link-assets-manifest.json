@@ -1,0 +1,61 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/resources/fonts/local/PlusJakartaSans-Bold.ttf",
+      "sha1": "1ca854f4f176fc36053a862e83ddb85c937d99f1"
+    },
+    {
+      "path": "src/resources/fonts/local/PlusJakartaSans-BoldItalic.ttf",
+      "sha1": "15116213e5b1ac789b112f67089dbe129b20d66e"
+    },
+    {
+      "path": "src/resources/fonts/local/PlusJakartaSans-ExtraBold.ttf",
+      "sha1": "b91e78ee4c46dd6814f72dcdeb20ec9a0653c41b"
+    },
+    {
+      "path": "src/resources/fonts/local/PlusJakartaSans-ExtraBoldItalic.ttf",
+      "sha1": "9273353ae60ee8c68480653730e4e043436ad161"
+    },
+    {
+      "path": "src/resources/fonts/local/PlusJakartaSans-ExtraLight.ttf",
+      "sha1": "4e273fb7cdb12ea65e5ecd9532227706b50a4d0e"
+    },
+    {
+      "path": "src/resources/fonts/local/PlusJakartaSans-ExtraLightItalic.ttf",
+      "sha1": "d74a96f55c45db162b3673e5460646fe53c8eb11"
+    },
+    {
+      "path": "src/resources/fonts/local/PlusJakartaSans-Italic.ttf",
+      "sha1": "b5810ea3c5f85eac197c2ab14c8ed46319a22135"
+    },
+    {
+      "path": "src/resources/fonts/local/PlusJakartaSans-Light.ttf",
+      "sha1": "09dee14f5d88bee269c2ee871a7a3d2a29f5a073"
+    },
+    {
+      "path": "src/resources/fonts/local/PlusJakartaSans-LightItalic.ttf",
+      "sha1": "183869dec5a7f6e2732de716441e7dfd123bee04"
+    },
+    {
+      "path": "src/resources/fonts/local/PlusJakartaSans-Medium.ttf",
+      "sha1": "f57cafa74fe42b666f31f6da98a2a824f1bc58dd"
+    },
+    {
+      "path": "src/resources/fonts/local/PlusJakartaSans-MediumItalic.ttf",
+      "sha1": "a93151f92a649b9bd9fedb70c9b96c48b5ddd5d3"
+    },
+    {
+      "path": "src/resources/fonts/local/PlusJakartaSans-Regular.ttf",
+      "sha1": "0d9c207021f3d748204dd642d831798df6c52129"
+    },
+    {
+      "path": "src/resources/fonts/local/PlusJakartaSans-SemiBold.ttf",
+      "sha1": "4de9dd8582c316692e5bd76586a3f8824c92dbd0"
+    },
+    {
+      "path": "src/resources/fonts/local/PlusJakartaSans-SemiBoldItalic.ttf",
+      "sha1": "62bfc01cc3f69ad300b9ecec2616b2a0a4cf0cf5"
+    }
+  ]
+}
