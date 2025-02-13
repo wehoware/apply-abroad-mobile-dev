@@ -1,0 +1,28 @@
+const images = {
+  cap: require('./local/cap.png'),
+  Onboard1: require('./local/Onboard1.png'),
+  Onboard2: require('./local/Onboard2.png'),
+  Onboard3: require('./local/Onboard3.png'),
+  GoogleImage: require('./local/google.png'),
+  SSC: require('./certificates/SSC.png'),
+  Intermediate: require('./certificates/Intermediate.png'),
+  Degree: require('./certificates/Degree.png'),
+  Masters: require('./certificates/Masters.png'),
+  AICourse: require('./Courses/AICourse.png'),
+  AICourseRect: require('./Courses/AICourseRect.png'),
+  CloudCourse: require('./Courses/CloudCourse.png'),
+  Chemical: require('./Courses/Chemical.png'),
+  WebDevelopment: require('./Courses/WebDevelopment.png'),
+  College1: require('./Colleges/College1.png'),
+  College2: require('./Colleges/College2.png'),
+  College3: require('./Colleges/College3.png'),
+  College4: require('./Colleges/College4.png'),
+  Filter: require('./Icons/Filter.png'),
+  Search: require('./Icons/search.png'),
+  Star: require('./Icons/star.png'),
+  GroupMembers: require('./Icons/groupMembers.png'),
+  Background: require('./local/Background.png'),
+  Profile: require('./local/Profile.png'),
+};
+
+export default images;
