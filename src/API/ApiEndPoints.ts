@@ -10,4 +10,8 @@ export const ApiEndPoints = {
   forgot: `/forgot/password`,
   categorySearch: `/category/search`,
   countries: `/countries/list`,
+  scoreTypes: `/scoreTypes/getAll`,
+  institutions: `/institution/search?page=`,
+  imageUpload: `s3/upload`,
+  profile: `/student/details`,
 };

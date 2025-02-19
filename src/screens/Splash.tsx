@@ -16,7 +16,7 @@ import {getDataFromAsync} from '../services/AsyncService';
 import {setMode, setTheme} from '../redux/slices/commonSlice';
 import {lightTheme} from '../resources/colors/colors';
 // import {formatUserData} from '../services/Helpers';
-import {customerProfileRequest} from '../redux/slices/authSlice';
+import {getProfileFetch} from '../redux/slices/authSlice';
 import {updateConfig} from '../redux/slices/appSlice';
 
 const Splash = () => {
@@ -64,17 +64,16 @@ const Splash = () => {
 
   const setUserData = async () => {
     let user = await getDataFromAsync(resources.AsyncConstants.userData);
-
+    dispatch(
+      updateConfig({
+        AWS_ACCESS_KEY: 'AKIAXYKJROLXUUUMMX6Y',
+        AWS_BUCKET_NAME: 'studyabrdstudyabrd',
+        AWS_REGION: 'ca-central-1',
+        AWS_SECRET_KEY: '+opxyV1mHOqEuY31Xvoz9WDBuiD4npqNfPTdIQfB',
+      }),
+    );
     if (user !== null) {
-      dispatch(customerProfileRequest({id: user._id}));
-      dispatch(
-        updateConfig({
-          AWS_ACCESS_KEY: 'AKIAXYKJROLXUUUMMX6Y',
-          AWS_BUCKET_NAME: 'studyabrdstudyabrd',
-          AWS_REGION: 'ca-central-1',
-          AWS_SECRET_KEY: '+opxyV1mHOqEuY31Xvoz9WDBuiD4npqNfPTdIQfB',
-        }),
-      );
+      dispatch(getProfileFetch());
     }
   };
 

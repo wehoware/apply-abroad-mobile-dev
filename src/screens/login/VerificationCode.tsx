@@ -49,9 +49,10 @@ const VerificationCode = () => {
   const [otp6, setOtp6] = useState<string>();
   const [otp6Error, setOtp6Error] = useState<boolean>(false);
 
-  const [timeInSeconds, setTimeInSeconds] = useState(60);
+  // const [timeInSeconds, setTimeInSeconds] = useState(60);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
-
+  const [timeLeft, setTimeLeft] = useState(60); // Initialize at 60 seconds
+  const [isActive, setIsActive] = useState(true); // Timer
   const _validateFields = () => {
     let otp: any = otp1 + otp2 + otp3 + otp4 + otp5 + otp6;
     _otpValidate(otp);
@@ -73,34 +74,59 @@ const VerificationCode = () => {
 
     dispatch(userOTPValidateFetch(data));
   };
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60); // Get the minutes
-    const remainingSeconds = seconds % 60; // Get the remaining seconds
-    return `${minutes < 10 ? '0' : ''}${minutes}:${
-      remainingSeconds < 10 ? '0' : ''
-    }${remainingSeconds}`;
-  };
-  const timer = () => {
-    const id = setInterval(() => {
-      setTimeInSeconds((prevTime: any) => {
-        if (prevTime <= 0) {
-          clearInterval(id); // Clear the interval when time reaches 0
-          return 0; // Prevent negative values
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
-  };
+  // const formatTime = (seconds: number) => {
+  //   const minutes = Math.floor(seconds / 60); // Get the minutes
+  //   const remainingSeconds = seconds % 60; // Get the remaining seconds
+  //   return `${minutes < 10 ? '0' : ''}${minutes}:${
+  //     remainingSeconds < 10 ? '0' : ''
+  //   }${remainingSeconds}`;
+  // };
+
+  // useEffect(() => {
+  //   timer();
+  //   // Cleanup interval when component unmounts
+  //   return () => {
+  //     if (intervalId) {
+  //       clearInterval(intervalId); // Clear the interval using the stored ID
+  //     }
+  //   };
+  // });
+  // const timer = () => {
+  //   const id = setInterval(() => {
+  //     setTimeInSeconds((prevTime: any) => {
+  //       if (prevTime <= 0) {
+  //         clearInterval(id); // Clear the interval when time reaches 0
+  //         return 0; // Prevent negative values
+  //       }
+  //       return prevTime - 1;
+  //     });
+  //   }, 1000);
+  // };
 
   useEffect(() => {
-    timer();
-    // Cleanup interval when component unmounts
-    return () => {
-      if (intervalId) {
-        clearInterval(intervalId); // Clear the interval using the stored ID
-      }
-    };
-  });
+    let interval: any;
+
+    // If the timer is active and time left is more than 0, decrease the time every second
+    if (isActive && timeLeft > 0) {
+      interval = setInterval(() => {
+        setTimeLeft(prevTimeLeft => prevTimeLeft - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      clearInterval(interval); // Stop the timer when it reaches zero
+    }
+
+    // Cleanup interval on component unmount or timer is paused
+    return () => clearInterval(interval);
+  }, [isActive, timeLeft]);
+
+  const formatTime = (timeInSeconds: any) => {
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = timeInSeconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(
+      2,
+      '0',
+    )}`;
+  };
   useFocusEffect(
     useCallback(() => {
       var backHandler = BackHandler.addEventListener(
@@ -121,22 +147,23 @@ const VerificationCode = () => {
   );
 
   const handleNumberPress = (num: string) => {
-    if (otp1 === '') {
+    console.log('111111111', num);
+    if (!otp1) {
       setOtp1(num);
       console.log('OTP 1:', num);
-    } else if (otp2 === '') {
+    } else if (!otp2) {
       setOtp2(num);
       console.log('OTP 2:', num);
-    } else if (otp3 === '') {
+    } else if (!otp3) {
       setOtp3(num);
       console.log('OTP 3:', num);
-    } else if (otp4 === '') {
+    } else if (!otp4) {
       setOtp4(num);
       console.log('OTP 4:', num);
-    } else if (otp5 === '') {
+    } else if (!otp5) {
       setOtp5(num);
       console.log('OTP 5:', num);
-    } else if (otp6 === '') {
+    } else if (!otp6) {
       setOtp6(num);
       console.log('OTP 6:', num);
     }
@@ -372,91 +399,6 @@ const VerificationCode = () => {
         <Text style={styles.boxText}>
           Please enter the verification code sent to S********a@test.com
         </Text>
-        {/* <View style={styles.otpBox}>
-          <TextInput
-            style={[
-              styles.inputStyle,
-              {
-                backgroundColor: otp1
-                  ? resources.colors.primary
-                  : resources.colors.ash,
-              },
-            ]}
-            placeholderTextColor={resources.colors.red}
-            maxLength={1}
-            value={otp1}
-            onChangeText={val => setOtp1(val)}
-          />
-          <TextInput
-            style={[
-              styles.inputStyle,
-              {
-                backgroundColor: otp2
-                  ? resources.colors.primary
-                  : resources.colors.ash,
-              },
-            ]}
-            placeholderTextColor={resources.colors.red}
-            maxLength={1}
-            value={otp2}
-            onChangeText={val => setOtp2(val)}
-          />
-          <TextInput
-            style={[
-              styles.inputStyle,
-              {
-                backgroundColor: otp3
-                  ? resources.colors.primary
-                  : resources.colors.ash,
-              },
-            ]}
-            placeholderTextColor={resources.colors.red}
-            maxLength={1}
-            value={otp3}
-            onChangeText={val => setOtp3(val)}
-          />
-          <TextInput
-            style={[
-              styles.inputStyle,
-              {
-                backgroundColor: otp4
-                  ? resources.colors.primary
-                  : resources.colors.ash,
-              },
-            ]}
-            placeholderTextColor={resources.colors.red}
-            maxLength={1}
-            value={otp4}
-            onChangeText={val => setOtp4(val)}
-          />
-          <TextInput
-            style={[
-              styles.inputStyle,
-              {
-                backgroundColor: otp5
-                  ? resources.colors.primary
-                  : resources.colors.ash,
-              },
-            ]}
-            maxLength={1}
-            value={otp5}
-            onChangeText={val => setOtp5(val)}
-          />
-          <TextInput
-            style={[
-              styles.inputStyle,
-              {
-                backgroundColor: otp6
-                  ? resources.colors.primary
-                  : resources.colors.ash,
-              },
-            ]}
-            maxLength={1}
-            value={otp6}
-            onChangeText={val => setOtp6(val)}
-          />
-        </View> */}
-
         <View style={styles.otpBox}>
           {[otp1, otp2, otp3, otp4, otp5, otp6].map((otp: any, index: any) => (
             <TextInput
@@ -487,7 +429,8 @@ const VerificationCode = () => {
             }}>
             {'Valid until '}
             <Text style={{color: resources.colors.red}}>
-              {formatTime(timeInSeconds)}
+              {formatTime(timeLeft)}
+              {/* {formatTime(timeInSeconds)} */}
             </Text>
           </Text>
         </View>

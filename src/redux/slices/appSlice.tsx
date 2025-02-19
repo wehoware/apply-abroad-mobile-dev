@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {AppSliceState, ConfigRequestPayload} from '../types';
 
@@ -10,17 +11,19 @@ const initialState: AppSliceState = {
     AWS_SECRET_KEY: '',
   },
   categories: [],
-
+  scoreTypes: [],
   selectedCategory: {
     _id: '',
     categoryName: '',
     description: '',
     icon: '',
   },
+  institutionList: [],
+  universityList: [],
 };
 
 const appSlice = createSlice({
-  name: 'banner',
+  name: 'home',
   initialState,
   reducers: {
     countriesFetchRequest: () => {},
@@ -29,6 +32,13 @@ const appSlice = createSlice({
       action: PayloadAction<any>,
     ) => {
       state.countries = action.payload;
+    },
+    scoreTypesFetchRequest: () => {},
+    scoreTypesFetchSuccess: (
+      state: AppSliceState,
+      action: PayloadAction<any>,
+    ) => {
+      state.scoreTypes = action.payload;
     },
     updateConfig: (
       state: AppSliceState,
@@ -43,6 +53,33 @@ const appSlice = createSlice({
     ) => {
       state.categories = action.payload;
     },
+    institutionListFetchRequest: (
+      state: AppSliceState,
+      action: PayloadAction<{
+        count: number;
+        page: number;
+      }>,
+    ) => {},
+    institutionListFetchSuccess: (
+      state: AppSliceState,
+      action: PayloadAction<any>,
+    ) => {
+      state.institutionList = action.payload;
+    },
+
+    universityListFetchRequest: (
+      state: AppSliceState,
+      action: PayloadAction<{
+        count: number;
+        page: number;
+      }>,
+    ) => {},
+    universityListFetchSuccess: (
+      state: AppSliceState,
+      action: PayloadAction<any>,
+    ) => {
+      state.universityList = action.payload;
+    },
   },
 });
 
@@ -52,6 +89,12 @@ export const {
   updateConfig,
   categoriesFetchRequest,
   categoriesFetchSuccess,
+  scoreTypesFetchRequest,
+  scoreTypesFetchSuccess,
+  institutionListFetchRequest,
+  institutionListFetchSuccess,
+  universityListFetchRequest,
+  universityListFetchSuccess,
 } = appSlice.actions;
 
 export const getConfig = (state: AppSliceState) => state.config;

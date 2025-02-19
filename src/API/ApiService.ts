@@ -12,6 +12,10 @@ const API = {
   createUser: async (data: any) => {
     return await ApiFetch.POST(ApiEndPoints.register, data);
   },
+
+  createStage2User: async (data: any) => {
+    return await ApiFetch.POST(ApiEndPoints.register, data);
+  },
   userLogin: async (data: any) => {
     return await ApiFetch.POST(ApiEndPoints.userlogin, data);
   },
@@ -44,12 +48,32 @@ const API = {
     return await ApiFetch.GET(ApiEndPoints.countries);
   },
 
+  getScoreTypes: async () => {
+    return await ApiFetch.GET(ApiEndPoints.scoreTypes);
+  },
+
+  getInstitutionsList: async (data: any) => {
+    return await ApiFetch.GET(
+      `${ApiEndPoints.institutions}${1}&limit=${
+        data.payload.count
+      }&sortBy=name&sortOrder=asc&type=College`,
+    );
+  },
+
+  getUniversityList: async (data: any) => {
+    return await ApiFetch.GET(
+      `${ApiEndPoints.institutions}${1}&limit=${
+        data.payload.count
+      }&sortBy=name&sortOrder=asc&type=University`,
+    );
+  },
+
   getHomeData: async () => {
     return await ApiFetch.GET(`${ApiEndPoints.countries}`);
   },
-  // getProfile: async (data: {id: string}) => {
-  //   return await ApiFetch.GET(`${ApiEndPoints.customerProfile}/${data.id}`);
-  // },
+  getProfile: async () => {
+    return await ApiFetch.GET(ApiEndPoints.profile);
+  },
 };
 
 export default API;

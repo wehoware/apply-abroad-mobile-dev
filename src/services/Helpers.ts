@@ -12,13 +12,15 @@ export const formatUserData = (user: any): UserState => {
     role: user?.role,
     loginMethod: user?.loginMethod,
     phoneNumber: user?.phoneNumber,
-    profilePic: user?.profilePic,
+    profilePhoto: user?.profilePhoto,
     socialLogins: user.socialLogins,
     status: user.status,
     accessToken: user.accessToken,
     refreshToken: user.refreshToken,
     intrestedCountry: user?.intrestedCountry,
-    interestedFields: user?.interestedFields,
+    interestedFieldsIds: user?.interestedFieldsIds,
+    interestedCountryId: user?.interestedCountryId,
+    StudentEducation: user?.StudentEducation,
   };
 
   return data;

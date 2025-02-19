@@ -10,6 +10,7 @@ import {
   userOTPValidateFetch,
   userPasswordOTPValidateFetch,
   customerProfileRequest,
+  userCreateStage2Fetch,
   customerProfileUpdateRequest,
   forgotPasswordRequest,
   forgotPasswordSuccess,
@@ -19,6 +20,8 @@ import {
   resetAuthState,
   setIsLogged,
   logoutUserFetch,
+  getProfileFetch,
+  getProfileSuccess,
 } from '../slices/authSlice';
 import {
   resetCommonState,
@@ -48,12 +51,17 @@ function* createUser(data: PayloadAction<any>) {
     var res: AxiosResponse<any, any> = yield call(API.createUser, data.payload);
 
     if (res.status) {
-      var userData: UserState = formatUserData(res.data.data);
+      var userData: UserState = formatUserData(res.data.user);
 
       let _theme: ColorScheme | null = yield getDataFromAsync(
         resources.AsyncConstants.theme,
       );
-
+      setDataToAsync(resources.AsyncConstants.authToken, userData.accessToken);
+      setDataToAsync(
+        resources.AsyncConstants.refreshToken,
+        userData.refreshToken,
+      );
+      setDataToAsync(resources.AsyncConstants.userData, userData);
       yield put(userCreateSuccess(userData));
       yield put(setIsLogged(true));
       yield put(setIsFetching(false));
@@ -64,6 +72,47 @@ function* createUser(data: PayloadAction<any>) {
       }
 
       yield put(redirectRequest('Home'));
+    } else {
+      yield put(setIsFetching(false));
+      yield put(setIsLogged(false));
+      yield put(setIsError(true));
+      yield put(setErrorData(res.data));
+    }
+  } catch (error: any) {
+    yield put(setIsFetching(false));
+    yield put(setIsError(true));
+
+    if (error && error.response) {
+      Toaster.error(error.response.data.message);
+    }
+  }
+}
+
+function* createStage2User(data: PayloadAction<any>) {
+  try {
+    yield put(setIsFetching(true));
+
+    var res: AxiosResponse<any, any> = yield call(
+      API.createStage2User,
+      data.payload,
+    );
+
+    if (res.status) {
+      var userData: UserState = formatUserData(res.data.data);
+
+      let _theme: ColorScheme | null = yield getDataFromAsync(
+        resources.AsyncConstants.theme,
+      );
+
+      yield put(setIsLogged(true));
+      yield put(setIsFetching(false));
+      yield put(setIsError(false));
+
+      if (_theme !== null) {
+        yield put(setTheme(_theme));
+      }
+
+      yield put(redirectRequest('Category'));
     } else {
       yield put(setIsFetching(false));
       yield put(setIsLogged(false));
@@ -391,14 +440,15 @@ function* logoutUser(data: PayloadAction<any>) {
   }
 }
 
-function* getCustomerProfile(data: PayloadAction<{id: string}>) {
+function* getProfile() {
   try {
-    var res: AxiosResponse<any, any> = yield call(API.getProfile, data.payload);
+    var res: AxiosResponse<any> = yield call(API.getProfile);
 
     if (res.status) {
       var userData: UserState = formatUserData(res.data.data);
+      console.log('getProfile res.data.data', res.data.data);
 
-      yield put(userCreateSuccess(userData));
+      yield put(getProfileSuccess(userData));
     } else {
       let user: Promise<any | null> = yield getDataFromAsync(
         resources.AsyncConstants.userData,
@@ -407,7 +457,7 @@ function* getCustomerProfile(data: PayloadAction<{id: string}>) {
       if (user !== null) {
         let _user = formatUserData(user);
 
-        yield put(userLoginSuccess(_user));
+        yield put(getProfileSuccess(_user));
       }
     }
   } catch (error) {
@@ -448,6 +498,7 @@ function* getCustomerProfile(data: PayloadAction<{id: string}>) {
 
 export function* AuthenticationSaga() {
   yield takeLatest(userCreateFetch.type, createUser);
+  yield takeLatest(userCreateStage2Fetch.type, createStage2User);
   yield takeLatest(userLoginFetch.type, userLogin);
   yield takeLatest(userOTPFetch.type, userOTP);
   yield takeLatest(userPasswordOTPFetch.type, userPasswordOTP);
@@ -456,5 +507,5 @@ export function* AuthenticationSaga() {
   yield takeLatest(logoutUserFetch.type, logoutUser);
   yield takeLatest(logoutRequest.type, logoutUser);
   yield takeLatest(forgotPasswordRequest.type, forgotPassword);
-  yield takeLatest(customerProfileRequest.type, getCustomerProfile);
+  yield takeLatest(getProfileFetch.type, getProfile);
 }

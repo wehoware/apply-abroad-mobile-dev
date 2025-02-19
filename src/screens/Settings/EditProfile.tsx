@@ -103,7 +103,115 @@ const EditProfile = () => {
     }
   };
   console.log('image', image);
-
+  const styles = StyleSheet.create({
+    main: {
+      flex: 1,
+      marginStart: hp('2%'),
+    },
+    header: {
+      height: hp('8%'),
+      width: wp('100%'),
+      marginStart: hp('1%'),
+      alignContent: 'center',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    headerText: {
+      textAlign: 'center',
+      fontSize: hp('2%'),
+      color: resources.colors.black,
+      fontWeight: '700',
+      fontFamily: resources.fonts.regular,
+    },
+    box: {
+      height: hp('7%'),
+      width: wp('90%'),
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: resources.colors.ash,
+      marginTop: hp('1%'),
+      justifyContent: 'center',
+    },
+    infoText: {
+      fontSize: hp('2.5%'),
+      fontWeight: '600',
+      color: resources.colors.black,
+      fontFamily: resources.fonts.semiBold,
+      marginTop: hp('1%'),
+    },
+    text: {
+      color: resources.colors.ash,
+      fontSize: hp('2%'),
+      marginTop: hp('2%'),
+    },
+    inputText: {
+      color: resources.colors.ash,
+      marginStart: hp('1%'),
+      fontSize: hp('2%'),
+      fontWeight: '500',
+      fontFamily: resources.fonts.medium,
+    },
+    saveButton: {
+      bottom: hp('5%'),
+      position: 'absolute',
+      height: hp('7%'),
+      width: wp('90%'),
+      backgroundColor: resources.colors.primary,
+      borderRadius: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    saveText: {
+      fontSize: hp('2%'),
+      color: resources.colors.white,
+      fontFamily: resources.fonts.medium,
+      fontWeight: '600',
+    },
+    centeredView: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    modalView: {
+      height: hp('28%'),
+      width: wp('90%'),
+      margin: 20,
+      backgroundColor: 'white',
+      borderRadius: 20,
+      padding: 35,
+      // alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
+    },
+    button: {
+      borderRadius: 20,
+      padding: 10,
+      elevation: 2,
+    },
+    buttonOpen: {
+      backgroundColor: '#F194FF',
+    },
+    buttonClose: {
+      backgroundColor: '#2196F3',
+    },
+    textStyle: {
+      color: 'white',
+      fontWeight: 'bold',
+      textAlign: 'center',
+    },
+    modalText: {
+      marginBottom: hp('2%'),
+      textAlign: 'center',
+      fontSize: hp('2%'),
+      fontWeight: '500',
+    },
+  });
   return (
     <View style={styles.main}>
       <TouchableOpacity style={styles.header}>
@@ -242,7 +350,6 @@ const EditProfile = () => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}>
         <View style={styles.centeredView}>
@@ -316,113 +423,3 @@ const EditProfile = () => {
 };
 
 export default EditProfile;
-
-const styles = StyleSheet.create({
-  main: {
-    flex: 1,
-    marginStart: hp('2%'),
-  },
-  header: {
-    height: hp('8%'),
-    width: wp('100%'),
-    marginStart: hp('1%'),
-    alignContent: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  headerText: {
-    textAlign: 'center',
-    fontSize: hp('2%'),
-    color: resources.colors.black,
-    fontWeight: '700',
-    fontFamily: resources.fonts.regular,
-  },
-  box: {
-    height: hp('7%'),
-    width: wp('90%'),
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: resources.colors.ash,
-    marginTop: hp('1%'),
-    justifyContent: 'center',
-  },
-  infoText: {
-    fontSize: hp('2.5%'),
-    fontWeight: '600',
-    color: resources.colors.black,
-    fontFamily: resources.fonts.semiBold,
-    marginTop: hp('1%'),
-  },
-  text: {
-    color: resources.colors.ash,
-    fontSize: hp('2%'),
-    marginTop: hp('2%'),
-  },
-  inputText: {
-    color: resources.colors.ash,
-    marginStart: hp('1%'),
-    fontSize: hp('2%'),
-    fontWeight: '500',
-    fontFamily: resources.fonts.medium,
-  },
-  saveButton: {
-    bottom: hp('5%'),
-    position: 'absolute',
-    height: hp('7%'),
-    width: wp('90%'),
-    backgroundColor: resources.colors.primary,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  saveText: {
-    fontSize: hp('2%'),
-    color: resources.colors.white,
-    fontFamily: resources.fonts.medium,
-    fontWeight: '600',
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalView: {
-    height: hp('28%'),
-    width: wp('90%'),
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    // alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: hp('2%'),
-    textAlign: 'center',
-    fontSize: hp('2%'),
-    fontWeight: '500',
-  },
-});
