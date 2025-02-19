@@ -18,7 +18,7 @@ interface TextWithDefaultProps extends Text {
 interface TextInputWithDefaultProps extends TextInput {
   defaultProps?: {allowFontScaling?: boolean};
 }
-
+//Textinput sizes
 (Text as unknown as TextWithDefaultProps).defaultProps =
   (Text as unknown as TextWithDefaultProps).defaultProps || {};
 (Text as unknown as TextWithDefaultProps).defaultProps!.allowFontScaling =
