@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 /* eslint-disable no-sequences */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -10,6 +11,9 @@ import {
   FlatList,
   Image,
   TextInput,
+  Modal,
+  PermissionsAndroid,
+  Linking,
 } from 'react-native';
 import React, {useState} from 'react';
 import CustomStatusbar from '../../components/CustomStatusbar';
@@ -24,6 +28,15 @@ import {
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import dayjs from 'dayjs';
 import DatePicker from 'react-native-date-picker';
+import RNPickerSelect from 'react-native-picker-select';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {getDataFromAsync} from '../../services/AsyncService';
+import {userCreateStage2Fetch} from '../../redux/slices/authSlice';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {Toaster} from '../../services/Toaster';
+import {ApiEndPoints} from '../../API/ApiEndPoints';
+import LoaderComponent from '../../components/LoaderComponent';
 const certificateList: any = [
   {
     id: 1,
@@ -57,13 +70,210 @@ const Certificates = () => {
 
   const [certificates, setCertificates] = useState<any>(certificateList);
   const [institutionName, setInstitutionName] = useState<string>('');
+  const [institutionNameError, setInstitutionNameError] =
+    useState<boolean>(false);
   const [stream, setStream] = useState<string>('');
-  const [score, setScore] = useState<any>(0);
-  const [maxScore, setMaxScore] = useState<any>(0);
+  const [streamError, setStreamError] = useState<boolean>(false);
+  const [score, setScore] = useState<any>();
+  const [scoreError, setScoreError] = useState<boolean>(false);
+  const [maxScore, setMaxScore] = useState<any>('');
+  const [maxScoreError, setMaxScoreError] = useState<boolean>(false);
   const [startDate, setStartDate] = useState<any>();
+  const [startDateError, setStartDateError] = useState<boolean>(false);
   const [endDate, setEndDate] = useState<any>();
+  const [endDateError, setEndDateError] = useState<boolean>(false);
   const [type, setType] = useState<string>('');
+  const [typeError, setTypeError] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [scoreTypeId, setScoreTypeId] = useState<any>();
+  const [scoreTypeIdError, setScoreTypeIdError] = useState<any>();
+  const {config, scoreTypes} = useAppSelector(state => state.app);
+  const [items, setItems] = useState<any>(scoreTypes);
+
+  const [image, setImage] = useState<any>('');
+  const [imageError, setImageError] = useState<boolean>(false);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
+  const requestCameraPermission = async () => {
+    setModalVisible(false);
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'Education Camera Permission',
+          message:
+            'Education App needs access to your camera ' +
+            'so you can take awesome pictures.',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      console.log('granted', granted);
+
+      if (granted === 'granted') {
+        capturePhoto();
+      } else {
+        await Linking.openSettings();
+        console.log('Camera permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  const capturePhoto = async () => {
+    setModalVisible(false);
+    try {
+      const result: any = await launchCamera({
+        saveToPhotos: true,
+        mediaType: 'photo',
+        includeBase64: false,
+        includeExtra: true,
+        quality: 0.8,
+      });
+      console.log('result capture', result);
+      // setImage(result?.assets[0]?.uri);
+      setPickerResponse(result);
+    } catch (error) {
+      console.log(error, 'error');
+    }
+  };
+
+  const chooseFromGallery = async () => {
+    setModalVisible(false);
+    try {
+      const result: any = await launchImageLibrary({
+        selectionLimit: 1,
+        mediaType: 'photo',
+        includeBase64: false,
+        includeExtra: true,
+        quality: 0.8,
+      });
+      console.log('result chooseFromGallery', result);
+      setPickerResponse(result);
+      // setImage(result?.assets[0]?.uri);
+    } catch (error) {
+      console.log(error, 'error');
+    }
+  };
+  const _onConfirm = (date: any) => {
+    if (type === 'start') {
+      setStartDate(date);
+    } else if (type === 'end') {
+      setEndDate(date);
+    }
+  };
+
+  const setPickerResponse = async (response: any) => {
+    console.log('file response', response);
+
+    if (response?.assets) {
+      setIsFetching(true);
+      const formData = new FormData();
+      formData.append('folder', 'student');
+      formData.append('subfolder', 'mlrit');
+      const file = {
+        uri: response?.assets[0]?.uri,
+        type: response?.assets[0]?.type,
+        name: response?.assets[0]?.fileName,
+      };
+
+      formData.append('file', file);
+
+      try {
+        const res = await fetch(
+          resources.config.baseURL + '/' + ApiEndPoints.imageUpload,
+          {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          },
+        );
+        const results = await res.json();
+        if (results?.status) {
+          setIsFetching(false);
+          setImage(results?.fileUrl);
+        } else {
+          Toaster.error(results?.message);
+          setIsFetching(false);
+        }
+        console.log('Upload response:', results);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        setIsFetching(false);
+      }
+    } else {
+      console.log('No image selected');
+      setIsFetching(false);
+    }
+  };
+  const _validateFields = () => {
+    console.log('===========', score);
+
+    let isInstitutionNameValid = institutionName.length > 0 ? true : false;
+    let isStreamValid = stream.length > 0 ? true : false;
+    let isScoreValid = score ? true : false;
+    let isMaxScoreValid = maxScore ? true : false;
+    let isScoreTypeIdValid = scoreTypeId ? true : false;
+    let isStartDateValid = startDate ? true : false;
+    let isImageValid = image ? true : false;
+    if (
+      isInstitutionNameValid &&
+      isStreamValid &&
+      isScoreValid &&
+      isMaxScoreValid &&
+      isScoreTypeIdValid &&
+      isStartDateValid
+    ) {
+      setInstitutionNameError(false);
+      setStreamError(false);
+      setScoreError(false);
+      setMaxScoreError(false);
+      setScoreTypeIdError(false);
+      setStartDateError(false);
+      setImageError(false);
+      _stageTwo();
+    } else {
+      setInstitutionNameError(!isInstitutionNameValid);
+      setStreamError(!isStreamValid);
+      setScoreError(!isScoreValid);
+      setMaxScoreError(!isMaxScoreValid);
+      setScoreTypeIdError(!isScoreTypeIdValid);
+      setStartDateError(!isStartDateValid);
+      setImageError(!isImageValid);
+    }
+  };
+
+  const _stageTwo = async () => {
+    let email = await getDataFromAsync(resources.AsyncConstants.email);
+    let eduLevelId = await getDataFromAsync(
+      resources.AsyncConstants.eduLevelId,
+    );
+    let course = await getDataFromAsync(resources.AsyncConstants.course);
+    var data = {
+      email: email,
+      signUpStage: 2,
+      educationDetails: [
+        {
+          eduLevelId: eduLevelId,
+          institutionName: institutionName,
+          course: course,
+          stream: stream,
+          score: score,
+          maxScore: maxScore,
+          scoreTypeId: scoreTypeId,
+          startDate: startDate,
+          endDate: endDate,
+          isCurrent: endDate ? false : true,
+          certPhoto: image,
+        },
+      ],
+    };
+
+    dispatch(userCreateStage2Fetch(data));
+  };
   const styles = StyleSheet.create({
     main: {
       flex: 1,
@@ -186,7 +396,7 @@ const Certificates = () => {
       borderColor: '#AFAFAF',
       borderWidth: 1,
       borderRadius: 5,
-      color: resources.colors.black,
+      color: resources.colors.ash,
       fontSize: hp('1.8%'),
       fontWeight: '500',
       marginTop: hp('1%'),
@@ -200,13 +410,57 @@ const Certificates = () => {
       borderColor: '#AFAFAF',
       borderWidth: 1,
       borderRadius: 5,
-      color: resources.colors.black,
+      color: resources.colors.ash,
       fontSize: hp('1.8%'),
       fontWeight: '500',
       marginTop: hp('1%'),
       fontFamily: resources.fonts.regular,
       paddingLeft: 15,
       textAlign: 'center',
+    },
+    centeredView: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    modalView: {
+      height: hp('28%'),
+      width: wp('90%'),
+      margin: 20,
+      backgroundColor: 'white',
+      borderRadius: 20,
+      padding: 35,
+      // alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
+    },
+    modalText: {
+      marginBottom: hp('2%'),
+      textAlign: 'center',
+      fontSize: hp('2%'),
+      fontWeight: '500',
+    },
+    box1: {
+      height: hp('6%'),
+      width: wp('86%'),
+      borderRadius: 5,
+      borderWidth: 1,
+      borderColor: resources.colors.ash,
+      marginTop: hp('1%'),
+      justifyContent: 'center',
+      marginStart: hp('2%'),
+    },
+    errorText: {
+      color: resources.colors.red,
+      fontSize: hp('1.6%'),
+      fontWeight: '500',
+      fontFamily: resources.fonts.regular,
     },
   });
 
@@ -229,13 +483,6 @@ const Certificates = () => {
   const ItemSeparatorComponent = () => {
     return <View style={styles.itemSeparate} />;
   };
-  const _onConfirm = (date: any) => {
-    if (type === 'start') {
-      setStartDate(date);
-    } else if (type === 'end') {
-      setEndDate(date);
-    }
-  };
 
   return (
     <View style={styles.main}>
@@ -248,6 +495,16 @@ const Certificates = () => {
       </View>
       <View style={styles.box}>
         <View style={{marginTop: hp('4%')}}>
+          {isFetching ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <LoaderComponent size={hp('3.5%')} color={theme.primary} />
+            </View>
+          ) : null}
           <View style={styles.start}>
             {/* <Text style={styles.inputHeaderText}>Institution Name</Text> */}
             <TextInput
@@ -256,16 +513,14 @@ const Certificates = () => {
               style={[
                 styles.inputStyle,
                 {
-                  borderColor: resources.colors.ash,
+                  borderColor: institutionNameError
+                    ? resources.colors.red
+                    : resources.colors.ash,
                 },
               ]}
               value={institutionName}
               onChangeText={val => setInstitutionName(val)}
             />
-
-            {/* {emailError ? (
-            <Text style={styles.errorText}>{'Please enter email'}</Text>
-          ) : null} */}
           </View>
           <View style={styles.start}>
             <TextInput
@@ -274,23 +529,89 @@ const Certificates = () => {
               style={[
                 styles.inputStyle,
                 {
-                  borderColor: resources.colors.ash,
+                  borderColor: streamError
+                    ? resources.colors.red
+                    : resources.colors.ash,
                 },
               ]}
               value={stream}
               onChangeText={val => setStream(val)}
             />
           </View>
-
+          <View>
+            <RNPickerSelect
+              placeholder={{value: '', label: 'Select Score Type'}}
+              onValueChange={value => {
+                const selectedItem = items.find(
+                  (item: any) => item.value === value,
+                );
+                if (selectedItem) {
+                  setScoreTypeId(value);
+                  // setEducationLabel(selectedItem.label);
+                }
+              }}
+              useNativeAndroidPickerStyle={false}
+              items={items}
+              style={{
+                inputIOS: {
+                  fontSize: hp('1.8%'),
+                  color: 'gray', // Customize the text color here
+                  paddingVertical: 10,
+                  paddingHorizontal: 12,
+                  borderWidth: 1,
+                  // borderColor: resources.colors.ash,
+                  borderColor: scoreTypeIdError
+                    ? resources.colors.red
+                    : resources.colors.ash,
+                  borderRadius: 5,
+                },
+                inputAndroid: {
+                  fontSize: hp('1.8%'),
+                  color: resources.colors.ash,
+                  paddingVertical: 10,
+                  paddingHorizontal: 12,
+                  height: hp('6%'),
+                  width: wp('86%'),
+                  borderRadius: 5,
+                  borderWidth: 1,
+                  borderColor: scoreTypeIdError
+                    ? resources.colors.red
+                    : resources.colors.ash,
+                  marginTop: hp('1%'),
+                  justifyContent: 'center',
+                  marginStart: hp('2%'),
+                },
+                placeholder: {
+                  color: resources.colors.ash,
+                },
+              }}
+              Icon={() => {
+                return (
+                  <Ionicons
+                    size={20}
+                    color={resources.colors.ash}
+                    name="chevron-down"
+                    style={{
+                      paddingRight: hp('4%'),
+                      marginTop: hp('3%'),
+                    }}
+                  />
+                );
+              }}
+            />
+          </View>
           <View style={{flexDirection: 'row'}}>
             <View style={styles.start}>
               <TextInput
                 placeholder="Score"
+                keyboardType="number-pad"
                 placeholderTextColor={'#AFAFAF'}
                 style={[
                   styles.inputStyle1,
                   {
-                    borderColor: resources.colors.ash,
+                    borderColor: scoreError
+                      ? resources.colors.red
+                      : resources.colors.ash,
                   },
                 ]}
                 value={score}
@@ -300,11 +621,14 @@ const Certificates = () => {
             <View style={styles.start}>
               <TextInput
                 placeholder="Max Score"
+                keyboardType="number-pad"
                 placeholderTextColor={'#AFAFAF'}
                 style={[
                   styles.inputStyle1,
                   {
-                    borderColor: resources.colors.ash,
+                    borderColor: maxScoreError
+                      ? resources.colors.red
+                      : resources.colors.ash,
                   },
                 ]}
                 value={maxScore}
@@ -321,7 +645,14 @@ const Certificates = () => {
               <Text
                 style={[
                   styles.inputStyle1,
-                  {justifyContent: 'center', paddingTop: hp('1%')},
+                  {
+                    justifyContent: 'center',
+                    paddingTop: hp('1%'),
+                    fontSize: hp('1.8%'),
+                    borderColor: startDateError
+                      ? resources.colors.red
+                      : resources.colors.ash,
+                  },
                 ]}>
                 {startDate
                   ? dayjs(startDate).format('DD/MM/YYYY')
@@ -356,6 +687,33 @@ const Certificates = () => {
               }}
             />
           </View>
+          <TouchableOpacity
+            onPress={() => setModalVisible(true)}
+            style={{
+              height: hp('15%'),
+              width: wp('85%'),
+              // borderColor: resources.colors.ash,
+              borderColor: imageError
+                ? resources.colors.red
+                : resources.colors.ash,
+              borderWidth: 1,
+              justifyContent: 'center',
+              alignContent: 'center',
+              alignSelf: 'center',
+              alignItems: 'center',
+              borderRadius: 10,
+              marginTop: hp('1%'),
+            }}>
+            {image ? (
+              <Image
+                source={{uri: image}}
+                style={{height: hp('15%'), width: wp('85%'), borderRadius: 10}}
+                // resizeMode="contain"
+              />
+            ) : (
+              <AntDesign name={'plus'} size={25} color={resources.colors.ash} />
+            )}
+          </TouchableOpacity>
           {/* <FlatList
             data={certificates}
             renderItem={item => _renderItem(item)}
@@ -365,10 +723,83 @@ const Certificates = () => {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('UploadDocuments')}>
+          onPress={() => _validateFields()}>
           <Text style={styles.signIn}>Next</Text>
         </TouchableOpacity>
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <TouchableOpacity
+              onPress={() => setModalVisible(!modalVisible)}
+              style={{
+                right: hp('2%'),
+                position: 'absolute',
+                marginTop: hp('1%'),
+                height: hp('4%'),
+                width: wp('8%'),
+                borderRadius: 100,
+                backgroundColor: resources.colors.primary,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <AntDesign
+                name={'close'}
+                size={20}
+                color={resources.colors.white}
+              />
+            </TouchableOpacity>
+
+            <Text style={styles.modalText}>Upload image from</Text>
+            <TouchableOpacity
+              onPress={() => requestCameraPermission()}
+              style={{
+                flexDirection: 'row',
+                height: hp('6%'),
+                width: wp('75%'),
+                borderColor: resources.colors.ash,
+                borderWidth: 1,
+                borderRadius: 10,
+                alignItems: 'center',
+              }}>
+              <FontAwesome
+                name={'camera'}
+                size={25}
+                color={resources.colors.ash}
+                style={{marginStart: hp('2%'), width: wp('10%')}}
+              />
+              <Text>Camera</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => chooseFromGallery()}
+              style={{
+                flexDirection: 'row',
+                height: hp('6%'),
+                width: wp('75%'),
+                borderColor: resources.colors.ash,
+                borderWidth: 1,
+                borderRadius: 10,
+                marginTop: hp('2%'),
+                alignItems: 'center',
+              }}>
+              <AntDesign
+                name={'picture'}
+                size={25}
+                color={resources.colors.ash}
+                style={{marginStart: hp('2%'), width: wp('10%')}}
+              />
+              <Text>Gallrey</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };

@@ -22,6 +22,7 @@ const initialState: AuthSliceState = {
     socialLogins: [],
     accessToken: '',
     refreshToken: '',
+    StudentEducation: [],
   },
   isLogged: false,
   redirect: null,
@@ -51,6 +52,10 @@ const authSlice = createSlice({
       state: AuthSliceState,
       action: PayloadAction<any>,
     ) => {},
+    userCreateStage2Fetch: (
+      state: AuthSliceState,
+      action: PayloadAction<any>,
+    ) => {},
 
     userCreateFetch: (state: AuthSliceState, action: PayloadAction<any>) => {},
     userCreateSuccess: (
@@ -75,6 +80,14 @@ const authSlice = createSlice({
       }>,
     ) => {},
     userLoginSuccess: (
+      state: AuthSliceState,
+      action: PayloadAction<UserState>,
+    ) => {
+      state.userData = action.payload;
+    },
+
+    getProfileFetch: () => {},
+    getProfileSuccess: (
       state: AuthSliceState,
       action: PayloadAction<UserState>,
     ) => {
@@ -133,8 +146,11 @@ const authSlice = createSlice({
 export const {
   userCreateFetch,
   userCreateSuccess,
+  userCreateStage2Fetch,
   userLoginFetch,
   userLoginSuccess,
+  getProfileFetch,
+  getProfileSuccess,
   setIsLogged,
   redirectRequest,
   clearRedirect,

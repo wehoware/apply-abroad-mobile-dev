@@ -31,7 +31,7 @@ const Settings = () => {
   const dispatch = useAppDispatch();
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-  const {isLogged, redirect} = useAppSelector(state => state.auth);
+  const {isLogged, redirect, userData} = useAppSelector(state => state.auth);
   useRedirect(redirect, 'replace');
   useEffect(() => {
     const fetchData = async () => {
@@ -42,6 +42,7 @@ const Settings = () => {
     fetchData();
   }, []);
 
+  console.log('================', userData);
   const logout = async () => {
     console.log('================');
 
@@ -63,8 +64,8 @@ const Settings = () => {
         <Image source={resources.images.Profile} style={styles.profileImage} />
       </ImageBackground>
       <View style={{marginTop: hp('10%'), justifyContent: 'center'}}>
-        <Text style={styles.nameText}>Yellagandula Sai Akhil</Text>
-        <Text style={styles.mailText}>saiakhill@gmail.com</Text>
+        <Text style={styles.nameText}>{userData?.fullName}</Text>
+        <Text style={styles.mailText}>{userData?.email}</Text>
       </View>
       <Text style={styles.themeText}>Theme</Text>
       <View style={styles.box}>
@@ -196,6 +197,7 @@ const styles = StyleSheet.create({
     fontSize: hp('2%'),
     color: resources.colors.ash,
     fontWeight: '400',
+    width: wp('98%'),
   },
   themeText: {
     marginStart: hp('2%'),

@@ -29,11 +29,13 @@ import {setDataToAsync} from '../../services/AsyncService';
 import {
   categoriesFetchRequest,
   countriesFetchRequest,
+  scoreTypesFetchRequest,
 } from '../../redux/slices/appSlice';
+import LoaderComponent from '../../components/LoaderComponent';
 const Login = () => {
   const navigation = useNavigation<stackProps>();
   const dispatch = useAppDispatch();
-  const {theme} = useAppSelector(state => state.common);
+  const {theme, isFetching, isError} = useAppSelector(state => state.common);
   const [visible, setVisible] = useState<boolean>(false);
   const [orientation, setOrientation] = useState('');
   const [email, setEmail] = useState<string>('');
@@ -41,9 +43,12 @@ const Login = () => {
   const [password, setPassword] = useState<string>('');
   const [passwordError, setPasswordError] = useState<boolean>(false);
   const [deviceId, setDeviceId] = useState<string>('');
-  const {categories, countries} = useAppSelector(state => state.app);
+  const {categories, countries, scoreTypes} = useAppSelector(
+    state => state.app,
+  );
   const {isLogged, redirect} = useAppSelector(state => state.auth);
   useRedirect(redirect, 'replace');
+
   const _validateFields = () => {
     let isEmailValid =
       email.length > 0
@@ -51,13 +56,6 @@ const Login = () => {
           ? true
           : false
         : false;
-
-    // let isPasswordValid =
-    //   password.length > 0
-    //     ? passwordValidator(password) === true
-    //       ? true
-    //       : false
-    //     : false;
 
     let isPasswordValid = password.length > 0 ? true : false;
 
@@ -78,6 +76,7 @@ const Login = () => {
     setDataToAsync(resources.AsyncConstants.deviceId, deviceIds);
     dispatch(categoriesFetchRequest());
     dispatch(countriesFetchRequest());
+    dispatch(scoreTypesFetchRequest());
   }, []);
 
   const handleLogin = () => {
@@ -259,6 +258,11 @@ const Login = () => {
       fontWeight: '500',
       fontFamily: resources.fonts.regular,
     },
+    loader: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
   });
 
   return (
@@ -275,6 +279,11 @@ const Login = () => {
           Log in or create an account to start learning with other great people
         </Text>
         <View style={styles.start}>
+          {isFetching ? (
+            <View style={styles.loader}>
+              <LoaderComponent size={hp('3.5%')} color={theme.primary} />
+            </View>
+          ) : null}
           <Text style={styles.inputHeaderText}>E-mail</Text>
           <TextInput
             placeholder="Enter your E-mail"
@@ -357,8 +366,7 @@ const Login = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.buttonSignUp}
-          // onPress={() => navigation.navigate('Signup')}>
-          onPress={() => navigation.navigate('Education')}>
+          onPress={() => navigation.navigate('Signup')}>
           <Text style={[styles.signIn, {color: resources.colors.black}]}>
             Create Account
           </Text>

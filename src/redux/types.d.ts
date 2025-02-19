@@ -19,6 +19,7 @@ export interface UserState {
   email: string;
   fullName: string;
   role: string;
+  countryCode?: string;
   loginMethod?: string;
   status: string;
   intrestedCountry?: number;
@@ -27,6 +28,7 @@ export interface UserState {
   accessToken?: string;
   refreshToken?: string;
   profilePic?: string;
+  StudentEducation?: [];
 }
 
 export interface LegalInfo {
@@ -56,6 +58,9 @@ export interface AppSliceState {
   config: ConfigRequestPayload;
   categories: any[];
   selectedCategory: SelectedCategoryPayload;
+  scoreTypes: any[];
+  institutionList: InstitutionList[];
+  universityList: any[];
 }
 
 export interface CustomerProfileUpdateRequestPayload {
@@ -127,4 +132,25 @@ export interface SelectedCategoryPayload {
   categoryName: string;
   description: string;
   icon: string;
+}
+export interface InstitutionList {
+  id: number;
+  name: string;
+  institutionType: string;
+  isStandalone: boolean;
+  parentInstitutionId?: number;
+  about: string;
+  phoneNumber?: string;
+  email?: string;
+  locationId: Array;
+  mainImage?: string;
+  otherImages?: Array;
+  website?: string;
+  rating: number;
+  ratingCount: number;
+  appliedCount: number;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
 }

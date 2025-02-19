@@ -15,6 +15,8 @@ import {
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import RNPickerSelect from 'react-native-picker-select';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {Toaster} from '../../services/Toaster';
+import {setDataToAsync} from '../../services/AsyncService';
 
 const EducationList: any = [
   {
@@ -57,8 +59,16 @@ const Education = () => {
     {label: 'Intermediate/10+2', value: '3'},
     {label: 'SSC/CBSC/ICSC', value: '4'},
   ]);
-  console.log('educationVal', educationVal);
-  console.log('educationLabel', educationLabel);
+
+  const _education = () => {
+    if (educationLabel) {
+      setDataToAsync(resources.AsyncConstants.eduLevelId, educationVal);
+      setDataToAsync(resources.AsyncConstants.course, educationLabel);
+      navigation.navigate('Certificates');
+    } else {
+      Toaster.error('Please select Education');
+    }
+  };
 
   const styles = StyleSheet.create({
     main: {
@@ -88,13 +98,14 @@ const Education = () => {
       borderRadius: 15,
     },
     box1: {
-      height: hp('7%'),
-      width: wp('90%'),
+      height: hp('6%'),
+      width: wp('88%'),
       borderRadius: 10,
       borderWidth: 1,
       borderColor: resources.colors.ash,
       marginTop: hp('1%'),
       justifyContent: 'center',
+      marginStart: hp('1%'),
     },
     boxText: {
       color: '#141B13',
@@ -213,7 +224,7 @@ const Education = () => {
       </View>
       <View style={styles.box}>
         <Text style={styles.boxText}>What is your Higher {'\n'}Education?</Text>
-        <View style={styles.box1}>
+        <View>
           <RNPickerSelect
             placeholder={{value: '', label: 'Select Education'}}
             onValueChange={value => {
@@ -226,27 +237,33 @@ const Education = () => {
               }
             }}
             items={items}
+            useNativeAndroidPickerStyle={false}
             style={{
               inputIOS: {
-                fontSize: 16,
-                color: 'gray', // Customize the text color here
+                fontSize: hp('1.8%'),
+                color: resources.colors.ash,
                 paddingVertical: 10,
                 paddingHorizontal: 12,
                 borderWidth: 1,
-                borderColor: 'gray',
+                borderColor: resources.colors.ash,
                 borderRadius: 5,
               },
               inputAndroid: {
-                fontSize: 16,
-                color: 'gray', // Customize the text color for Android here
+                fontSize: hp('1.8%'),
+                color: resources.colors.ash,
                 paddingVertical: 10,
                 paddingHorizontal: 12,
                 borderWidth: 1,
-                borderColor: 'gray',
+                borderColor: resources.colors.ash,
                 borderRadius: 5,
+                marginTop: hp('1%'),
+                justifyContent: 'center',
+                marginStart: hp('2%'),
+                height: hp('6%'),
+                width: wp('86%'),
               },
               placeholder: {
-                color: 'gray', // Customize the placeholder color here
+                color: resources.colors.ash, // Customize the placeholder color here
               },
             }}
             Icon={() => {
@@ -256,7 +273,7 @@ const Education = () => {
                   color={resources.colors.ash}
                   name="chevron-down"
                   style={{
-                    paddingRight: hp('2%'),
+                    paddingRight: hp('4%'),
                     marginTop: hp('3%'),
                   }}
                 />
@@ -272,9 +289,7 @@ const Education = () => {
           />
         </View> */}
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('Certificates')}>
+        <TouchableOpacity style={styles.button} onPress={() => _education()}>
           <Text style={styles.signIn}>Next</Text>
         </TouchableOpacity>
         <TouchableOpacity

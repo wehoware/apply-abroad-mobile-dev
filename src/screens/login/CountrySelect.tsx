@@ -1,3 +1,4 @@
+/* eslint-disable no-sequences */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
@@ -9,6 +10,7 @@ import {
   TouchableOpacity,
   Alert,
   FlatList,
+  TextInput,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import CustomStatusbar from '../../components/CustomStatusbar';
@@ -29,13 +31,14 @@ import {getDataFromAsync, setDataToAsync} from '../../services/AsyncService';
 import {Image} from 'react-native';
 import {userCreateFetch} from '../../redux/slices/authSlice';
 import useRedirect from '../../hooks/useRedirect';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const CountrySelect = () => {
   const navigation = useNavigation<stackProps>();
   const dispatch = useAppDispatch();
   const {theme} = useAppSelector(state => state.common);
-  const [selectedItems, setSelectedItems] = useState<any>([]);
-
+  const [selectedItems, setSelectedItems] = useState<any>({});
+  const [search, setSearch] = useState<string>('');
   const {countries} = useAppSelector(state => state.app);
   const [countriesList, setcountriesList] = useState<any>(countries);
   const {isLogged, redirect} = useAppSelector(state => state.auth);
@@ -46,6 +49,7 @@ const CountrySelect = () => {
   const selectCountry = (item: any) => {
     setSelectedItems(item);
   };
+
   const _countrySave = async () => {
     console.log('selectedItems', selectedItems);
     let email = await getDataFromAsync(resources.AsyncConstants.email);
@@ -53,7 +57,6 @@ const CountrySelect = () => {
     let courseIds = await getDataFromAsync(resources.AsyncConstants.courseIds);
 
     const countryId = selectedItems.id;
-    console.log('countryId', countryId);
     if (!countryId) {
       Toaster.error('Please select any Country');
     } else {
@@ -143,41 +146,74 @@ const CountrySelect = () => {
       alignItems: 'center',
     },
     itemSeparate: {
-      //   height: 20,
       width: wp('80%'),
       borderColor: resources.colors.ash,
       borderWidth: 0.5,
       margin: 10,
     },
     circle: {
-      height: hp('2%'),
-      borderColor: resources.colors.ash,
-      borderWidth: 1,
-      width: wp('4%'),
+      height: hp('2.5%'),
+      borderColor: '#33363F',
+      borderWidth: 2,
+      width: wp('5%'),
       borderRadius: 100,
     },
     yellowCircle: {
-      height: hp('3'),
-      borderColor: '#FFC979',
+      height: hp('2.5%'),
+      borderColor: '#33363F',
       borderWidth: 7,
-      width: wp('6'),
+      width: wp('5%'),
       borderRadius: 100,
       backgroundColor: resources.colors.white,
     },
+    searchBox: {
+      height: hp('6%'),
+      width: wp('83%'),
+      borderColor: resources.colors.ash,
+      borderWidth: 1,
+      borderRadius: 8,
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginTop: hp('6%'),
+      marginStart: hp('2%'),
+    },
   });
+
+  const educationSelection = (item1: any) => {
+    const selectedId = item1.id;
+    const updatedCountyList = countriesList.map((item: any) =>
+      item.id === selectedId
+        ? {...item, select: true}
+        : {...item, select: false},
+    );
+    setcountriesList(updatedCountyList);
+  };
+
+  const searchCollege = (searchQuery: any) => {
+    if (searchQuery.length > 2) {
+      const filteredColleges = countries.filter((country: any) =>
+        country.name.toLowerCase().includes(searchQuery.toLowerCase()),
+      );
+      setcountriesList(filteredColleges);
+    } else {
+      setcountriesList(countries);
+      setSelectedItems({});
+    }
+  };
 
   const _renderItems = ({item}: any) => {
     return (
       <TouchableOpacity
         style={{
           flexDirection: 'row',
-
           alignContent: 'center',
           alignItems: 'center',
         }}
-        onPress={() => selectCountry(item)}>
+        onPress={() => {
+          selectCountry(item), educationSelection(item);
+        }}>
         <Image
-          source={resources.images.College1}
+          source={{uri: item?.flagImage}}
           style={{
             height: hp('8'),
             width: wp('16'),
@@ -187,6 +223,11 @@ const CountrySelect = () => {
         <Text style={{width: wp('55%'), marginStart: hp('2%')}}>
           {item.name}
         </Text>
+        {item.select ? (
+          <AntDesign name={'checkcircle'} size={20} color={'#33363F'} />
+        ) : (
+          <View style={styles.circle} />
+        )}
         {/* <Text style={{width: wp('60%'), marginStart: hp('2%')}}>0</Text> */}
       </TouchableOpacity>
     );
@@ -205,6 +246,26 @@ const CountrySelect = () => {
         <Text style={styles.headerText}>Country</Text>
       </View>
       <View style={styles.box}>
+        <View style={styles.searchBox}>
+          <Image
+            source={resources.images.Search}
+            style={{height: hp('4%'), width: wp('6%'), marginLeft: hp('1%')}}
+            resizeMode="contain"
+          />
+          <TextInput
+            style={{
+              color: resources.colors.ash,
+              fontSize: hp('2%'),
+              marginStart: hp('2%'),
+            }}
+            value={search}
+            placeholderTextColor={resources.colors.ash}
+            placeholder={'Search countries'}
+            onChangeText={val => {
+              setSearch(val), searchCollege(val);
+            }}
+          />
+        </View>
         <View
           style={{
             marginTop: hp('3%'),
