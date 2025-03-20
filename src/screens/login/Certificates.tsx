@@ -567,11 +567,7 @@ const Certificates = () => {
               style={{
                 inputIOS: {
                   fontSize: hp('1.8%'),
-<<<<<<< HEAD
                   color: resources.colors.black, // Customize the text color here
-=======
-                  color: 'gray', // Customize the text color here
->>>>>>> 217a96960f4c4eff06872c78283470f9beebae0d
                   paddingVertical: 10,
                   paddingHorizontal: 12,
                   borderWidth: 1,
@@ -583,11 +579,7 @@ const Certificates = () => {
                 },
                 inputAndroid: {
                   fontSize: hp('1.8%'),
-<<<<<<< HEAD
                   color: resources.colors.black,
-=======
-                  color: resources.colors.ash,
->>>>>>> 217a96960f4c4eff06872c78283470f9beebae0d
                   paddingVertical: 10,
                   paddingHorizontal: 12,
                   height: hp('6%'),
