@@ -66,10 +66,10 @@ const Splash = () => {
     let user = await getDataFromAsync(resources.AsyncConstants.userData);
     dispatch(
       updateConfig({
-        AWS_ACCESS_KEY: 'AKIAXYKJROLXUUUMMX6Y',
-        AWS_BUCKET_NAME: 'studyabrdstudyabrd',
-        AWS_REGION: 'ca-central-1',
-        AWS_SECRET_KEY: '+opxyV1mHOqEuY31Xvoz9WDBuiD4npqNfPTdIQfB',
+        AWS_ACCESS_KEY: '',
+        AWS_BUCKET_NAME: '',
+        AWS_REGION: '',
+        AWS_SECRET_KEY: '',
       }),
     );
     if (user !== null) {
