@@ -17,6 +17,7 @@
     "@react-navigation/native": "^7.0.14",
     "@react-navigation/stack": "^7.1.1",
     "@reduxjs/toolkit": "^2.5.0",
+<<<<<<< HEAD
     "@stripe/stripe-react-native": "^0.42.0",
     "aws-sdk": "^2.1692.0",
     "axios": "^1.7.9",
@@ -26,11 +27,20 @@
     "react": "18.3.1",
     "react-native": "0.76.6",
     "react-native-aws3": "^0.0.9",
+=======
+    "axios": "^1.7.9",
+    "dayjs": "^1.11.13",
+    "react": "18.3.1",
+    "react-native": "0.76.6",
+>>>>>>> 217a96960f4c4eff06872c78283470f9beebae0d
     "react-native-bootsplash": "^6.3.2",
     "react-native-compressor": "^1.10.3",
     "react-native-date-picker": "^5.0.10",
     "react-native-device-info": "^14.0.4",
+<<<<<<< HEAD
     "react-native-fs": "^2.20.0",
+=======
+>>>>>>> 217a96960f4c4eff06872c78283470f9beebae0d
     "react-native-gesture-handler": "^2.22.0",
     "react-native-image-picker": "^8.0.0",
     "react-native-paper": "^5.13.1",

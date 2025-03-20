@@ -62,12 +62,20 @@ const WelcomScreen = () => {
     },
     skipText: {
       color: resources.colors.olive_green,
+<<<<<<< HEAD
       fontSize: hp('2.3%'),
+=======
+      fontSize: hp('2.5%'),
+>>>>>>> 217a96960f4c4eff06872c78283470f9beebae0d
       fontFamily: resources.fonts.medium,
       fontWeight: '600',
       textAlign: 'center',
     },
+<<<<<<< HEAD
     skipIcon: {marginTop: 8, marginStart: 5},
+=======
+    skipIcon: {marginTop: 10, marginStart: 5},
+>>>>>>> 217a96960f4c4eff06872c78283470f9beebae0d
     button: {
       marginStart: 20,
       height: hp('6%'),
@@ -115,7 +123,11 @@ const WelcomScreen = () => {
   });
   return (
     <View style={styles.main}>
+<<<<<<< HEAD
       {count === 0 || count === 1 ? (
+=======
+      {count === 0 ? (
+>>>>>>> 217a96960f4c4eff06872c78283470f9beebae0d
         <>
           <Pressable
             onPress={() => navigation.navigate('Login')}
@@ -124,7 +136,11 @@ const WelcomScreen = () => {
             <AntDesign
               name={'right'}
               color={resources.colors.olive_green}
+<<<<<<< HEAD
               size={18}
+=======
+              size={20}
+>>>>>>> 217a96960f4c4eff06872c78283470f9beebae0d
               style={styles.skipIcon}
             />
           </Pressable>
