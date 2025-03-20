@@ -1,4 +1,3 @@
-/* eslint-disable no-sequences */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
@@ -29,68 +28,103 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Toaster} from '../../services/Toaster';
 import {getDataFromAsync, setDataToAsync} from '../../services/AsyncService';
 import {Image} from 'react-native';
-import {userCreateFetch} from '../../redux/slices/authSlice';
+import {
+  setSelectedEducationData,
+  userCreateFetch,
+} from '../../redux/slices/authSlice';
 import useRedirect from '../../hooks/useRedirect';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import Entypo from 'react-native-vector-icons/Entypo';
-
-const CountrySelect = () => {
+const certificateList: any = [
+  {
+    id: 1,
+    image: resources.images.Masters,
+    name: 'Masters / Post Graduation',
+    status: 'Not Uploaded',
+  },
+  {
+    id: 2,
+    image: resources.images.Degree,
+    name: 'Degree / Under Graduation',
+    status: 'Not Uploaded',
+  },
+  {
+    id: 3,
+    image: resources.images.Intermediate,
+    name: 'Intermediate/10+2',
+    status: 'Not Uploaded',
+  },
+  {
+    id: 4,
+    image: resources.images.SSC,
+    name: 'SSC/CBSC/ICSC',
+    status: 'Not Uploaded',
+  },
+];
+const EducationCertificates = () => {
   const navigation = useNavigation<stackProps>();
   const dispatch = useAppDispatch();
   const {theme} = useAppSelector(state => state.common);
   const [selectedItems, setSelectedItems] = useState<any>({});
   const [search, setSearch] = useState<string>('');
   const {countries} = useAppSelector(state => state.app);
-  const [countriesList, setcountriesList] = useState<any>(countries);
-  const {isLogged, redirect} = useAppSelector(state => state.auth);
+  const {isLogged, redirect, userData} = useAppSelector(state => state.auth);
+  const [certificates, setCertificates] = useState<any>(certificateList);
+  const [selectedEducation, setSelectedEducation] = useState<any>(null);
   useRedirect(redirect, 'replace');
   useEffect(() => {
     dispatch(countriesFetchRequest());
   }, []);
-  const selectCountry = (item: any) => {
-    setSelectedItems(item);
-  };
 
-  const _countrySave = async () => {
-    console.log('selectedItems', selectedItems);
-    let email = await getDataFromAsync(resources.AsyncConstants.email);
-    let deviceId = await getDataFromAsync(resources.AsyncConstants.deviceId);
-    let courseIds = await getDataFromAsync(resources.AsyncConstants.courseIds);
+  useEffect(() => {
+    const updatedCertificates = certificateList.map((certificate: any) => {
+      const isUploaded = userData?.StudentEducation?.some(
+        (edu: any) => edu.course.trim() === certificate.name.trim(),
+      );
 
-    const countryId = selectedItems.id;
-    if (!countryId) {
-      Toaster.error('Please select any Country');
-    } else {
-      let data = {
-        email: email,
-        signUpStage: 3,
-        deviceId: deviceId,
-        countryId: countryId,
-        interestedFieldsIds: courseIds,
+      return {
+        ...certificate,
+        status: isUploaded ? 'Uploaded' : 'Not Uploaded',
       };
-      dispatch(userCreateFetch(data));
-    }
-  };
+    });
+
+    setCertificates(updatedCertificates);
+  }, [userData]);
 
   const styles = StyleSheet.create({
     main: {
       flex: 1,
       backgroundColor: resources.colors.white,
     },
+    // header: {
+    //   backgroundColor: resources.colors.primary,
+    //   height: hp('18%'),
+    //   width: wp('100%'),
+    //   justifyContent: 'center',
+    //   alignContent: 'center',
+    //   alignItems: 'center',
+    // },
     header: {
       backgroundColor: resources.colors.primary,
       height: hp('18%'),
       width: wp('100%'),
-      alignItems: 'center',
       flexDirection: 'row',
+      //   justifyContent: 'center',
+      //   alignContent: 'center',
+      //   alignItems: 'center',
     },
     headerText: {
       color: resources.colors.white,
-      fontWeight: '900',
-      fontFamily: resources.fonts.Abold,
-      fontSize: hp('3%'),
-      marginStart: hp('2%'),
+      fontWeight: '600',
+      fontFamily: resources.fonts.Amedium,
+      fontSize: hp('2.5%'),
+      marginTop: hp('5%'),
     },
+    // headerText: {
+    //   color: resources.colors.white,
+    //   fontWeight: '600',
+    //   fontFamily: resources.fonts.medium,
+    //   fontSize: hp('3%'),
+    // },
     box: {
       height: hp('80%'),
       width: wp('95%'),
@@ -148,8 +182,8 @@ const CountrySelect = () => {
     },
     itemSeparate: {
       width: wp('80%'),
-      borderColor: resources.colors.ash,
-      borderWidth: 0.5,
+      //   borderColor: resources.colors.ash,
+      //   borderWidth: 0.5,
       margin: 10,
     },
     circle: {
@@ -180,55 +214,83 @@ const CountrySelect = () => {
     },
   });
 
-  const educationSelection = (item1: any) => {
-    const selectedId = item1.id;
-    const updatedCountyList = countriesList.map((item: any) =>
-      item.id === selectedId
-        ? {...item, select: true}
-        : {...item, select: false},
-    );
-    setcountriesList(updatedCountyList);
-  };
-
-  const searchCollege = (searchQuery: any) => {
-    if (searchQuery.length > 2) {
-      const filteredColleges = countries.filter((country: any) =>
-        country.name.toLowerCase().includes(searchQuery.toLowerCase()),
-      );
-      setcountriesList(filteredColleges);
-    } else {
-      setcountriesList(countries);
-      setSelectedItems({});
-    }
-  };
-
   const _renderItems = ({item}: any) => {
+    const matchingEducation = userData?.StudentEducation.find(
+      (edu: any) => edu.course.trim() === item.name.trim(),
+    );
+
+    const handlePress = (item1: any) => {
+      console.log('item1', item1);
+
+      if (matchingEducation) {
+        setSelectedEducation(matchingEducation);
+        console.log('Found Education Data:', matchingEducation);
+        setDataToAsync(resources.AsyncConstants.eduLevelId, item1.id);
+        setDataToAsync(resources.AsyncConstants.course, item1.name);
+        dispatch(setSelectedEducationData(matchingEducation));
+        navigation.navigate('EducationDetails');
+      } else {
+        setSelectedEducation(null);
+        setDataToAsync(resources.AsyncConstants.eduLevelId, item1.id);
+        setDataToAsync(resources.AsyncConstants.course, item1.name);
+        console.log('No Education Found for:', item.name);
+        dispatch(setSelectedEducationData({}));
+        navigation.navigate('EducationDetails');
+      }
+    };
     return (
       <TouchableOpacity
         style={{
           flexDirection: 'row',
           alignContent: 'center',
           alignItems: 'center',
+          height: hp('10%'),
+          width: wp('88%'),
+          borderRadius: 5,
+          borderColor: resources.colors.light_ash,
+          borderWidth: 1,
+          backgroundColor: resources.colors.white,
         }}
-        onPress={() => {
-          selectCountry(item), educationSelection(item);
-        }}>
+        onPress={() => handlePress(item)}>
         <Image
-          source={{uri: item?.flagImage}}
+          source={item.image}
           style={{
             height: hp('8'),
             width: wp('16'),
             borderRadius: 10,
+            marginStart: hp('2%'),
           }}
         />
-        <Text style={{width: wp('55%'), marginStart: hp('2%')}}>
-          {item.name}
-        </Text>
-        {item.select ? (
+        <View>
+          <Text
+            style={{
+              width: wp('55%'),
+              marginStart: hp('2%'),
+              color: resources.colors.black,
+              fontWeight: '700',
+              fontFamily: resources.fonts.Amedium,
+              fontSize: hp('2%'),
+            }}>
+            {item.name}
+          </Text>
+          <Text
+            style={{
+              width: wp('55%'),
+              marginStart: hp('2%'),
+              color: resources.colors.ash,
+              fontWeight: '500',
+              fontFamily: resources.fonts.Aregular,
+              fontSize: hp('1.8%'),
+            }}>
+            {item.status}
+          </Text>
+        </View>
+
+        {/* {item.select ? (
           <AntDesign name={'checkcircle'} size={20} color={'#33363F'} />
         ) : (
           <View style={styles.circle} />
-        )}
+        )} */}
         {/* <Text style={{width: wp('60%'), marginStart: hp('2%')}}>0</Text> */}
       </TouchableOpacity>
     );
@@ -245,59 +307,39 @@ const CountrySelect = () => {
       />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Entypo
-            name={'chevron-left'}
-            size={35}
+          <AntDesign
+            name={'left'}
             color={resources.colors.white}
+            size={20}
             style={{
-              width: wp('30%'),
-              marginTop: hp('0.6%'),
               marginStart: hp('2%'),
+              marginTop: hp('5%'),
+              width: wp('10%'),
             }}
           />
         </TouchableOpacity>
-        <Text style={styles.headerText}>Country</Text>
+
+        <Text style={styles.headerText}>Certificates</Text>
       </View>
+      {/* <View style={styles.header}>
+        <Text style={styles.headerText}>Certificates</Text>
+      </View> */}
       <View style={styles.box}>
-        <View style={styles.searchBox}>
-          <Image
-            source={resources.images.Search}
-            style={{height: hp('4%'), width: wp('6%'), marginLeft: hp('1%')}}
-            resizeMode="contain"
-          />
-          <TextInput
-            style={{
-              color: resources.colors.ash,
-              fontSize: hp('2%'),
-              marginStart: hp('2%'),
-            }}
-            value={search}
-            placeholderTextColor={resources.colors.ash}
-            placeholder={'Search countries'}
-            onChangeText={val => {
-              setSearch(val), searchCollege(val);
-            }}
-          />
-        </View>
         <View
           style={{
-            marginTop: hp('3%'),
+            marginTop: hp('8%'),
             marginStart: hp('2%'),
             height: hp('60%'),
           }}>
           <FlatList
-            data={countriesList}
+            data={certificates}
             renderItem={_renderItems}
             ItemSeparatorComponent={ItemSeparatorComponent}
           />
         </View>
-
-        <TouchableOpacity style={styles.button} onPress={() => _countrySave()}>
-          <Text style={styles.signIn}>Next</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
 };
 
-export default CountrySelect;
+export default EducationCertificates;

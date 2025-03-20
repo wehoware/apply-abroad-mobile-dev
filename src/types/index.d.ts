@@ -40,6 +40,9 @@ export interface CutsomModalProps extends ModalProps {
 }
 
 export interface CustomStatusbarProps extends StatusBarProps {}
+export interface CustomHeaderProps extends HeaderProps {
+  countryImage: any;
+}
 
 export interface LoaderComponentProps extends ActivityIndicatorProps {}
 

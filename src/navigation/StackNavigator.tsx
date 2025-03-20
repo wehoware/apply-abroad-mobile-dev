@@ -20,6 +20,12 @@ import Notifications from '../screens/Settings/Notifications';
 import EditProfile from '../screens/Settings/EditProfile';
 import PasswordVerificationCode from '../screens/login/PasswordVerificationCode';
 import CountrySelect from '../screens/login/CountrySelect';
+import Courses from '../screens/home/Courses';
+import EducationDetails from '../screens/Settings/EducationDetails';
+import EducationCertificates from '../screens/Settings/EducationCertificates';
+import CollegeDetails from '../screens/Colleges/CollegeDetails';
+import CountryChange from '../screens/home/CountryChange';
+import CategoriesList from '../screens/home/CategoriesList';
 const Stack = createStackNavigator<StackNavigatorList>();
 
 const StackNavigator = () => {
@@ -46,10 +52,19 @@ const StackNavigator = () => {
       <Stack.Screen name={'CheckOut'} component={CheckOut} />
       <Stack.Screen name={'Notifications'} component={Notifications} />
       <Stack.Screen name={'EditProfile'} component={EditProfile} />
+      <Stack.Screen name={'Courses'} component={Courses} />
+      <Stack.Screen name={'EducationDetails'} component={EducationDetails} />
+      <Stack.Screen
+        name={'EducationCertificates'}
+        component={EducationCertificates}
+      />
       <Stack.Screen
         name={'PasswordVerificationCode'}
         component={PasswordVerificationCode}
       />
+      <Stack.Screen name={'CollegeDetails'} component={CollegeDetails} />
+      <Stack.Screen name={'CountryChange'} component={CountryChange} />
+      <Stack.Screen name={'CategoriesList'} component={CategoriesList} />
     </Stack.Navigator>
   );
 };

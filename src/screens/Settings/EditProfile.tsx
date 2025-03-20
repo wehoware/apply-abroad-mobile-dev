@@ -27,21 +27,62 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
 import {stackProps} from '../../navigation/types';
-import {useAppDispatch} from '../../hooks/redux_hooks';
+import {useAppDispatch, useAppSelector} from '../../hooks/redux_hooks';
 import dayjs from 'dayjs';
 import DatePicker from 'react-native-date-picker';
 import RNPickerSelect from 'react-native-picker-select';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {updateProfileFetch} from '../../redux/slices/authSlice';
+import {Toaster} from '../../services/Toaster';
+import {ApiEndPoints} from '../../API/ApiEndPoints';
+const EducationList: any = [
+  {
+    id: 1,
+    name: 'Masters / Post Graduation',
+    select: false,
+  },
+  {
+    id: 2,
+    name: 'Degree / Under Graduation',
+    select: false,
+  },
+  {
+    id: 3,
+    name: 'Intermediate/10+2',
+    select: false,
+  },
+  {
+    id: 4,
+    name: '',
+    select: false,
+  },
+];
 const EditProfile = () => {
   const navigation = useNavigation<stackProps>();
   const dispatch = useAppDispatch();
-  const [fullName, setFullName] = useState<string>('');
+  const {theme} = useAppSelector(state => state.common);
+  const {isLogged, redirect, userData} = useAppSelector(state => state.auth);
+  const [fullName, setFullName] = useState<string>(userData?.fullName);
   const [education, setEducation] = useState<string>('');
-  const [dob, setDob] = useState<Date>(new Date());
+  const [dob, setDob] = useState<any>(userData?.dob);
   const [open, setOpen] = useState(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [image, setImage] = useState<any>('');
-
+  const [image, setImage] = useState<any>(userData?.profilePhoto);
+  const {config, scoreTypes} = useAppSelector(state => state.app);
+  const [items, setItems] = useState<any>([
+    {
+      label: 'Masters / Post Graduation',
+      value: '1',
+    },
+    {
+      label: 'Degree / Under Graduation',
+      value: '2',
+    },
+    {label: 'Intermediate/10+2', value: '3'},
+    {label: 'SSC/CBSC/ICSC', value: '4'},
+  ]);
+  const [scoreTypeId, setScoreTypeId] = useState<any>();
+  const [isFetching, setIsFetching] = useState<boolean>(false);
   const requestCameraPermission = async () => {
     setModalVisible(false);
     try {
@@ -80,7 +121,8 @@ const EditProfile = () => {
         quality: 0.8,
       });
       console.log('result capture', result);
-      setImage(result?.assets[0]?.uri);
+      // setImage(result?.assets[0]?.uri);
+      setPickerResponse(result);
     } catch (error) {
       console.log(error, 'error');
     }
@@ -97,10 +139,71 @@ const EditProfile = () => {
         quality: 0.8,
       });
       console.log('result chooseFromGallery', result);
-      setImage(result?.assets[0]?.uri);
+      setPickerResponse(result);
+      // setImage(result?.assets[0]?.uri);
     } catch (error) {
       console.log(error, 'error');
     }
+  };
+  const setPickerResponse = async (response: any) => {
+    console.log('file response', response);
+
+    if (response?.assets) {
+      setIsFetching(true);
+      const formData = new FormData();
+      formData.append('folder', 'student');
+      formData.append('subfolder', 'mlrit');
+      const file = {
+        uri: response?.assets[0]?.uri,
+        type: response?.assets[0]?.type,
+        name: response?.assets[0]?.fileName,
+      };
+
+      formData.append('file', file);
+
+      try {
+        const res = await fetch(
+          resources.config.baseURL + '/' + ApiEndPoints.imageUpload,
+          {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          },
+        );
+        const results = await res.json();
+        if (results?.status) {
+          setIsFetching(false);
+          setImage(results?.fileUrl);
+        } else {
+          Toaster.error(results?.message);
+          setIsFetching(false);
+        }
+        console.log('Upload response:', results);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        setIsFetching(false);
+      }
+    } else {
+      console.log('No image selected');
+      setIsFetching(false);
+    }
+  };
+
+  const _save = () => {
+    const data: any = {
+      fullName: fullName,
+      dob: dob,
+      countryCode: '',
+      phoneNumber: userData?.phoneNumber,
+      profilePhoto: image,
+      interestedCountryId: userData?.interestedCountryId,
+      interestedFieldsIds: userData?.interestedFieldsIds,
+      isActive: true,
+      id: userData?.id,
+    };
+    dispatch(updateProfileFetch(data));
   };
   console.log('image', image);
   const styles = StyleSheet.create({
@@ -124,7 +227,7 @@ const EditProfile = () => {
       fontFamily: resources.fonts.regular,
     },
     box: {
-      height: hp('7%'),
+      height: hp('6%'),
       width: wp('90%'),
       borderRadius: 10,
       borderWidth: 1,
@@ -214,16 +317,18 @@ const EditProfile = () => {
   });
   return (
     <View style={styles.main}>
-      <TouchableOpacity style={styles.header}>
-        <AntDesign
-          name={'left'}
-          size={20}
-          color={resources.colors.black}
-          onPress={() => navigation.goBack()}
-          style={{width: wp('30%')}}
-        />
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <AntDesign
+            name={'left'}
+            size={20}
+            color={resources.colors.black}
+            style={{width: wp('30%')}}
+          />
+        </TouchableOpacity>
+
         <Text style={styles.headerText}>Edit Profile</Text>
-      </TouchableOpacity>
+      </View>
       <Text
         style={{
           fontSize: hp('2.5%'),
@@ -269,55 +374,64 @@ const EditProfile = () => {
         />
       </View>
       <Text style={styles.text}>Education</Text>
-      <View style={styles.box}>
+      <View>
         <RNPickerSelect
           // placeholder="Select Education"
-          placeholder={{value: '', label: 'Select Education'}}
-          onValueChange={value => setEducation(value)}
-          items={[
-            {
-              label: 'Masters / Post Graduation',
-              value: 'Masters / Post Graduation',
-            },
-            {
-              label: 'Degree / Under Graduation',
-              value: 'Degree / Under Graduation',
-            },
-            {label: 'Intermediate/10+2', value: 'Intermediate/10+2'},
-            {label: 'SSC/CBSC/ICSC', value: 'SSC/CBSC/ICSC'},
-          ]}
+          placeholder={{
+            value: '',
+            label: userData.StudentEducation[0].course
+              ? userData.StudentEducation[0].course
+              : 'Select Education',
+          }}
+          onValueChange={value => {
+            const selectedItem = items.find(
+              (item: any) => item.value === value,
+            );
+            if (selectedItem) {
+              setScoreTypeId(value);
+              // setEducationLabel(selectedItem.label);
+            }
+          }}
+          useNativeAndroidPickerStyle={false}
+          items={items}
           style={{
             inputIOS: {
-              fontSize: 16,
+              fontSize: hp('1.8%'),
               color: 'gray', // Customize the text color here
               paddingVertical: 10,
               paddingHorizontal: 12,
               borderWidth: 1,
-              borderColor: 'gray',
+              // borderColor: resources.colors.ash,
+              borderColor: resources.colors.ash,
               borderRadius: 5,
             },
             inputAndroid: {
-              fontSize: 16,
-              color: 'gray', // Customize the text color for Android here
+              fontSize: hp('1.8%'),
+              color: resources.colors.ash,
               paddingVertical: 10,
               paddingHorizontal: 12,
-              borderWidth: 1,
-              borderColor: 'gray',
+              height: hp('6%'),
+              width: wp('90%'),
               borderRadius: 5,
+              borderWidth: 1,
+              borderColor: resources.colors.ash,
+              marginTop: hp('1%'),
+              justifyContent: 'center',
+              // marginStart: hp('2%'),
             },
             placeholder: {
-              color: 'gray', // Customize the placeholder color here
+              color: resources.colors.ash,
             },
           }}
           Icon={() => {
             return (
               <Ionicons
-                size={25}
+                size={20}
                 color={resources.colors.ash}
                 name="chevron-down"
                 style={{
-                  paddingRight: hp('2%'),
-                  marginTop: hp('2%'),
+                  paddingRight: hp('4%'),
+                  marginTop: hp('3%'),
                 }}
               />
             );
@@ -326,12 +440,14 @@ const EditProfile = () => {
       </View>
       <Text style={styles.text}>Date of Birth</Text>
       <TouchableOpacity style={styles.box} onPress={() => setOpen(true)}>
-        <Text style={styles.inputText}>{dayjs(dob).format('DD/MM/YYYY')}</Text>
+        <Text style={styles.inputText}>
+          {dob ? dayjs(dob).format('DD/MM/YYYY') : 'Enter Date of birth'}
+        </Text>
       </TouchableOpacity>
       <DatePicker
         modal
         open={open}
-        date={dob}
+        date={new Date()}
         mode="date"
         onConfirm={date => {
           setOpen(false);
@@ -342,7 +458,7 @@ const EditProfile = () => {
         }}
       />
 
-      <TouchableOpacity style={styles.saveButton}>
+      <TouchableOpacity style={styles.saveButton} onPress={() => _save()}>
         <Text style={styles.saveText}>Save Change</Text>
       </TouchableOpacity>
       <Modal

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-native/no-inline-styles */
 import {
   View,
@@ -7,67 +8,241 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
+  listenOrientationChange as lor,
 } from '../../services/ResponsiveUIHelpers';
-import {useNavigation} from '@react-navigation/native';
-import {useAppDispatch} from '../../hooks/redux_hooks';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useAppDispatch, useAppSelector} from '../../hooks/redux_hooks';
 import {stackProps} from '../../navigation/types';
 import resources from '../../resources';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import moment from 'moment';
+import SubHeaderComponent from '../../components/SubHeaderComponent';
 const CourseDetails = () => {
   const navigation = useNavigation<stackProps>();
   const dispatch = useAppDispatch();
+  const {selectedCourse, fromScreen} = useAppSelector(state => state.app);
+  const [orientation, setOrientation] = useState('');
   const [infoActive, setInfoActive] = useState<boolean>(true);
   const [salaryScaleActive, setSalaryScaleActive] = useState<boolean>(false);
+  const {userData} = useAppSelector(state => state.auth);
+  const [expanded, setExpanded] = useState(false);
+  const maxLines = 4; // Limit initial lines
+  const goback = () => {
+    navigation.goBack();
+  };
+  useFocusEffect(
+    useCallback(() => {
+      lor(setOrientation);
+    }, []),
+  );
+  console.log('selectedCourse', selectedCourse);
+
+  const styles = StyleSheet.create({
+    main: {
+      flex: 1,
+      backgroundColor: resources.colors.white,
+      // marginStart: hp('1%'),
+    },
+    header: {
+      height: hp('8%'),
+      width: wp('100%'),
+      marginStart: hp('2%'),
+      alignContent: 'center',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    headerText: {
+      textAlign: 'center',
+      fontSize: hp('2%'),
+      color: resources.colors.black,
+      fontWeight: '700',
+      fontFamily: resources.fonts.regular,
+    },
+    text: {
+      fontSize: hp('1.8%'),
+      color: resources.colors.primary,
+      fontFamily: resources.fonts.AsemiBold,
+      fontWeight: '500',
+      width: wp('48%'),
+    },
+    groupImage: {height: hp('3%'), width: wp('8%'), marginStart: hp('2.5%')},
+    starText: {
+      fontSize: hp('1.8%'),
+      color: resources.colors.black,
+      fontFamily: resources.fonts.AsemiBold,
+      fontWeight: '500',
+      marginStart: hp('1%'),
+    },
+
+    contentHead: {
+      marginStart: hp('3%'),
+      marginTop: hp('3%'),
+      fontSize: hp('2.2%'),
+      fontFamily: resources.fonts.AsemiBold,
+      fontWeight: '600',
+    },
+    contentText: {
+      marginStart: hp('3%'),
+      marginTop: hp('2%'),
+      fontSize: hp('1.8%'),
+      fontFamily: resources.fonts.black,
+      fontWeight: '400',
+      width: wp('92%'),
+      lineHeight: 20,
+      paddingRight: hp('1.8%'),
+    },
+    button: {
+      height: hp('10%'),
+      width: wp('90%'),
+      backgroundColor: '#F9F9F9',
+      borderRadius: 5,
+      marginTop: hp('3%'),
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignContent: 'center',
+      alignSelf: 'center',
+    },
+    salaryButton: {
+      height: hp('6%'),
+      width: wp('42%'),
+      borderRadius: 12,
+      justifyContent: 'center',
+    },
+    salaryText: {
+      textAlign: 'center',
+      fontSize: hp('2%'),
+      fontWeight: '600',
+      fontFamily: resources.fonts.AsemiBold,
+    },
+    mainText: {
+      marginTop: hp('2%'),
+      marginStart: hp('3%'),
+      fontSize: hp('1.8%'),
+      fontWeight: '700',
+      fontFamily: resources.fonts.Amedium,
+      color: resources.colors.black,
+      width: wp('95%'),
+    },
+    subText: {
+      fontSize: hp('1.8%'),
+      fontWeight: '400',
+      color: resources.colors.black,
+      // fontFamily: resources.fonts.Aregular,
+      fontFamily: resources.fonts.Amedium,
+    },
+    subText1: {
+      fontSize: hp('1.8%'),
+      fontWeight: '100',
+      color: resources.colors.black,
+      fontFamily: resources.fonts.regular,
+      marginStart: hp('3%'),
+      marginTop: hp('1%'),
+    },
+    collegeImage: {
+      height: hp('25%'),
+      width: wp('95%'),
+      borderRadius: 12,
+      marginTop: hp('2%'),
+      marginStart: hp('1%'),
+    },
+    applyButton: {
+      height: hp('6%'),
+      width: wp('55%'),
+      backgroundColor: resources.colors.primary,
+      marginTop: hp('4%'),
+      borderRadius: 5,
+      justifyContent: 'center',
+      alignSelf: 'center',
+    },
+    applyText: {
+      color: resources.colors.white,
+      fontSize: hp('2'),
+      fontWeight: '600',
+      textAlign: 'center',
+      fontFamily: resources.fonts.AsemiBold,
+      lineHeight: 20,
+    },
+  });
   return (
     <View style={styles.main}>
-      <TouchableOpacity style={styles.header}>
-        <AntDesign
-          name={'left'}
-          size={20}
-          color={resources.colors.black}
-          onPress={() => navigation.goBack()}
-          style={{width: wp('30%')}}
-        />
-        <Text style={styles.headerText}>Course Details</Text>
-      </TouchableOpacity>
+      <SubHeaderComponent
+        countryImage={''}
+        name={'Course Details'}
+        cap={resources.images.cap}
+        goBack={() => goback()}
+      />
       <ScrollView>
         <Image
-          source={resources.images.AICourseRect}
-          style={{height: hp('25%'), width: wp('95%'), borderRadius: 12}}
+          source={{uri: selectedCourse?.mainImage}}
+          style={styles.collegeImage}
+          resizeMode="stretch"
           // resizeMode="contain"
         />
         <View
           style={{
             flexDirection: 'row',
-            marginTop: hp('1%'),
+            marginTop: hp('2%'),
             alignItems: 'center',
           }}>
           <Image
             source={resources.images.GroupMembers}
-            style={{height: hp('4%'), width: wp('10%')}}
+            style={styles.groupImage}
             resizeMode="contain"
           />
-          <Text style={styles.text}>5.8k Students Applied</Text>
+          <Text style={styles.text}>
+            {selectedCourse?.appliedCount} Students Applied
+          </Text>
           <Image
             source={resources.images.Star}
-            style={{height: hp('4%'), width: wp('5%')}}
+            style={{height: hp('3%'), width: wp('4%')}}
             // resizeMode="contain"
           />
-          <Text style={styles.starText}>{'4.9  (509 Reviews)'}</Text>
+          <Text style={styles.starText}>
+            {selectedCourse?.rating.toFixed(1)}
+            {'  '}({selectedCourse?.reviewCount} Reviews)
+          </Text>
         </View>
-        <Text style={styles.contentHead}>
-          Web Development – Front-End Design (Postgraduate) (G418)
+        <Text style={styles.contentHead} numberOfLines={1}>
+          {selectedCourse?.specialization}
         </Text>
-        <Text style={styles.contentText}>
-          You’ll take an innovative and interdisciplinary approach to exploring
-          solutions to engineering problems at the cutting edge of technology
-          and design, preparing you to pursue or advance your career in
-          acadamy...
+        <Text style={[styles.contentHead, {marginTop: hp('0%')}]}>
+          {selectedCourse?.educationLevel?.name
+            ? '(' + selectedCourse?.educationLevel?.name + ')'
+            : ''}{' '}
+          {selectedCourse?.code ? '(' + selectedCourse?.code + ')' : ''}
         </Text>
+        <Text
+          style={styles.contentText}
+          numberOfLines={expanded ? undefined : maxLines}>
+          {selectedCourse?.description}
+        </Text>
+
+        <TouchableOpacity
+          onPress={() => setExpanded(!expanded)}
+          style={{
+            marginTop: 5,
+            alignContent: 'flex-end',
+            alignItems: 'flex-end',
+            marginRight: hp('4%'),
+          }}>
+          <Text
+            style={{
+              color: resources.colors.primary,
+              justifyContent: 'flex-end',
+              fontWeight: '400',
+              fontSize: hp('1.8%'),
+              fontFamily: resources.fonts.regular,
+              textAlign: 'justify',
+              letterSpacing: 0.4,
+            }}>
+            {expanded ? 'less...' : 'more...'}
+          </Text>
+        </TouchableOpacity>
         <View style={styles.button}>
           <TouchableOpacity
             onPress={() => {
@@ -123,119 +298,139 @@ const CourseDetails = () => {
 
         <Text
           style={{
-            marginTop: hp('2%'),
-            marginStart: hp('2%'),
-            fontSize: hp('2%'),
-            fontWeight: '500',
-            fontFamily: resources.fonts.medium,
+            marginTop: hp('4%'),
+            marginStart: hp('3%'),
+            fontSize: hp('2.2%'),
+            fontWeight: '700',
+            fontFamily: resources.fonts.Amedium,
             color: resources.colors.black,
           }}>
           Program Overview
         </Text>
         <Text style={styles.mainText}>
           Department/School:
-          <Text style={styles.subText}> Systems Design Engineering</Text>
+          <Text style={styles.subText}> {selectedCourse?.department}</Text>
         </Text>
         <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
-          Faculty:
-          <Text style={styles.subText}>Faculty of Engineering</Text>
+          Faculty: <Text style={styles.subText}>{selectedCourse?.faculty}</Text>
         </Text>
 
         <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
           Admit term(s):
-          <Text style={styles.subText}>
-            Fall (September - December), Winter (January - April), Spring (May -
-            August)
-          </Text>
+          <Text style={styles.subText}>{selectedCourse?.admitTerms}</Text>
         </Text>
 
         <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
           Delivery mode:
-          <Text style={styles.subText}> On-campus</Text>
+          <Text style={styles.subText}> {selectedCourse?.studyMode}</Text>
         </Text>
 
         <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
-          Program type:
-          <Text style={styles.subText}> Master's, Research</Text>
+          Program type:{' '}
+          <Text style={styles.subText}>
+            {selectedCourse?.educationLevel?.name}
+          </Text>
         </Text>
 
         <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
           Length of program:
-          <Text style={styles.subText}> 24 months (full-time)</Text>
+          <Text style={styles.subText}> {selectedCourse?.duration} </Text>
         </Text>
 
         <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
           Registration option(s):
-          <Text style={styles.subText}> Full-time, Part-time</Text>
+          <Text style={styles.subText}> {selectedCourse?.enrollmentType}</Text>
         </Text>
         <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
           Study option(s):
-          <Text style={styles.subText}> Thesis</Text>
+          <Text style={styles.subText}> {selectedCourse?.studyOptions}</Text>
         </Text>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <Text
             style={{
               marginTop: hp('2%'),
-              marginStart: hp('2%'),
-              fontSize: hp('2%'),
-              fontWeight: '500',
-              fontFamily: resources.fonts.medium,
+              marginStart: hp('3%'),
+              fontSize: hp('2.2%'),
+              fontWeight: '700',
+              fontFamily: resources.fonts.Amedium,
               color: resources.colors.black,
             }}>
-            Program Overview
+            Application Fee
           </Text>
           <Text
             style={{
               marginTop: hp('2%'),
               marginStart: hp('2%'),
               fontSize: hp('2%'),
-              fontWeight: '500',
-              fontFamily: resources.fonts.medium,
+              fontWeight: '700',
+              fontFamily: resources.fonts.Amedium,
               color: resources.colors.red,
               marginRight: hp('3%'),
             }}>
-            {'$120'}
+            {selectedCourse?.applicationFees
+              ? '$' + selectedCourse?.applicationFees
+              : 'Free'}
+            {/* {'$120'} */}
           </Text>
         </View>
-        <Text
-          style={{
-            marginTop: hp('2%'),
-            marginStart: hp('2%'),
-            fontSize: hp('2%'),
-            fontWeight: '500',
-            fontFamily: resources.fonts.medium,
-            color: resources.colors.black,
-          }}>
-          Application deadline
-        </Text>
-        <Text style={styles.subText1}>March 1(for admission in September)</Text>
-        <Text style={styles.subText1}>
-          June 1(for admission in January of the following year)
-        </Text>
-        <Text style={styles.subText1}>
-          October 1(for admission in May of the following year)
-        </Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('CheckOut')}
-          style={{
-            height: hp('6%'),
-            width: wp('60%'),
-            backgroundColor: resources.colors.primary,
-            marginTop: hp('4%'),
-            borderRadius: 12,
-            justifyContent: 'center',
-            alignSelf: 'center',
-          }}>
+
+        {/* {selectedCourse?.programOverView?.map((item: any, index: number) => (
+          <Text
+            key={index}
+            style={{
+              marginTop: hp('1%'),
+              marginStart: hp('2%'),
+              fontSize: hp('1.8%'),
+              fontWeight: '400',
+              fontFamily: resources.fonts.Amedium,
+              color: resources.colors.black,
+              marginRight: hp('3%'),
+            }}>
+            {item.key}: {item.value}
+            {'\n'}
+          </Text>
+        ))} */}
+        {selectedCourse?.intakes ? (
           <Text
             style={{
-              color: resources.colors.white,
-              fontSize: hp('2'),
-              fontWeight: '500',
-              textAlign: 'center',
+              marginTop: hp('2%'),
+              marginStart: hp('3%'),
+              fontSize: hp('2%'),
+              fontWeight: '700',
+              fontFamily: resources.fonts.Amedium,
+              color: resources.colors.black,
             }}>
-            Apply Now
+            Application deadline
           </Text>
-        </TouchableOpacity>
+        ) : null}
+
+        <Text style={styles.subText1}>
+          {selectedCourse?.intakes?.map((item: any, index: number) => (
+            <Text
+              key={index}
+              style={{
+                marginTop: hp('1%'),
+                marginStart: hp('3%'),
+                fontSize: hp('1.8%'),
+                fontWeight: '400',
+                fontFamily: resources.fonts.Amedium,
+                color: resources.colors.black,
+              }}>
+              {moment(item?.applicationEndDate).format('MMMM D')}({item?.name})
+              {'\n'}
+            </Text>
+          ))}
+
+          {/* March 1(for admission in September) */}
+        </Text>
+        {fromScreen === 'Applied' ? null : (
+          <TouchableOpacity
+            onPress={() => navigation.navigate('CheckOut')}
+            style={styles.applyButton}>
+            <Text style={styles.applyText}>Apply Now</Text>
+          </TouchableOpacity>
+        )}
+
         <View style={{height: hp('3%')}} />
       </ScrollView>
     </View>
@@ -243,99 +438,3 @@ const CourseDetails = () => {
 };
 
 export default CourseDetails;
-
-const styles = StyleSheet.create({
-  main: {
-    flex: 1,
-    marginStart: hp('1%'),
-  },
-  header: {
-    height: hp('8%'),
-    width: wp('100%'),
-    marginStart: hp('1%'),
-    alignContent: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  headerText: {
-    textAlign: 'center',
-    fontSize: hp('2%'),
-    color: resources.colors.black,
-    fontWeight: '700',
-    fontFamily: resources.fonts.regular,
-  },
-  text: {
-    fontSize: hp('1.8%'),
-    color: resources.colors.primary,
-    fontFamily: resources.fonts.medium,
-    fontWeight: '500',
-    width: wp('45%'),
-  },
-  starText: {
-    fontSize: hp('1.8%'),
-    color: resources.colors.black,
-    fontFamily: resources.fonts.medium,
-    fontWeight: '500',
-  },
-  contentHead: {
-    marginStart: hp('1%'),
-    marginTop: hp('2%'),
-    fontSize: hp('2.3%'),
-    fontFamily: resources.fonts.medium,
-    fontWeight: '600',
-  },
-  contentText: {
-    marginStart: hp('1%'),
-    marginTop: hp('2%'),
-    fontSize: hp('1.8%'),
-    fontFamily: resources.fonts.regular,
-    fontWeight: '400',
-    width: wp('92%'),
-  },
-  button: {
-    height: hp('6%'),
-    width: wp('88%'),
-    backgroundColor: resources.colors.white,
-    borderRadius: 12,
-    marginTop: hp('3%'),
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
-    alignSelf: 'center',
-  },
-  salaryButton: {
-    height: hp('6%'),
-    width: wp('44%'),
-    borderRadius: 12,
-    justifyContent: 'center',
-  },
-  salaryText: {
-    textAlign: 'center',
-    fontSize: hp('2%'),
-    fontWeight: '600',
-    fontFamily: resources.fonts.medium,
-  },
-  mainText: {
-    marginTop: hp('2%'),
-    marginStart: hp('2%'),
-    fontSize: hp('1.8%'),
-    fontWeight: '500',
-    fontFamily: resources.fonts.medium,
-    color: resources.colors.black,
-    width: wp('95%'),
-  },
-  subText: {
-    fontSize: hp('1.8%'),
-    fontWeight: '100',
-    color: resources.colors.black,
-    fontFamily: resources.fonts.regular,
-  },
-  subText1: {
-    fontSize: hp('1.8%'),
-    fontWeight: '100',
-    color: resources.colors.black,
-    fontFamily: resources.fonts.regular,
-    marginStart: hp('2%'),
-  },
-});

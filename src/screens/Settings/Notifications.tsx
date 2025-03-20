@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react-native/no-inline-styles */
 import {
   View,
   Text,
@@ -29,16 +28,17 @@ const Notifications = () => {
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   return (
     <View style={styles.main}>
-      <TouchableOpacity style={styles.header}>
-        <AntDesign
-          name={'left'}
-          size={20}
-          color={resources.colors.black}
-          onPress={() => navigation.goBack()}
-          style={{width: wp('30%')}}
-        />
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <AntDesign
+            name={'left'}
+            size={20}
+            color={resources.colors.black}
+            style={{width: wp('30%')}}
+          />
+        </TouchableOpacity>
         <Text style={styles.headerText}>Notification</Text>
-      </TouchableOpacity>
+      </View>
 
       <View style={styles.box}>
         <Ionicons

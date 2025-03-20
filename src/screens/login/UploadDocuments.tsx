@@ -63,8 +63,8 @@ const UploadDocuments = () => {
     },
     headerText: {
       color: resources.colors.white,
-      fontWeight: '600',
-      fontFamily: resources.fonts.medium,
+      fontWeight: '900',
+      fontFamily: resources.fonts.Abold,
       fontSize: hp('3%'),
     },
     box: {

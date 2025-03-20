@@ -16,18 +16,27 @@ import resources from '../../resources';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
+  listenOrientationChange as lor,
 } from '../../services/ResponsiveUIHelpers';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {
   institutionListFetchRequest,
-  institutionListFetchSuccess,
+  setFromScreen,
+  setSelectedCollege,
+  setSelectedCourse,
   universityListFetchRequest,
 } from '../../redux/slices/appSlice';
 import {useAppDispatch, useAppSelector} from '../../hooks/redux_hooks';
 import LoaderComponent from '../../components/LoaderComponent';
+import HeaderComponent from '../../components/HeaderComponent';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {stackProps} from '../../navigation/types';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const Colleges = () => {
+  const navigation = useNavigation<stackProps>();
   const dispatch = useAppDispatch();
+  const [orientation, setOrientation] = useState('');
   const [search, setSearch] = useState<string>('');
   const [collegeActive, setCollegeActive] = useState<boolean>(true);
   const [universityActive, setUniversityActive] = useState<boolean>(false);
@@ -38,11 +47,13 @@ const Colleges = () => {
 
   const [colleges, setColleges] = useState<any>(institutionList);
   const [university, setUniversity] = useState<any>(universityList);
+  const {userData} = useAppSelector(state => state.auth);
 
   useEffect(() => {
     var data = {
       count,
       page,
+      countryId: userData?.Country?.id,
     };
     dispatch(institutionListFetchRequest(data));
     dispatch(universityListFetchRequest(data));
@@ -52,7 +63,11 @@ const Colleges = () => {
     setColleges(institutionList);
     setUniversity(universityList);
   }, [institutionList, universityList]);
-
+  useFocusEffect(
+    useCallback(() => {
+      lor(setOrientation);
+    }, []),
+  );
   const searchCollege = (searchQuery: any) => {
     if (searchQuery.length > 2) {
       const filteredColleges = colleges.filter((college: any) =>
@@ -71,78 +86,136 @@ const Colleges = () => {
     const data = {
       page: page + 1,
       count: count + 10,
+      countryId: userData?.Country?.id,
     };
     dispatch(institutionListFetchRequest(data));
     dispatch(universityListFetchRequest(data));
   }, [dispatch, count]);
+
+  const _details = (item: any) => {
+    dispatch(setSelectedCollege(item));
+    dispatch(setFromScreen('Courses'));
+    navigation.navigate('CollegeDetails');
+  };
+  const countryChange = () => {
+    navigation.navigate('CountryChange');
+  };
   const _renderColleges = ({item}: any) => {
     return (
-      <View style={styles.box}>
+      <TouchableOpacity style={styles.box} onPress={() => _details(item)}>
         <Image
           source={{uri: item.mainImage}}
           style={styles.collegeImage}
           resizeMode="cover"
         />
-        <Text style={styles.collegeName}>{item.name}</Text>
-        <View style={{flexDirection: 'row'}}>
+        <Text style={styles.collegeName} numberOfLines={1}>
+          {item.name}
+        </Text>
+        <View style={{flexDirection: 'row', marginTop: hp('0.5%')}}>
           <EvilIcons
             name="location"
             color={resources.colors.red}
             size={20}
-            style={{marginStart: hp('1%'), marginTop: hp('0.5%')}}
+            style={{marginStart: hp('1.4%'), marginTop: hp('0.5%')}}
           />
-          <Text numberOfLines={2} style={styles.locationName}>
-            {item.address}
+          <Text
+            numberOfLines={1}
+            style={[styles.locationName, {width: wp('25%')}]}>
+            {item?.locations[0].city}
           </Text>
-          <Image
-            source={resources.images.Star}
-            style={styles.starImage}
-            // resizeMode="contain"
-          />
-          <Text style={styles.locationName}>{item.rating}</Text>
+          <View style={{flexDirection: 'row', marginStart: hp('0.4%')}}>
+            <Image
+              source={resources.images.Star}
+              style={styles.starImage}
+              resizeMode="contain"
+            />
+            <Text
+              style={[
+                styles.locationName,
+                {color: resources.colors.black, fontWeight: '600'},
+              ]}>
+              {item.rating}
+            </Text>
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
   const _renderUniversity = ({item}: any) => {
     return (
-      <View style={styles.box}>
+      <TouchableOpacity style={styles.box} onPress={() => _details(item)}>
         <Image
           source={{uri: item.mainImage}}
           style={styles.collegeImage}
-          resizeMode="cover"
+          // resizeMode="cover"
         />
 
-        <Text style={styles.collegeName}>{item.name}</Text>
+        <Text style={styles.collegeName} numberOfLines={1}>
+          {item.name}
+        </Text>
 
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flexDirection: 'row', marginTop: hp('0.5%')}}>
           <EvilIcons
             name="location"
             color={resources.colors.red}
             size={20}
-            style={{marginStart: hp('1%'), marginTop: hp('0.5%')}}
+            style={{marginStart: hp('1.4%'), marginTop: hp('0.5%')}}
           />
-          <Text style={styles.locationName}>{item.address}</Text>
-          <Image
-            source={resources.images.Star}
-            style={styles.starImage}
-            // resizeMode="contain"
-          />
-          <Text style={styles.locationName}>{item.rating}</Text>
+          <Text
+            numberOfLines={1}
+            style={[styles.locationName, {width: wp('25%')}]}>
+            {item?.locations[0].city}
+          </Text>
+          <View style={{flexDirection: 'row', marginStart: hp('0.4%')}}>
+            <Image
+              source={resources.images.Star}
+              style={styles.starImage}
+              resizeMode="contain"
+            />
+            <Text
+              style={[
+                styles.locationName,
+                {color: resources.colors.black, fontWeight: '600'},
+              ]}>
+              {item.rating}
+            </Text>
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
   const _ItemSeparator = () => {
     return <View style={styles.separate} />;
   };
+
+  const ListEmptyComponent = () => {
+    return (
+      <View
+        style={{
+          alignItems: 'center',
+          marginTop: hp('30%'),
+        }}>
+        <Text
+          style={{
+            textAlign: 'center',
+            color: resources.colors.ash,
+            fontSize: hp('2.2%'),
+            fontFamily: resources.fonts.Aregular,
+            fontWeight: '500',
+          }}>
+          No Data found
+        </Text>
+      </View>
+    );
+  };
   const styles = StyleSheet.create({
     main: {
       flex: 1,
-      marginStart: hp('2%'),
+      // marginStart: hp('2%'),
+      // backgroundColor: resources.colors.white,
     },
-    header: {height: hp('8%'), width: wp('100')},
+    header: {height: hp('8%'), width: wp('100'), marginStart: hp('2%')},
     topText: {
       fontSize: hp('3%'),
       color: resources.colors.black,
@@ -159,6 +232,7 @@ const Colleges = () => {
       flexDirection: 'row',
       alignItems: 'center',
       marginTop: hp('1%'),
+      marginStart: hp('2%'),
     },
     filter: {
       height: hp('6%'),
@@ -172,20 +246,29 @@ const Colleges = () => {
       justifyContent: 'center',
       marginStart: hp('1%'),
     },
+    collegeImage: {
+      height: hp('18%'),
+      width: wp('38%'),
+      borderRadius: 10,
+      marginTop: hp('1.2%'),
+      alignSelf: 'center',
+    },
     box: {
-      height: hp('30%'),
-      width: wp('43%'),
+      height: hp('28%'),
+      width: wp('44%'),
       backgroundColor: resources.colors.white,
-      margin: 10,
+      // marginStart: 10,
+      marginStart: hp('2%'),
       borderRadius: 10,
     },
     button: {
       height: hp('6%'),
       width: wp('92%'),
-      backgroundColor: resources.colors.ash,
+      backgroundColor: resources.colors.light_ash,
       borderRadius: 12,
       marginTop: hp('3%'),
       flexDirection: 'row',
+      marginStart: hp('2%'),
     },
     collegeButton: {
       height: hp('6%'),
@@ -196,37 +279,33 @@ const Colleges = () => {
     collegeText: {
       textAlign: 'center',
       fontSize: hp('2%'),
-      fontWeight: '600',
-      fontFamily: resources.fonts.medium,
+      fontWeight: '700',
+      fontFamily: resources.fonts.Amedium,
     },
     // list: {marginRight: 10, marginTop: 10},
     separate: {margin: 10},
-    collegeImage: {
-      height: hp('20%'),
-      width: wp('40%'),
-      borderRadius: 10,
 
-      alignSelf: 'center',
-    },
     starImage: {
-      height: hp('3%'),
-      width: wp('4%'),
+      height: hp('2.4%'),
+      width: wp('5%'),
+      marginTop: hp('0.3%'),
     },
     collegeName: {
       color: resources.colors.black,
-      fontWeight: '600',
-      fontSize: hp('2%'),
-      fontFamily: resources.fonts.medium,
-      marginStart: hp('1%'),
-      marginTop: hp('1%'),
-      width: wp('40%'),
+      fontWeight: '500',
+      fontSize: hp('1.9%'),
+      fontFamily: resources.fonts.Abold,
+      marginStart: hp('2%'),
+      marginTop: hp('1.5%'),
+      width: wp('35%'),
     },
     locationName: {
       color: resources.colors.ash,
-      fontWeight: '600',
-      fontSize: hp('1.8%'),
-      fontFamily: resources.fonts.regular,
+      fontWeight: '400',
+      fontSize: hp('1.9%'),
+      fontFamily: resources.fonts.Abold,
       width: wp('25%'),
+      marginTop: hp('0.3%'),
     },
     list: {marginRight: 10, marginTop: 10, marginBottom: hp('25%')},
     loader: {
@@ -235,16 +314,31 @@ const Colleges = () => {
       alignItems: 'center',
     },
   });
+
   return (
     <View style={styles.main}>
-      <View style={styles.header} />
+      <View style={styles.header}>
+        <HeaderComponent
+          // backgroundColor={theme.primary}
+          countryImage={userData?.Country?.flagImage}
+          name={'Colleges'}
+          cap={resources.images.cap}
+          countryChange={() => countryChange()}
+        />
+      </View>
       <View style={{flexDirection: 'row'}}>
         <View style={styles.searchBox}>
-          <Image
+          <AntDesign
+            name={'search1'}
+            size={20}
+            color={resources.colors.ash}
+            style={{marginLeft: hp('1%')}}
+          />
+          {/* <Image
             source={resources.images.Search}
             style={{height: hp('4%'), width: wp('6%'), marginLeft: hp('1%')}}
             resizeMode="contain"
-          />
+          /> */}
           <TextInput
             style={{color: resources.colors.ash, fontSize: hp('2%')}}
             value={search}
@@ -274,7 +368,7 @@ const Colleges = () => {
             {
               backgroundColor: collegeActive
                 ? resources.colors.primary
-                : resources.colors.ash,
+                : resources.colors.light_ash,
             },
           ]}>
           <Text
@@ -283,7 +377,7 @@ const Colleges = () => {
               {
                 color: collegeActive
                   ? resources.colors.white
-                  : resources.colors.black,
+                  : resources.colors.light_ash1,
               },
             ]}>
             Colleges
@@ -299,7 +393,7 @@ const Colleges = () => {
             {
               backgroundColor: universityActive
                 ? resources.colors.primary
-                : resources.colors.ash,
+                : resources.colors.light_ash,
             },
           ]}>
           <Text
@@ -308,7 +402,7 @@ const Colleges = () => {
               {
                 color: universityActive
                   ? resources.colors.white
-                  : resources.colors.black,
+                  : resources.colors.light_ash1,
               },
             ]}>
             University
@@ -327,6 +421,7 @@ const Colleges = () => {
             numColumns={2}
             renderItem={_renderColleges}
             ItemSeparatorComponent={_ItemSeparator}
+            ListEmptyComponent={ListEmptyComponent}
             // onEndReached={onEndReached}
             onEndReachedThreshold={0.5}
           />
@@ -338,6 +433,7 @@ const Colleges = () => {
             numColumns={2}
             renderItem={_renderUniversity}
             ItemSeparatorComponent={_ItemSeparator}
+            ListEmptyComponent={ListEmptyComponent}
             onEndReached={onEndReached}
             onEndReachedThreshold={0.5}
           />

@@ -27,6 +27,7 @@ const getNewRefreshToken = async () => {
     const refreshToken = await getDataFromAsync(
       resources.AsyncConstants.refreshToken,
     );
+    const deviceId = await getDataFromAsync(resources.AsyncConstants.deviceId);
 
     if (!refreshToken) {
       throw new Error('No refresh token found'); // Handle missing refresh token
@@ -36,6 +37,7 @@ const getNewRefreshToken = async () => {
       ApiEndPoints.refreshtoken,
       {
         refreshToken: refreshToken,
+        deviceId: deviceId,
       },
     );
 

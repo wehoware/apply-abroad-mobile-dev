@@ -15,6 +15,7 @@ const initialState: AuthSliceState = {
     role: '',
     profilePic: '',
     loginMethod: '',
+    profilePhoto: '',
     status: '',
     intrestedCountry: 0,
     interestedFields: [],
@@ -23,6 +24,20 @@ const initialState: AuthSliceState = {
     accessToken: '',
     refreshToken: '',
     StudentEducation: [],
+    interestedCountryId: '',
+    phoneNumber: '',
+    dob: '',
+    Country: {
+      id: 0,
+      name: '',
+      flagImage: '',
+      code: '',
+      isDeleted: false,
+      isActive: false,
+      createdAt: '',
+      updatedAt: '',
+    },
+    interestedFieldsIds: [],
   },
   isLogged: false,
   redirect: null,
@@ -33,6 +48,7 @@ const initialState: AuthSliceState = {
     show: false,
     url: '',
   },
+  selectedEducation: {},
 };
 
 const authSlice = createSlice({
@@ -72,6 +88,10 @@ const authSlice = createSlice({
         deviceId: string;
       }>,
     ) => {},
+
+    setSelectedEducationData: (state, action: PayloadAction<any>) => {
+      state.selectedEducation = action.payload;
+    },
     logoutUserFetch: (
       state: AuthSliceState,
       action: PayloadAction<{
@@ -135,6 +155,52 @@ const authSlice = createSlice({
       state: AuthSliceState,
       action: PayloadAction<{id: string}>,
     ) => {},
+    updateProfileFetch: (
+      state: AuthSliceState,
+      action: PayloadAction<{
+        fullName: string;
+        dob: string;
+        countryCode: string;
+        phoneNumber: string;
+        profilePhoto: string;
+        interestedCountryId: any;
+        interestedFieldsIds: any;
+        isActive: boolean;
+        id: any;
+      }>,
+    ) => {},
+    updateCountryFetch: (
+      state: AuthSliceState,
+      action: PayloadAction<{
+        fullName: string;
+        dob: string;
+        countryCode: string;
+        phoneNumber: string;
+        profilePhoto: string;
+        interestedCountryId: any;
+        interestedFieldsIds: any;
+        isActive: boolean;
+        id: any;
+      }>,
+    ) => {},
+
+    updateEducationFetch: (
+      state: AuthSliceState,
+      action: PayloadAction<{
+        id?: number;
+        institutionName: string;
+        eduLevelId: number;
+        course: string;
+        stream: string;
+        score: any;
+        scoreTypeId: any;
+        maxScore: any;
+        startDate: string;
+        endDate: string;
+        isCurrent: boolean;
+        certPhoto: string;
+      }>,
+    ) => {},
     customerProfileUpdateRequest: (
       state: AuthSliceState,
       action: PayloadAction<CustomerProfileUpdateRequestPayload>,
@@ -167,6 +233,10 @@ export const {
   userPasswordOTPFetch,
   userOTPValidateFetch,
   userPasswordOTPValidateFetch,
+  updateProfileFetch,
+  updateCountryFetch,
+  updateEducationFetch,
+  setSelectedEducationData,
 } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -62,12 +62,12 @@ const WelcomScreen = () => {
     },
     skipText: {
       color: resources.colors.olive_green,
-      fontSize: hp('2.5%'),
+      fontSize: hp('2.3%'),
       fontFamily: resources.fonts.medium,
       fontWeight: '600',
       textAlign: 'center',
     },
-    skipIcon: {marginTop: 10, marginStart: 5},
+    skipIcon: {marginTop: 8, marginStart: 5},
     button: {
       marginStart: 20,
       height: hp('6%'),
@@ -115,7 +115,7 @@ const WelcomScreen = () => {
   });
   return (
     <View style={styles.main}>
-      {count === 0 ? (
+      {count === 0 || count === 1 ? (
         <>
           <Pressable
             onPress={() => navigation.navigate('Login')}
@@ -124,7 +124,7 @@ const WelcomScreen = () => {
             <AntDesign
               name={'right'}
               color={resources.colors.olive_green}
-              size={20}
+              size={18}
               style={styles.skipIcon}
             />
           </Pressable>

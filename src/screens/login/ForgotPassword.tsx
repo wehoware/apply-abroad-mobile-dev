@@ -91,12 +91,12 @@ const ForgotPassword = () => {
     },
     headerText: {
       color: resources.colors.white,
-      fontWeight: '600',
-      fontFamily: resources.fonts.medium,
+      fontWeight: '900',
+      fontFamily: resources.fonts.Abold,
       fontSize: hp('3%'),
     },
     box: {
-      height: hp('70%'),
+      height: hp('75%'),
       width: wp('95%'),
       backgroundColor: resources.colors.light_green,
       bottom: hp('5%'),
@@ -104,31 +104,31 @@ const ForgotPassword = () => {
       borderRadius: 15,
     },
     boxText: {
-      color: '#141B13',
+      color: resources.colors.black,
       fontWeight: '400',
-      fontSize: hp('2.1%'),
+      fontSize: hp('1.8%'),
       marginTop: 20,
-      // marginStart: 20,
       padding: 20,
+      fontFamily: resources.fonts.Amedium,
     },
     inputHeaderText: {
-      fontSize: hp('1.8%'),
-      color: '#141B13',
+      fontSize: hp('1.9%'),
+      color: resources.colors.black,
       fontWeight: '500',
-      fontFamily: resources.fonts.medium,
+      fontFamily: resources.fonts.Abold,
     },
     start: {marginStart: 20},
     inputStyle: {
       height: hp('6%'),
       width: wp('85%'),
-      borderColor: '#AFAFAF',
+      borderColor: resources.colors.ash,
       borderWidth: 1,
       borderRadius: 5,
       color: resources.colors.black,
       fontSize: hp('1.8%'),
       fontWeight: '500',
       marginTop: hp('1%'),
-      fontFamily: resources.fonts.regular,
+      fontFamily: resources.fonts.Aregular,
       paddingLeft: 15,
     },
     inputStyle1: {
@@ -137,13 +137,13 @@ const ForgotPassword = () => {
       color: resources.colors.black,
       fontSize: hp('1.8%'),
       fontWeight: '500',
-      fontFamily: resources.fonts.regular,
+      fontFamily: resources.fonts.Aregular,
       paddingLeft: 15,
     },
     passwordStyle: {
       height: hp('6%'),
       width: wp('85%'),
-      borderColor: '#AFAFAF',
+      borderColor: resources.colors.ash,
       borderWidth: 1,
       borderRadius: 5,
       flexDirection: 'row',
@@ -159,9 +159,10 @@ const ForgotPassword = () => {
     signIn: {
       color: resources.colors.white,
       marginTop: 10,
-      fontWeight: '600',
+      fontWeight: '900',
       textAlign: 'center',
-      fontSize: hp('2.0%'),
+      fontSize: hp('2%'),
+      fontFamily: resources.fonts.Abold,
     },
     button: {
       marginStart: 20,
@@ -195,11 +196,12 @@ const ForgotPassword = () => {
         barStyle={'light-content'}
       />
       <View style={styles.header}>
-        <Text style={styles.headerText}>Hello Welcome!</Text>
+        <Text style={styles.headerText}>Forgot password</Text>
       </View>
       <View style={styles.box}>
         <Text style={styles.boxText}>
-          Log in or create an account to start learning with other great people
+          To keep your account secure, please enter your current password and
+          set a new one.
         </Text>
         <View style={styles.start}>
           <Text style={styles.inputHeaderText}>E-mail</Text>
@@ -222,7 +224,7 @@ const ForgotPassword = () => {
           </Text>
           <View style={styles.passwordStyle}>
             <TextInput
-              placeholder="Enter your Password"
+              placeholder="Enter your new password"
               placeholderTextColor={'#AFAFAF'}
               style={styles.inputStyle1}
               secureTextEntry={!visible ? true : false}
@@ -237,7 +239,7 @@ const ForgotPassword = () => {
             />
           </View>
           {passwordError ? (
-            <Text style={styles.errorText}>{'Please enter password'}</Text>
+            <Text style={styles.errorText}>{'Please enter new password'}</Text>
           ) : null}
         </View>
 
@@ -247,7 +249,7 @@ const ForgotPassword = () => {
           </Text>
           <View style={styles.passwordStyle}>
             <TextInput
-              placeholder="Retype your Password"
+              placeholder="Retype your new password"
               placeholderTextColor={'#AFAFAF'}
               style={styles.inputStyle1}
               secureTextEntry={!visible ? true : false}
@@ -262,9 +264,7 @@ const ForgotPassword = () => {
             />
           </View>
           {retypePasswordError ? (
-            <Text style={styles.errorText}>
-              {'Please enter retype password'}
-            </Text>
+            <Text style={styles.errorText}>{'Please retype new password'}</Text>
           ) : null}
         </View>
 

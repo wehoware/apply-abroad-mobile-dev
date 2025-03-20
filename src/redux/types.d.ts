@@ -15,6 +15,7 @@ export interface CommonSliceState {
 }
 
 export interface UserState {
+  phoneNumber: any;
   id: number;
   email: string;
   fullName: string;
@@ -23,12 +24,26 @@ export interface UserState {
   loginMethod?: string;
   status: string;
   intrestedCountry?: number;
+  interestedCountryId: any;
   interestedFields?: [];
   socialLogins?: [];
   accessToken?: string;
   refreshToken?: string;
   profilePic?: string;
-  StudentEducation?: [];
+  StudentEducation?: any;
+  profilePhoto?: string;
+  dob?: string;
+  Country?: {
+    id?: number;
+    name?: string;
+    flagImage?: string;
+    code?: string;
+    isDeleted?: boolean;
+    isActive?: boolean;
+    createdAt?: string;
+    updatedAt?: string;
+  };
+  interestedFieldsIds?: [];
 }
 
 export interface LegalInfo {
@@ -44,6 +59,7 @@ export interface AuthSliceState {
   showForgotPasswordText: boolean;
   redirectForgot: boolean;
   legalInfo: LegalInfo;
+  selectedEducation: any;
 }
 
 export interface ConfigRequestPayload {
@@ -61,6 +77,15 @@ export interface AppSliceState {
   scoreTypes: any[];
   institutionList: InstitutionList[];
   universityList: any[];
+  courseList: any[];
+  selectedCourse: any;
+  appliedCourses: any[];
+  fromScreen: string;
+  applyCourses: any[];
+  popularColleges: any[];
+  selectedCollege: any;
+  topCourses: any[];
+  categorieIds: any;
 }
 
 export interface CustomerProfileUpdateRequestPayload {

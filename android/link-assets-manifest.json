@@ -2,6 +2,30 @@
   "migIndex": 1,
   "data": [
     {
+      "path": "src/resources/fonts/local/Akatab-Black.ttf",
+      "sha1": "5832971015e5a21cfa435b894d7df2d89a314662"
+    },
+    {
+      "path": "src/resources/fonts/local/Akatab-Bold.ttf",
+      "sha1": "6b34e20cae9878aeb6a95459dd9b3a875fe642eb"
+    },
+    {
+      "path": "src/resources/fonts/local/Akatab-ExtraBold.ttf",
+      "sha1": "8aede7342b5146280c13971ddf5f1fc765284069"
+    },
+    {
+      "path": "src/resources/fonts/local/Akatab-Medium.ttf",
+      "sha1": "46e9cec3fab2108e6db26691afbdc010d2f8762f"
+    },
+    {
+      "path": "src/resources/fonts/local/Akatab-Regular.ttf",
+      "sha1": "a2249715eaf8c7e7238637f62845706a13f21980"
+    },
+    {
+      "path": "src/resources/fonts/local/Akatab-SemiBold.ttf",
+      "sha1": "ee500a719a08e63c97f58813f4b90f3656e32484"
+    },
+    {
       "path": "src/resources/fonts/local/PlusJakartaSans-Bold.ttf",
       "sha1": "1ca854f4f176fc36053a862e83ddb85c937d99f1"
     },

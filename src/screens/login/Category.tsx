@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react/no-unstable-nested-components */
 import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import CustomStatusbar from '../../components/CustomStatusbar';
@@ -19,6 +18,7 @@ import colors from '../../resources/colors/colors';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Toaster} from '../../services/Toaster';
 import {setDataToAsync} from '../../services/AsyncService';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 const Category = () => {
   const navigation = useNavigation<stackProps>();
@@ -48,15 +48,15 @@ const Category = () => {
       backgroundColor: resources.colors.primary,
       height: hp('18%'),
       width: wp('100%'),
-      justifyContent: 'center',
-      alignContent: 'center',
       alignItems: 'center',
+      flexDirection: 'row',
     },
     headerText: {
       color: resources.colors.white,
-      fontWeight: '600',
-      fontFamily: resources.fonts.medium,
+      fontWeight: '900',
+      fontFamily: resources.fonts.Abold,
       fontSize: hp('3%'),
+      marginStart: hp('2%'),
     },
     box: {
       height: hp('80%'),
@@ -67,14 +67,15 @@ const Category = () => {
       borderRadius: 15,
     },
     boxText: {
-      color: '#141B13',
-      fontWeight: '700',
-      fontSize: hp('3%'),
+      color: resources.colors.black,
+      fontWeight: '600',
+      fontSize: hp('2.4%'),
       marginTop: 20,
-      fontFamily: resources.fonts.regular,
+      fontFamily: resources.fonts.Aregular,
       // marginStart: 20,
       paddingTop: hp('3%'),
       paddingStart: hp('3%'),
+      marginBottom: 20,
     },
     start: {marginStart: 20},
 
@@ -138,7 +139,19 @@ const Category = () => {
         barStyle={'light-content'}
       />
       <View style={styles.header}>
-        <Text style={styles.headerText}>Education</Text>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Entypo
+            name={'chevron-left'}
+            size={35}
+            color={resources.colors.white}
+            style={{
+              width: wp('30%'),
+              marginTop: hp('0.6%'),
+              marginStart: hp('2%'),
+            }}
+          />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>Category</Text>
       </View>
       <View style={styles.box}>
         <Text style={styles.boxText}>
@@ -152,7 +165,7 @@ const Category = () => {
             const items = [...selectedItems, item]; // Adding new item to selectedItems
             setSelectedItems(items); // Update state
           }}
-          containerStyle={{padding: 5}}
+          containerStyle={{padding: 5, width: wp('90%'), marginStart: hp('1%')}}
           onRemoveItem={(item: any, index: any) => {
             const items = selectedItems.filter(
               (sitem: any) => sitem.id !== item.id,
@@ -203,11 +216,12 @@ const Category = () => {
             flexWrap: 'wrap',
             marginTop: 10,
             height: hp('40%'),
-            width: wp('90%'),
+            width: wp('87%'),
+            marginStart: hp('2%'),
             borderColor: resources.colors.ash,
             borderWidth: 1,
             borderRadius: 10,
-            marginStart: hp('1%'),
+            // marginStart: hp('1%'),
           }}>
           {selectedItems.map((item: any, index: any) => (
             <View
@@ -222,6 +236,7 @@ const Category = () => {
                 flexDirection: 'row', // Align icon and text in a row
                 alignItems: 'center',
                 marginTop: hp('1'),
+                marginStart: hp('0.5%'),
               }}>
               <Text style={{color: '#333', marginRight: 5}}>{item.name}</Text>
 

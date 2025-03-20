@@ -22,6 +22,9 @@ import {
   logoutUserFetch,
   getProfileFetch,
   getProfileSuccess,
+  updateProfileFetch,
+  updateEducationFetch,
+  updateCountryFetch,
 } from '../slices/authSlice';
 import {
   resetCommonState,
@@ -63,6 +66,7 @@ function* createUser(data: PayloadAction<any>) {
       );
       setDataToAsync(resources.AsyncConstants.userData, userData);
       yield put(userCreateSuccess(userData));
+      yield call(getProfile);
       yield put(setIsLogged(true));
       yield put(setIsFetching(false));
       yield put(setIsError(false));
@@ -151,9 +155,11 @@ function* userLogin(data: PayloadAction<any>) {
       );
 
       yield put(userLoginSuccess(user));
+      yield call(getProfile);
       yield put(setIsFetching(false));
       yield put(setIsError(false));
       yield put(setIsLogged(true));
+      // yield put(getProfileFetch());
 
       if (_theme !== null) {
         yield put(setTheme(_theme));
@@ -329,14 +335,27 @@ function* userPasswordOTPValidate(data: PayloadAction<any>) {
       let _theme: ColorScheme | null = yield getDataFromAsync(
         resources.AsyncConstants.theme,
       );
-
-      yield put(setIsFetching(false));
-      yield put(setIsError(false));
+      var res: AxiosResponse<any, any> = yield call(
+        API.userPasswordChange,
+        data.payload,
+      );
+      if (res?.status) {
+        yield put(redirectRequest('Login'));
+        yield put(setIsError(false));
+        yield put(setIsFetching(false));
+      } else {
+        yield put(setIsError(true));
+        yield put(setIsLogged(false));
+        yield put(setErrorData(res.data));
+        yield put(redirectRequest('ForgotPassword'));
+        Toaster.error(res.data.message);
+      }
+      // yield put(setIsError(false));
+      // yield put(setIsFetching(false));
 
       if (_theme !== null) {
         yield put(setTheme(_theme));
       }
-      yield put(redirectRequest('Login'));
     } else {
       console.log('else==============');
       yield put(setIsFetching(false));
@@ -364,7 +383,7 @@ function* forgotPassword(data: PayloadAction<any>) {
 
     // do the api call here
     let res: AxiosResponse<any, any> = yield call(
-      API.forgotPassword,
+      API.userPasswordOTP,
       data.payload,
     );
 
@@ -446,7 +465,6 @@ function* getProfile() {
 
     if (res.status) {
       var userData: UserState = formatUserData(res.data.data);
-      console.log('getProfile res.data.data', res.data.data);
 
       yield put(getProfileSuccess(userData));
     } else {
@@ -465,36 +483,138 @@ function* getProfile() {
   }
 }
 
-// function* updateCustomerProfile(
-//   data: PayloadAction<CustomerProfileUpdateRequestPayload>,
-// ) {
-//   try {
-//     yield put(setIsFetching(true));
+function* updateProfile(data: PayloadAction<any>) {
+  console.log('updateProfile data==================', data.payload);
 
-//     var res: AxiosResponse<any, any> = yield call(
-//       API.updateCustomerProfile,
-//       data.payload,
-//     );
+  try {
+    yield put(setIsFetching(true));
 
-//     if (res.status) {
-//       yield put(setIsFetching(false));
-//       yield put(setIsError(false));
+    var res: AxiosResponse<any, any> = yield call(
+      API.profileUpdate,
+      data.payload,
+    );
+    console.log('res---------', res.data);
 
-//       var userData: UserState = formatUserData(res.data.data);
+    if (res?.status) {
+      let _theme: ColorScheme | null = yield getDataFromAsync(
+        resources.AsyncConstants.theme,
+      );
 
-//       yield put(customerCreateSuccess(userData));
+      yield put(setIsFetching(false));
+      yield put(setIsError(false));
+      yield put(setIsLogged(false));
+      yield put(redirectRequest(''));
+      yield call(getProfile);
+      if (_theme !== null) {
+        yield put(setTheme(_theme));
+      }
+      Toaster.success(res.data.message);
+    } else {
+      console.log('else==============');
+      yield put(setIsFetching(false));
+      yield put(setIsError(true));
+      yield put(setIsLogged(false));
+      Toaster.error(res.data.message);
+    }
+  } catch (error: any) {
+    yield put(setIsFetching(false));
+    yield put(setIsError(false));
+    console.log('response ==>', error);
 
-//       Toaster.success(res.data.message);
-//     }
-//   } catch (error: any) {
-//     yield put(setIsFetching(false));
-//     yield put(setIsError(true));
+    if (error && error.response) {
+      Toaster.error(error.response.data.message);
+    }
+  }
+}
 
-//     if (error && error.response) {
-//       Toaster.error(error.response.data.message);
-//     }
-//   }
-// }
+function* updateCountry(data: PayloadAction<any>) {
+  console.log('updateCountry data==================', data.payload);
+
+  try {
+    yield put(setIsFetching(true));
+
+    var res: AxiosResponse<any, any> = yield call(
+      API.profileUpdate,
+      data.payload,
+    );
+    console.log('res---------', res.data);
+
+    if (res?.status) {
+      let _theme: ColorScheme | null = yield getDataFromAsync(
+        resources.AsyncConstants.theme,
+      );
+
+      yield put(setIsFetching(false));
+      yield put(setIsError(false));
+      yield put(setIsLogged(false));
+      yield put(redirectRequest('Home'));
+      yield call(getProfile);
+      if (_theme !== null) {
+        yield put(setTheme(_theme));
+      }
+      Toaster.success(res.data.message);
+    } else {
+      console.log('else==============');
+      yield put(setIsFetching(false));
+      yield put(setIsError(true));
+      yield put(setIsLogged(false));
+      Toaster.error(res.data.message);
+    }
+  } catch (error: any) {
+    yield put(setIsFetching(false));
+    yield put(setIsError(false));
+    console.log('response ==>', error);
+
+    if (error && error.response) {
+      Toaster.error(error.response.data.message);
+    }
+  }
+}
+
+function* updateEducation(data: PayloadAction<any>) {
+  console.log('updateEducation data==================', data);
+
+  try {
+    yield put(setIsFetching(true));
+
+    var res: AxiosResponse<any, any> = yield call(
+      API.educationUpdate,
+      data.payload,
+    );
+    console.log('res---------', res.data);
+
+    if (res?.status) {
+      let _theme: ColorScheme | null = yield getDataFromAsync(
+        resources.AsyncConstants.theme,
+      );
+
+      yield put(setIsFetching(false));
+      yield put(setIsError(false));
+      yield put(setIsLogged(false));
+      yield call(getProfile);
+      yield put(redirectRequest('EducationCertificates'));
+      if (_theme !== null) {
+        yield put(setTheme(_theme));
+      }
+
+      Toaster.success(res.data.message);
+    } else {
+      console.log('else==============');
+      yield put(setIsFetching(false));
+      yield put(setIsError(true));
+      yield put(setIsLogged(false));
+      Toaster.error(res.data.message);
+    }
+  } catch (error: any) {
+    yield put(setIsFetching(false));
+    yield put(setIsError(false));
+    console.log('response ==>', error);
+
+    if (error && error.response) {
+      Toaster.error(error.response.data.message);
+    }
+  }
+}
 
 export function* AuthenticationSaga() {
   yield takeLatest(userCreateFetch.type, createUser);
@@ -508,4 +628,7 @@ export function* AuthenticationSaga() {
   yield takeLatest(logoutRequest.type, logoutUser);
   yield takeLatest(forgotPasswordRequest.type, forgotPassword);
   yield takeLatest(getProfileFetch.type, getProfile);
+  yield takeLatest(updateProfileFetch.type, updateProfile);
+  yield takeLatest(updateCountryFetch.type, updateCountry);
+  yield takeLatest(updateEducationFetch.type, updateEducation);
 }

@@ -14,7 +14,7 @@ import {
   PermissionsAndroid,
   Linking,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import CustomStatusbar from '../../components/CustomStatusbar';
 import {useNavigation} from '@react-navigation/native';
 import {useAppDispatch, useAppSelector} from '../../hooks/redux_hooks';
@@ -31,12 +31,15 @@ import RNPickerSelect from 'react-native-picker-select';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {getDataFromAsync} from '../../services/AsyncService';
-import {userCreateStage2Fetch} from '../../redux/slices/authSlice';
+import {
+  updateEducationFetch,
+  userCreateStage2Fetch,
+} from '../../redux/slices/authSlice';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Toaster} from '../../services/Toaster';
 import {ApiEndPoints} from '../../API/ApiEndPoints';
 import LoaderComponent from '../../components/LoaderComponent';
-import Entypo from 'react-native-vector-icons/Entypo';
+import {scoreTypesFetchRequest} from '../../redux/slices/appSlice';
 const certificateList: any = [
   {
     id: 1,
@@ -63,37 +66,79 @@ const certificateList: any = [
     status: 'Not Uploaded',
   },
 ];
-const Certificates = () => {
+const EducationDetails = () => {
   const navigation = useNavigation<stackProps>();
   const dispatch = useAppDispatch();
   const {theme} = useAppSelector(state => state.common);
-
+  const {isLogged, redirect, userData, selectedEducation} = useAppSelector(
+    state => state.auth,
+  );
+  const {config, scoreTypes} = useAppSelector(state => state.app);
   const [certificates, setCertificates] = useState<any>(certificateList);
-  const [institutionName, setInstitutionName] = useState<string>('');
+  const [institutionName, setInstitutionName] = useState<string>(
+    selectedEducation?.institutionName
+      ? selectedEducation?.institutionName
+      : '',
+  );
   const [institutionNameError, setInstitutionNameError] =
     useState<boolean>(false);
-  const [stream, setStream] = useState<string>('');
+  const [stream, setStream] = useState<string>(
+    selectedEducation?.stream ? selectedEducation?.stream : '',
+  );
   const [streamError, setStreamError] = useState<boolean>(false);
-  const [score, setScore] = useState<any>();
-  const [scoreError, setScoreError] = useState<boolean>(false);
-  const [maxScore, setMaxScore] = useState<any>('');
+
   const [maxScoreError, setMaxScoreError] = useState<boolean>(false);
-  const [startDate, setStartDate] = useState<any>();
+  const [startDate, setStartDate] = useState<any>(
+    selectedEducation?.startDate ? selectedEducation?.startDate : '',
+  );
   const [startDateError, setStartDateError] = useState<boolean>(false);
-  const [endDate, setEndDate] = useState<any>();
+  const [endDate, setEndDate] = useState<any>(
+    selectedEducation?.endDate ? selectedEducation?.endDate : '',
+  );
   const [endDateError, setEndDateError] = useState<boolean>(false);
   const [type, setType] = useState<string>('');
   const [typeError, setTypeError] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [scoreTypeId, setScoreTypeId] = useState<any>();
+  const [scoreTypeId, setScoreTypeId] = useState<any>(
+    selectedEducation?.scoreTypeId ? selectedEducation?.scoreTypeId : '',
+  );
   const [scoreTypeIdError, setScoreTypeIdError] = useState<any>();
-  const {config, scoreTypes} = useAppSelector(state => state.app);
-  const [items, setItems] = useState<any>(scoreTypes);
 
-  const [image, setImage] = useState<any>('');
+  const [score, setScore] = useState<any>(
+    selectedEducation?.score ? selectedEducation?.score : '',
+  );
+  const [scoreError, setScoreError] = useState<boolean>(false);
+  const [maxScore, setMaxScore] = useState<any>(
+    selectedEducation?.maxScore ? selectedEducation?.maxScore : '',
+  );
+  const [items, setItems] = useState<any>(scoreTypes);
+  const [check, setcheck] = useState<string>('');
+
+  const [image, setImage] = useState<any>(selectedEducation?.certPhoto);
   const [imageError, setImageError] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(false);
+  // useEffect(() => {
+  //   dispatch(scoreTypesFetchRequest());
+  //   setItems(scoreTypes);
+  // }, []);
+  console.log('selectedEducation', selectedEducation);
+  // const [educationVal, setEducationVal] = useState<any>(
+  //   userData?.StudentEducation[0]?.eduLevelId,
+  // );
+  const [educationLabel, setEducationLabel] = useState<any>('');
+  const [educationitems, setEducationItems] = useState<any>([
+    {
+      label: 'Masters / Post Graduation',
+      value: '1',
+    },
+    {
+      label: 'Degree / Under Graduation',
+      value: '2',
+    },
+    {label: 'Intermediate/10+2', value: '3'},
+    {label: 'SSC/CBSC/ICSC', value: '4'},
+  ]);
   const requestCameraPermission = async () => {
     setModalVisible(false);
     try {
@@ -163,6 +208,37 @@ const Certificates = () => {
       setEndDate(date);
     }
   };
+  // console.log('userData============', userData);
+
+  // const handleEducationSelection = (selectedEducationId: number) => {
+  //   const selectedEducation = userData?.StudentEducation.find(
+  //     (edu: any) => edu.eduLevelId === selectedEducationId,
+  //   );
+
+  //   if (selectedEducation) {
+  //     // Update state with existing education data
+  //     setInstitutionName(selectedEducation.institutionName);
+  //     setStream(selectedEducation.stream);
+  //     setScore(selectedEducation.score.toString());
+  //     setMaxScore(selectedEducation.maxScore.toString());
+  //     setStartDate(selectedEducation.startDate);
+  //     setEndDate(selectedEducation.endDate);
+  //     setScoreTypeId(selectedEducation.scoreTypeId);
+  //     setImage(selectedEducation.certPhoto);
+  //     setcheck('Yes');
+  //   } else {
+  //     // Reset state for new entry
+  //     setInstitutionName('');
+  //     setStream('');
+  //     setScore('');
+  //     setMaxScore('');
+  //     setStartDate(null);
+  //     setEndDate(null);
+  //     setScoreTypeId(null);
+  //     setImage(null);
+  //     setcheck('No');
+  //   }
+  // };
 
   const setPickerResponse = async (response: any) => {
     console.log('file response', response);
@@ -247,32 +323,32 @@ const Certificates = () => {
   };
 
   const _stageTwo = async () => {
-    let email = await getDataFromAsync(resources.AsyncConstants.email);
+    let course = await getDataFromAsync(resources.AsyncConstants.course);
+    console.log('course', course);
     let eduLevelId = await getDataFromAsync(
       resources.AsyncConstants.eduLevelId,
     );
-    let course = await getDataFromAsync(resources.AsyncConstants.course);
     var data = {
-      email: email,
-      signUpStage: 2,
-      educationDetails: [
-        {
-          eduLevelId: eduLevelId,
-          institutionName: institutionName,
-          course: course,
-          stream: stream,
-          score: score,
-          maxScore: maxScore,
-          scoreTypeId: scoreTypeId,
-          startDate: startDate,
-          endDate: endDate,
-          isCurrent: endDate ? false : true,
-          certPhoto: image,
-        },
-      ],
+      institutionName: institutionName,
+      eduLevelId: eduLevelId,
+      course: course,
+      stream: stream,
+      score: Number(score),
+      maxScore: Number(maxScore),
+      scoreTypeId: scoreTypeId,
+      startDate: startDate,
+      endDate: endDate,
+      isCurrent: endDate ? false : true,
+      certPhoto: image,
     };
+    console.log('data========', data);
+    if (selectedEducation?.id) {
+      data = {...data, id: selectedEducation?.id};
+    }
 
-    dispatch(userCreateStage2Fetch(data));
+    console.log('Final Data Sent:', data);
+
+    dispatch(updateEducationFetch(data));
   };
   const styles = StyleSheet.create({
     main: {
@@ -283,18 +359,20 @@ const Certificates = () => {
       backgroundColor: resources.colors.primary,
       height: hp('18%'),
       width: wp('100%'),
-      alignItems: 'center',
       flexDirection: 'row',
+      //   justifyContent: 'center',
+      //   alignContent: 'center',
+      //   alignItems: 'center',
     },
     headerText: {
       color: resources.colors.white,
-      fontWeight: '900',
-      fontFamily: resources.fonts.Abold,
-      fontSize: hp('3%'),
-      marginStart: hp('2%'),
+      fontWeight: '600',
+      fontFamily: resources.fonts.Amedium,
+      fontSize: hp('2.5%'),
+      marginTop: hp('5%'),
     },
     box: {
-      height: hp('83%'),
+      height: hp('80%'),
       width: wp('95%'),
       backgroundColor: resources.colors.light_green,
       bottom: hp('5%'),
@@ -330,7 +408,7 @@ const Certificates = () => {
       height: hp('6%'),
       width: wp('85%'),
       backgroundColor: resources.colors.primary,
-      marginTop: hp('10%'),
+      marginTop: hp('15%'),
       borderRadius: 5,
     },
     buttonSkip: {
@@ -396,7 +474,7 @@ const Certificates = () => {
       borderColor: '#AFAFAF',
       borderWidth: 1,
       borderRadius: 5,
-      color: resources.colors.black,
+      color: resources.colors.ash,
       fontSize: hp('1.8%'),
       fontWeight: '500',
       marginTop: hp('1%'),
@@ -410,7 +488,7 @@ const Certificates = () => {
       borderColor: '#AFAFAF',
       borderWidth: 1,
       borderRadius: 5,
-      color: resources.colors.black,
+      color: resources.colors.ash,
       fontSize: hp('1.8%'),
       fontWeight: '500',
       marginTop: hp('1%'),
@@ -444,7 +522,16 @@ const Certificates = () => {
       marginBottom: hp('2%'),
       textAlign: 'center',
       fontSize: hp('2%'),
-      fontWeight: '500',
+      fontWeight: '600',
+      fontFamily: resources.fonts.Amedium,
+      color: resources.colors.light_ash1,
+    },
+    modalCamText: {
+      textAlign: 'center',
+      fontSize: hp('2%'),
+      fontWeight: '600',
+      fontFamily: resources.fonts.Amedium,
+      color: resources.colors.light_ash1,
     },
     box1: {
       height: hp('6%'),
@@ -483,6 +570,7 @@ const Certificates = () => {
   const ItemSeparatorComponent = () => {
     return <View style={styles.itemSeparate} />;
   };
+  console.log('score', score);
 
   return (
     <View style={styles.main}>
@@ -492,18 +580,18 @@ const Certificates = () => {
       />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Entypo
-            name={'chevron-left'}
-            size={35}
+          <AntDesign
+            name={'left'}
             color={resources.colors.white}
+            size={20}
             style={{
-              width: wp('30%'),
-              marginTop: hp('0.6%'),
               marginStart: hp('2%'),
+              marginTop: hp('5%'),
+              width: wp('10%'),
             }}
           />
         </TouchableOpacity>
-        <Text style={styles.headerText}>Certificates</Text>
+        <Text style={styles.headerText}>Update Education details </Text>
       </View>
       <View style={styles.box}>
         <View style={{marginTop: hp('4%')}}>
@@ -517,6 +605,64 @@ const Certificates = () => {
               <LoaderComponent size={hp('3.5%')} color={theme.primary} />
             </View>
           ) : null}
+          {/* <View>
+            <RNPickerSelect
+              placeholder={{value: '', label: 'Select Education type'}}
+              onValueChange={value => {
+                const selectedItem = educationitems.find(
+                  (item: any) => item.value === value,
+                );
+                if (selectedItem) {
+                  setEducationVal(value);
+                  setEducationLabel(selectedItem.label);
+                  handleEducationSelection(parseInt(value, 10));
+                }
+              }}
+              items={educationitems}
+              useNativeAndroidPickerStyle={false}
+              style={{
+                inputIOS: {
+                  fontSize: hp('1.8%'),
+                  color: resources.colors.ash,
+                  paddingVertical: 10,
+                  paddingHorizontal: 12,
+                  borderWidth: 1,
+                  borderColor: resources.colors.ash,
+                  borderRadius: 5,
+                },
+                inputAndroid: {
+                  fontSize: hp('1.8%'),
+                  color: resources.colors.ash,
+                  paddingVertical: 10,
+                  paddingHorizontal: 12,
+                  borderWidth: 1,
+                  borderColor: resources.colors.ash,
+                  borderRadius: 5,
+                  marginTop: hp('1%'),
+                  justifyContent: 'center',
+                  marginStart: hp('2%'),
+                  height: hp('6%'),
+                  width: wp('86%'),
+                },
+                placeholder: {
+                  color: resources.colors.ash, // Customize the placeholder color here
+                },
+              }}
+              Icon={() => {
+                return (
+                  <Ionicons
+                    size={25}
+                    color={resources.colors.ash}
+                    name="chevron-down"
+                    style={{
+                      paddingRight: hp('4%'),
+                      marginTop: hp('3%'),
+                    }}
+                  />
+                );
+              }}
+            />
+          </View> */}
           <View style={styles.start}>
             {/* <Text style={styles.inputHeaderText}>Institution Name</Text> */}
             <TextInput
@@ -559,7 +705,6 @@ const Certificates = () => {
                 );
                 if (selectedItem) {
                   setScoreTypeId(value);
-                  // setEducationLabel(selectedItem.label);
                 }
               }}
               useNativeAndroidPickerStyle={false}
@@ -567,7 +712,7 @@ const Certificates = () => {
               style={{
                 inputIOS: {
                   fontSize: hp('1.8%'),
-                  color: resources.colors.black, // Customize the text color here
+                  color: 'gray', // Customize the text color here
                   paddingVertical: 10,
                   paddingHorizontal: 12,
                   borderWidth: 1,
@@ -579,7 +724,7 @@ const Certificates = () => {
                 },
                 inputAndroid: {
                   fontSize: hp('1.8%'),
-                  color: resources.colors.black,
+                  color: resources.colors.ash,
                   paddingVertical: 10,
                   paddingHorizontal: 12,
                   height: hp('6%'),
@@ -606,7 +751,6 @@ const Certificates = () => {
                     style={{
                       paddingRight: hp('4%'),
                       marginTop: hp('3%'),
-                      color: resources.colors.black,
                     }}
                   />
                 );
@@ -728,24 +872,16 @@ const Certificates = () => {
             )}
           </TouchableOpacity>
           {/* <FlatList
-            data={certificates}
-            renderItem={item => _renderItem(item)}
-            ItemSeparatorComponent={ItemSeparatorComponent}
-          /> */}
+              data={certificates}
+              renderItem={item => _renderItem(item)}
+              ItemSeparatorComponent={ItemSeparatorComponent}
+            /> */}
         </View>
 
         <TouchableOpacity
           style={styles.button}
           onPress={() => _validateFields()}>
-          <Text style={styles.signIn}>Next</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.buttonSkip}
-          onPress={() => navigation.navigate('Category')}>
-          <Text style={[styles.signIn, {color: resources.colors.black}]}>
-            Skip
-          </Text>
+          <Text style={styles.signIn}>Update</Text>
         </TouchableOpacity>
       </View>
       <Modal
@@ -795,7 +931,7 @@ const Certificates = () => {
                 color={resources.colors.ash}
                 style={{marginStart: hp('2%'), width: wp('10%')}}
               />
-              <Text>Camera</Text>
+              <Text style={styles.modalCamText}>Camera</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -816,7 +952,7 @@ const Certificates = () => {
                 color={resources.colors.ash}
                 style={{marginStart: hp('2%'), width: wp('10%')}}
               />
-              <Text>Gallrey</Text>
+              <Text style={styles.modalCamText}>Gallrey</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -825,4 +961,4 @@ const Certificates = () => {
   );
 };
 
-export default Certificates;
+export default EducationDetails;

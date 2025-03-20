@@ -21,6 +21,12 @@ export const formatUserData = (user: any): UserState => {
     interestedFieldsIds: user?.interestedFieldsIds,
     interestedCountryId: user?.interestedCountryId,
     StudentEducation: user?.StudentEducation,
+    Country: user?.Country,
+    interestedFields: user?.interestedFields,
+    dob: user?.dob,
+    signupStage: user?.signupStage,
+    googleLogin: user?.googleLogin,
+    googleId: user?.googleId,
   };
 
   return data;

@@ -23,6 +23,12 @@ export type StackNavigatorList = {
   Categories: undefined;
   Settings: undefined;
   CountrySelect: undefined;
+  Courses: undefined;
+  EducationDetails: undefined;
+  EducationCertificates: undefined;
+  CollegeDetails: undefined;
+  CountryChange: undefined;
+  CategoriesList: undefined;
 };
 
 export type stackProps = StackNavigationProp<StackNavigatorList>;

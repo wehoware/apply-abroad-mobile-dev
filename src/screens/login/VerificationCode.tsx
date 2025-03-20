@@ -24,6 +24,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {emailValidator, passwordValidator} from '../../services/Validators';
 import {getDataFromAsync} from '../../services/AsyncService';
 import {userOTPValidateFetch} from '../../redux/slices/authSlice';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 const VerificationCode = () => {
   const navigation = useNavigation<stackProps>();
@@ -53,10 +54,20 @@ const VerificationCode = () => {
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const [timeLeft, setTimeLeft] = useState(60); // Initialize at 60 seconds
   const [isActive, setIsActive] = useState(true); // Timer
+  const [userEmail, setUserEmail] = useState<string>('');
   const _validateFields = () => {
     let otp: any = otp1 + otp2 + otp3 + otp4 + otp5 + otp6;
     _otpValidate(otp);
   };
+
+  useEffect(() => {
+    const fetchEmail = async () => {
+      let email = await getDataFromAsync(resources.AsyncConstants.email);
+      setUserEmail(email);
+    };
+
+    fetchEmail();
+  }, []);
 
   const _otpValidate = async (otp: any) => {
     console.log('otp----------', otp);
@@ -74,34 +85,6 @@ const VerificationCode = () => {
 
     dispatch(userOTPValidateFetch(data));
   };
-  // const formatTime = (seconds: number) => {
-  //   const minutes = Math.floor(seconds / 60); // Get the minutes
-  //   const remainingSeconds = seconds % 60; // Get the remaining seconds
-  //   return `${minutes < 10 ? '0' : ''}${minutes}:${
-  //     remainingSeconds < 10 ? '0' : ''
-  //   }${remainingSeconds}`;
-  // };
-
-  // useEffect(() => {
-  //   timer();
-  //   // Cleanup interval when component unmounts
-  //   return () => {
-  //     if (intervalId) {
-  //       clearInterval(intervalId); // Clear the interval using the stored ID
-  //     }
-  //   };
-  // });
-  // const timer = () => {
-  //   const id = setInterval(() => {
-  //     setTimeInSeconds((prevTime: any) => {
-  //       if (prevTime <= 0) {
-  //         clearInterval(id); // Clear the interval when time reaches 0
-  //         return 0; // Prevent negative values
-  //       }
-  //       return prevTime - 1;
-  //     });
-  //   }, 1000);
-  // };
 
   useEffect(() => {
     let interval: any;
@@ -193,19 +176,19 @@ const VerificationCode = () => {
       backgroundColor: resources.colors.primary,
       height: hp('18%'),
       width: wp('100%'),
-      justifyContent: 'center',
-      alignContent: 'center',
       alignItems: 'center',
+      flexDirection: 'row',
     },
     headerText: {
       color: resources.colors.white,
-      fontWeight: '600',
-      fontFamily: resources.fonts.medium,
+      fontWeight: '900',
+      fontFamily: resources.fonts.Abold,
       fontSize: hp('3%'),
+      marginStart: hp('2%'),
     },
     box: {
-      height: hp('78%'),
-      width: wp('95%'),
+      height: hp('80%'),
+      width: wp('93%'),
       backgroundColor: resources.colors.light_green,
       bottom: hp('5%'),
       alignSelf: 'center',
@@ -218,12 +201,14 @@ const VerificationCode = () => {
       fontFamily: resources.fonts.medium,
     },
     boxText: {
-      color: '#141B13',
+      color: resources.colors.black,
       fontWeight: '400',
-      fontSize: hp('2.1%'),
-      marginTop: 20,
+      fontSize: hp('2%'),
+      marginTop: hp('2%'),
       // marginStart: 20,
       padding: 20,
+      fontFamily: resources.fonts.regular,
+      letterSpacing: 0.4,
     },
     start: {marginStart: 20},
     inputStyle: {
@@ -275,7 +260,7 @@ const VerificationCode = () => {
     button: {
       marginStart: 20,
       height: hp('6%'),
-      width: wp('85%'),
+      width: wp('83%'),
       backgroundColor: resources.colors.primary,
       marginTop: hp('3%'),
       borderRadius: 5,
@@ -350,24 +335,28 @@ const VerificationCode = () => {
       marginStart: hp('1%'),
     },
     numberButton: {
-      width: wp('25%'),
-      height: hp('9%'),
+      width: wp('24%'),
+      height: hp('9.5%'),
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: resources.colors.light_orange,
-      borderRadius: 5,
-      marginStart: hp('2%'),
-      marginTop: 10,
+      backgroundColor: resources.colors.white,
+      borderRadius: 15,
+      marginStart: hp('1%'),
+      marginTop: hp('2%'),
+      shadowOffset: {width: 0, height: 4},
+      shadowOpacity: 0.2,
+      shadowRadius: 3,
+      elevation: 6,
     },
 
     noButton: {
-      width: wp('25%'),
-      height: hp('9%'),
+      width: wp('24%'),
+      height: hp('9.5%'),
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: 5,
-      marginStart: hp('2%'),
-      marginTop: 10,
+      borderRadius: 15,
+      marginStart: hp('1%'),
+      marginTop: hp('2%'),
     },
     numberText: {
       fontSize: hp('3%'),
@@ -375,14 +364,14 @@ const VerificationCode = () => {
       color: resources.colors.black,
     },
     backButton: {
-      width: wp('25%'),
-      height: hp('9%'),
+      width: wp('24%'),
+      height: hp('9.5%'),
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: resources.colors.primary,
-      borderRadius: 5,
-      marginStart: hp('2%'),
-      marginTop: 10,
+      borderRadius: 15,
+      marginStart: hp('1%'),
+      marginTop: hp('2%'),
     },
   });
 
@@ -393,11 +382,24 @@ const VerificationCode = () => {
         barStyle={'light-content'}
       />
       <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Entypo
+            name={'chevron-left'}
+            size={35}
+            color={resources.colors.white}
+            style={{
+              width: wp('30%'),
+              marginTop: hp('0.6%'),
+              marginStart: hp('2%'),
+            }}
+          />
+        </TouchableOpacity>
         <Text style={styles.headerText}>Verification</Text>
       </View>
       <View style={styles.box}>
         <Text style={styles.boxText}>
-          Please enter the verification code sent to S********a@test.com
+          Please enter the verification code sent to{' '}
+          <Text style={[styles.boxText, {fontWeight: '700'}]}>{userEmail}</Text>
         </Text>
         <View style={styles.otpBox}>
           {[otp1, otp2, otp3, otp4, otp5, otp6].map((otp: any, index: any) => (
@@ -408,7 +410,7 @@ const VerificationCode = () => {
                 {
                   backgroundColor: otp
                     ? resources.colors.primary
-                    : resources.colors.ash,
+                    : resources.colors.white,
                 },
               ]}
               value={otp}
@@ -443,12 +445,12 @@ const VerificationCode = () => {
               <Text style={styles.numberText}>1</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.numberButton}
+              style={[styles.numberButton, {marginStart: hp('3%')}]}
               onPress={() => handleNumberPress('2')}>
               <Text style={styles.numberText}>2</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.numberButton}
+              style={[styles.numberButton, {marginStart: hp('3%')}]}
               onPress={() => handleNumberPress('3')}>
               <Text style={styles.numberText}>3</Text>
             </TouchableOpacity>
@@ -460,12 +462,12 @@ const VerificationCode = () => {
               <Text style={styles.numberText}>4</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.numberButton}
+              style={[styles.numberButton, {marginStart: hp('3%')}]}
               onPress={() => handleNumberPress('5')}>
               <Text style={styles.numberText}>5</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.numberButton}
+              style={[styles.numberButton, {marginStart: hp('3%')}]}
               onPress={() => handleNumberPress('6')}>
               <Text style={styles.numberText}>6</Text>
             </TouchableOpacity>
@@ -477,12 +479,12 @@ const VerificationCode = () => {
               <Text style={styles.numberText}>7</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.numberButton}
+              style={[styles.numberButton, {marginStart: hp('3%')}]}
               onPress={() => handleNumberPress('8')}>
               <Text style={styles.numberText}>8</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.numberButton}
+              style={[styles.numberButton, {marginStart: hp('3%')}]}
               onPress={() => handleNumberPress('9')}>
               <Text style={styles.numberText}>9</Text>
             </TouchableOpacity>
@@ -492,15 +494,18 @@ const VerificationCode = () => {
               {/* <Text></Text> */}
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.numberButton}
+              style={[styles.numberButton, {marginStart: hp('3%')}]}
               onPress={() => handleNumberPress('0')}>
               <Text style={styles.numberText}>0</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.backButton}
+              style={[styles.backButton, {marginStart: hp('3%')}]}
               onPress={handleBackspace}>
-              <Text style={styles.numberText}>{'⌫'}</Text>
+              <Text
+                style={[styles.numberText, {color: resources.colors.white}]}>
+                {'⌫'}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

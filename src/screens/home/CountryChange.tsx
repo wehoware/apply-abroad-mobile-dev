@@ -26,50 +26,76 @@ import {countriesFetchRequest} from '../../redux/slices/appSlice';
 
 import colors from '../../resources/colors/colors';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
 import {Toaster} from '../../services/Toaster';
 import {getDataFromAsync, setDataToAsync} from '../../services/AsyncService';
 import {Image} from 'react-native';
-import {userCreateFetch} from '../../redux/slices/authSlice';
+import {updateCountryFetch} from '../../redux/slices/authSlice';
 import useRedirect from '../../hooks/useRedirect';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import Entypo from 'react-native-vector-icons/Entypo';
 
-const CountrySelect = () => {
+const CountryChange = () => {
   const navigation = useNavigation<stackProps>();
   const dispatch = useAppDispatch();
   const {theme} = useAppSelector(state => state.common);
+  const {isLogged, redirect, userData} = useAppSelector(state => state.auth);
   const [selectedItems, setSelectedItems] = useState<any>({});
   const [search, setSearch] = useState<string>('');
   const {countries} = useAppSelector(state => state.app);
-  const [countriesList, setcountriesList] = useState<any>(countries);
-  const {isLogged, redirect} = useAppSelector(state => state.auth);
+  const [countriesList, setcountriesList] = useState<any>([]);
+
   useRedirect(redirect, 'replace');
+
   useEffect(() => {
     dispatch(countriesFetchRequest());
   }, []);
   const selectCountry = (item: any) => {
     setSelectedItems(item);
   };
-
-  const _countrySave = async () => {
-    console.log('selectedItems', selectedItems);
-    let email = await getDataFromAsync(resources.AsyncConstants.email);
-    let deviceId = await getDataFromAsync(resources.AsyncConstants.deviceId);
-    let courseIds = await getDataFromAsync(resources.AsyncConstants.courseIds);
-
-    const countryId = selectedItems.id;
-    if (!countryId) {
-      Toaster.error('Please select any Country');
-    } else {
-      let data = {
-        email: email,
-        signUpStage: 3,
-        deviceId: deviceId,
-        countryId: countryId,
-        interestedFieldsIds: courseIds,
-      };
-      dispatch(userCreateFetch(data));
+  useEffect(() => {
+    if (countries.length > 0 || countries.length === 0) {
+      setcountriesList(countries);
     }
+  }, [countries]);
+  //   const _countrySave = async () => {
+  //     console.log('selectedItems', selectedItems);
+  //     let email = await getDataFromAsync(resources.AsyncConstants.email);
+  //     let deviceId = await getDataFromAsync(resources.AsyncConstants.deviceId);
+  //     let courseIds = await getDataFromAsync(resources.AsyncConstants.courseIds);
+
+  //     const countryId = selectedItems.id;
+  //     if (!countryId) {
+  //       Toaster.error('Please select any Country');
+  //     } else {
+  //       let data = {
+  //         email: email,
+  //         signUpStage: 3,
+  //         deviceId: deviceId,
+  //         countryId: countryId,
+  //         interestedFieldsIds: courseIds,
+  //       };
+  //       dispatch(userCreateFetch(data));
+  //     }
+  //   };
+
+  const _countrySave = () => {
+    console.log('_countrySave ===========', selectedItems);
+    const countryId = selectedItems
+      ? selectedItems.id
+      : userData?.interestedCountryId;
+    console.log('countryId ===========', countryId);
+    const data: any = {
+      fullName: userData?.fullName,
+      dob: userData?.dob,
+      countryCode: '',
+      phoneNumber: userData?.phoneNumber,
+      profilePhoto: userData?.profilePhoto,
+      interestedCountryId: countryId,
+      interestedFieldsIds: userData?.interestedFieldsIds,
+      isActive: true,
+      id: userData?.id,
+    };
+    dispatch(updateCountryFetch(data));
   };
 
   const styles = StyleSheet.create({
@@ -87,8 +113,10 @@ const CountrySelect = () => {
     headerText: {
       color: resources.colors.white,
       fontWeight: '900',
-      fontFamily: resources.fonts.Abold,
+      fontFamily: resources.fonts.Amedium,
       fontSize: hp('3%'),
+      justifyContent: 'center',
+      alignContent: 'center',
       marginStart: hp('2%'),
     },
     box: {
@@ -117,6 +145,7 @@ const CountrySelect = () => {
       fontWeight: '600',
       textAlign: 'center',
       fontSize: hp('2.0%'),
+      fontFamily: resources.fonts.medium,
     },
     button: {
       marginStart: 20,
@@ -148,7 +177,7 @@ const CountrySelect = () => {
     },
     itemSeparate: {
       width: wp('80%'),
-      borderColor: resources.colors.ash,
+      borderColor: resources.colors.light_ash,
       borderWidth: 0.5,
       margin: 10,
     },
@@ -177,6 +206,7 @@ const CountrySelect = () => {
       alignItems: 'center',
       marginTop: hp('6%'),
       marginStart: hp('2%'),
+      backgroundColor: resources.colors.white,
     },
   });
 
@@ -209,6 +239,7 @@ const CountrySelect = () => {
           flexDirection: 'row',
           alignContent: 'center',
           alignItems: 'center',
+          height: hp('8%'),
         }}
         onPress={() => {
           selectCountry(item), educationSelection(item);
@@ -216,12 +247,19 @@ const CountrySelect = () => {
         <Image
           source={{uri: item?.flagImage}}
           style={{
-            height: hp('8'),
-            width: wp('16'),
+            height: hp('7%'),
+            width: wp('14%'),
             borderRadius: 10,
+            marginStart: hp('3%'),
           }}
         />
-        <Text style={{width: wp('55%'), marginStart: hp('2%')}}>
+        <Text
+          style={{
+            width: wp('50%'),
+            marginStart: hp('2%'),
+            fontFamily: resources.fonts.Amedium,
+            fontWeight: '700',
+          }}>
           {item.name}
         </Text>
         {item.select ? (
@@ -260,10 +298,16 @@ const CountrySelect = () => {
       </View>
       <View style={styles.box}>
         <View style={styles.searchBox}>
-          <Image
+          {/* <Image
             source={resources.images.Search}
             style={{height: hp('4%'), width: wp('6%'), marginLeft: hp('1%')}}
             resizeMode="contain"
+          /> */}
+          <AntDesign
+            name={'search1'}
+            size={22}
+            color={resources.colors.ash}
+            style={{marginLeft: hp('2%')}}
           />
           <TextInput
             style={{
@@ -283,7 +327,11 @@ const CountrySelect = () => {
           style={{
             marginTop: hp('3%'),
             marginStart: hp('2%'),
-            height: hp('60%'),
+            height: hp('50%'),
+            backgroundColor: 'white',
+            width: wp('84%'),
+            borderRadius: 10,
+            marginBottom: hp('2%'),
           }}>
           <FlatList
             data={countriesList}
@@ -293,11 +341,11 @@ const CountrySelect = () => {
         </View>
 
         <TouchableOpacity style={styles.button} onPress={() => _countrySave()}>
-          <Text style={styles.signIn}>Next</Text>
+          <Text style={styles.signIn}>Update</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
 
-export default CountrySelect;
+export default CountryChange;

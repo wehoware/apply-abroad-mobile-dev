@@ -1,4 +1,4 @@
-import { navigationRef } from "../../App";
+import {navigationRef} from '../../App';
 
 export const forceLogout = () => {
   if (navigationRef.isReady()) {
@@ -6,7 +6,7 @@ export const forceLogout = () => {
       index: 0,
       routes: [
         {
-          name: "Signup",
+          name: 'Login',
         },
       ],
     });

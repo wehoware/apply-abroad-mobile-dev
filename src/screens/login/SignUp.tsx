@@ -112,13 +112,13 @@ const SignUp = () => {
     },
     headerText: {
       color: resources.colors.white,
-      fontWeight: '600',
-      fontFamily: resources.fonts.medium,
+      fontWeight: '900',
+      fontFamily: resources.fonts.Abold,
       fontSize: hp('3%'),
     },
     start: {marginStart: 20},
     box: {
-      height: hp('78%'),
+      height: hp('83%'),
       width: wp('95%'),
       backgroundColor: resources.colors.light_green,
       bottom: hp('5%'),
@@ -126,30 +126,31 @@ const SignUp = () => {
       borderRadius: 15,
     },
     boxText: {
-      color: '#141B13',
+      color: resources.colors.black,
       fontWeight: '400',
-      fontSize: hp('2.1%'),
+      fontSize: hp('1.8%'),
       marginTop: 20,
-      // marginStart: 20,
       padding: 20,
+      fontFamily: resources.fonts.Amedium,
     },
     inputHeaderText: {
-      fontSize: hp('1.8%'),
-      color: '#141B13',
+      fontSize: hp('1.9%'),
+      color: resources.colors.black,
       fontWeight: '500',
-      fontFamily: resources.fonts.medium,
+      fontFamily: resources.fonts.Abold,
     },
+
     inputStyle: {
       height: hp('6%'),
       width: wp('85%'),
-      borderColor: '#AFAFAF',
+      borderColor: resources.colors.ash,
       borderWidth: 1,
       borderRadius: 5,
       color: resources.colors.black,
       fontSize: hp('1.8%'),
       fontWeight: '500',
       marginTop: hp('1%'),
-      fontFamily: resources.fonts.regular,
+      fontFamily: resources.fonts.Aregular,
       paddingLeft: 15,
     },
     inputStyle1: {
@@ -158,13 +159,13 @@ const SignUp = () => {
       color: resources.colors.black,
       fontSize: hp('1.8%'),
       fontWeight: '500',
-      fontFamily: resources.fonts.regular,
+      fontFamily: resources.fonts.Aregular,
       paddingLeft: 15,
     },
     passwordStyle: {
       height: hp('6%'),
       width: wp('85%'),
-      borderColor: '#AFAFAF',
+      borderColor: resources.colors.ash,
       borderWidth: 1,
       borderRadius: 5,
       flexDirection: 'row',
@@ -199,7 +200,7 @@ const SignUp = () => {
       width: wp('85%'),
       borderWidth: 1,
       borderColor: resources.colors.primary,
-      marginTop: hp('5%'),
+      marginTop: hp('3%'),
       borderRadius: 5,
     },
     errorText: {
@@ -207,6 +208,12 @@ const SignUp = () => {
       fontSize: hp('1.6%'),
       fontWeight: '500',
       fontFamily: resources.fonts.regular,
+    },
+    termsText: {
+      fontSize: hp('1.8%'),
+      color: resources.colors.black,
+      fontWeight: '400',
+      fontFamily: resources.fonts.Amedium,
     },
   });
   return (
@@ -306,9 +313,16 @@ const SignUp = () => {
             Forgot Password
           </Text>
         </View>
-        <View style={[styles.start, {marginTop: hp('12%')}]}>
-          <Text>
-            By registering, you agree to the Terms of Service and Privacy Policy
+        <View style={[styles.start, {marginTop: hp('8%')}]}>
+          <Text style={styles.termsText}>
+            By registering, you agree to the
+            <Text style={{color: resources.colors.primary}}>
+              Terms of Service
+            </Text>
+            and{' '}
+            <Text style={{color: resources.colors.primary}}>
+              Privacy Policy
+            </Text>{' '}
             Fundrises
           </Text>
         </View>
@@ -318,6 +332,14 @@ const SignUp = () => {
           // onPress={() => handleSignUp()}
         >
           <Text style={styles.signIn}>Continue</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.buttonSignUp}
+          onPress={() => navigation.navigate('Login')}>
+          <Text style={[styles.signIn, {color: resources.colors.black}]}>
+            Sign In
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

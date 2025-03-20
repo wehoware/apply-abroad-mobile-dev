@@ -15,6 +15,9 @@ export default {
   blue: '#357FFF',
   green: '#13A538',
   light_green1: '#AEEBBA',
+  light_ash: '#EAEAEA',
+  light_black: '#808080',
+  light_ash1: '#A5A5A5',
 };
 
 export const lightTheme: ColorScheme = {

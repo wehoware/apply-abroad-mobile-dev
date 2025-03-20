@@ -30,8 +30,9 @@ const TabNavigator = () => {
         },
         tabBarLabelStyle: {
           fontSize: hp('1.6%'),
-          fontFamily: resources.fonts.medium,
+          fontFamily: resources.fonts.Amedium,
           fontWeight: '500',
+          letterSpacing: 1,
         },
         tabBarActiveTintColor: resources.colors.primary, // Active tab icon color
         tabBarInactiveTintColor: resources.colors.ash, // Inactive tab icon color

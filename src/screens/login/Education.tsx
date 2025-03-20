@@ -1,4 +1,3 @@
-/* eslint-disable no-sequences */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/no-unstable-nested-components */
 import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
@@ -85,8 +84,8 @@ const Education = () => {
     },
     headerText: {
       color: resources.colors.white,
-      fontWeight: '600',
-      fontFamily: resources.fonts.medium,
+      fontWeight: '900',
+      fontFamily: resources.fonts.Abold,
       fontSize: hp('3%'),
     },
     box: {
@@ -108,11 +107,11 @@ const Education = () => {
       marginStart: hp('1%'),
     },
     boxText: {
-      color: '#141B13',
-      fontWeight: '700',
-      fontSize: hp('3%'),
+      color: resources.colors.black,
+      fontWeight: '600',
+      fontSize: hp('2.6%'),
       marginTop: 20,
-      fontFamily: resources.fonts.regular,
+      fontFamily: resources.fonts.Aregular,
       // marginStart: 20,
       paddingTop: hp('3%'),
       paddingStart: hp('3%'),
@@ -223,8 +222,8 @@ const Education = () => {
         <Text style={styles.headerText}>Education</Text>
       </View>
       <View style={styles.box}>
-        <Text style={styles.boxText}>What is your Higher {'\n'}Education?</Text>
-        <View>
+        <Text style={styles.boxText}>What is your Higher Education?</Text>
+        <View style={{marginTop: hp('2%')}}>
           <RNPickerSelect
             placeholder={{value: '', label: 'Select Education'}}
             onValueChange={value => {
@@ -241,7 +240,7 @@ const Education = () => {
             style={{
               inputIOS: {
                 fontSize: hp('1.8%'),
-                color: resources.colors.ash,
+                color: resources.colors.black,
                 paddingVertical: 10,
                 paddingHorizontal: 12,
                 borderWidth: 1,
@@ -250,7 +249,7 @@ const Education = () => {
               },
               inputAndroid: {
                 fontSize: hp('1.8%'),
-                color: resources.colors.ash,
+                color: resources.colors.black,
                 paddingVertical: 10,
                 paddingHorizontal: 12,
                 borderWidth: 1,
