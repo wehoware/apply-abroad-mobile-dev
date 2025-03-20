@@ -64,6 +64,7 @@ const Splash = () => {
 
   const setUserData = async () => {
     let user = await getDataFromAsync(resources.AsyncConstants.userData);
+    //added comment
     dispatch(
       updateConfig({
         AWS_ACCESS_KEY: '',
