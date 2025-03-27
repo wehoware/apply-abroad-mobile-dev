@@ -11,6 +11,7 @@ import {
   ScrollView,
   Linking,
   FlatList,
+  Dimensions,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {
@@ -33,6 +34,8 @@ import {
 } from '../../redux/slices/appSlice';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import LoaderComponent from '../../components/LoaderComponent';
+import RenderHtml from 'react-native-render-html';
+
 const CollegeDetails = () => {
   const navigation = useNavigation<stackProps>();
   const dispatch = useAppDispatch();
@@ -48,6 +51,8 @@ const CollegeDetails = () => {
   const maxLines = 4; // Limit initial lines
   const {userData} = useAppSelector(state => state.auth);
   const {theme, isFetching} = useAppSelector(state => state.common);
+  const {width} = Dimensions.get('window');
+  const maxLength = 200; // Adjust character limit as needed
   useEffect(() => {
     const fetchData = async () => {
       // await dispatch(categoriesFetchRequest());
@@ -75,6 +80,12 @@ const CollegeDetails = () => {
   const goback = () => {
     navigation.goBack();
   };
+
+  const previewHtml =
+    selectedCollege?.about.length > maxLength
+      ? selectedCollege?.about.substring(0, maxLength) + '...'
+      : selectedCollege?.about;
+
   const styles = StyleSheet.create({
     main: {
       flex: 1,
@@ -383,7 +394,7 @@ const CollegeDetails = () => {
     return (
       <TouchableOpacity style={styles.courseBox} onPress={() => _details(item)}>
         <Image
-          source={{uri: item?.mainImage}}
+          source={{uri: item?.mainImageSquare}}
           style={{
             height: hp('13%'),
             width: wp('30'),
@@ -461,9 +472,9 @@ const CollegeDetails = () => {
         goBack={() => goback()}
       />
 
-      <ScrollView>
+      <ScrollView nestedScrollEnabled={true}>
         <Image
-          source={{uri: selectedCollege?.mainImage}}
+          source={{uri: selectedCollege?.mainImageRectangle}}
           style={{
             height: hp('25%'),
             width: wp('95%'),
@@ -471,8 +482,8 @@ const CollegeDetails = () => {
             marginStart: hp('1%'),
             marginTop: hp('2%'),
           }}
+          // resizeMode="cover"
           resizeMode="stretch"
-          // resizeMode="contain"
         />
 
         <Text style={styles.collegeText}>{selectedCollege?.name}</Text>
@@ -601,10 +612,16 @@ const CollegeDetails = () => {
         <Text style={styles.textHead}>About</Text>
         <Text
           style={styles.contentText}
-          numberOfLines={expanded ? undefined : maxLines}>
-          {selectedCollege?.about}
+          // numberOfLines={expanded ? undefined : maxLines}
+        >
+          {/* {selectedCollege?.about} */}
+
+          <RenderHtml
+            contentWidth={width}
+            source={{html: expanded ? selectedCollege?.about : previewHtml}}
+          />
         </Text>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => setExpanded(!expanded)}
           style={{
             marginTop: 5,
@@ -624,7 +641,30 @@ const CollegeDetails = () => {
             }}>
             {expanded ? 'less...' : 'more...'}
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+
+        {selectedCollege?.about.length > maxLength && (
+          <TouchableOpacity
+            onPress={() => setExpanded(!expanded)}
+            style={{
+              alignContent: 'flex-end',
+              alignItems: 'flex-end',
+              marginRight: hp('4%'),
+            }}>
+            <Text
+              style={{
+                color: resources.colors.primary,
+                justifyContent: 'flex-end',
+                fontWeight: '400',
+                fontSize: hp('1.7%'),
+                fontFamily: resources.fonts.regular,
+                textAlign: 'justify',
+                // letterSpacing: 0.4,
+              }}>
+              {expanded ? 'Less...' : 'More...'}
+            </Text>
+          </TouchableOpacity>
+        )}
         <Text style={styles.categoriesText}>Colleges</Text>
         <View style={styles.list}>
           <FlatList

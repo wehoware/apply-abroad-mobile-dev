@@ -114,6 +114,12 @@ const API = {
     );
   },
 
+  getCoursesForYou: async (data: any) => {
+    return await ApiFetch.GET(
+      `${ApiEndPoints.topCourses}sortBy=name&sortOrder=ASC&categoryIds=${data.payload.categoryId}&countryId=${data.payload.countryId}`,
+    );
+  },
+
   applyCourses: async (data: any) => {
     console.log('data===========', data);
     return await ApiFetch.PUT(`${ApiEndPoints.courseApply}${data.payload.id}`);

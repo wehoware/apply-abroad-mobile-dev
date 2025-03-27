@@ -29,6 +29,8 @@ const initialState: AppSliceState = {
   topCourses: [],
   selectedCollege: {},
   categorieIds: '',
+  courseListHome: [],
+  courseListForYouHome: [],
 };
 
 const appSlice = createSlice({
@@ -145,6 +147,38 @@ const appSlice = createSlice({
       state.courseList = action.payload;
     },
 
+    courseListFetchRequestHome: (
+      state: AppSliceState,
+      action: PayloadAction<{
+        count: number;
+        page: number;
+        categoryId: any;
+        countryId: number;
+      }>,
+    ) => {},
+    courseListFetchSuccessHome: (
+      state: AppSliceState,
+      action: PayloadAction<any>,
+    ) => {
+      state.courseListHome = action.payload;
+    },
+
+    courseListForYouFetchRequestHome: (
+      state: AppSliceState,
+      action: PayloadAction<{
+        count: number;
+        page: number;
+        categoryId: any;
+        countryId: number;
+      }>,
+    ) => {},
+    courseListForYouFetchSuccessHome: (
+      state: AppSliceState,
+      action: PayloadAction<any>,
+    ) => {
+      state.courseListForYouHome = action.payload;
+    },
+
     popularCollegesListFetchRequest: (
       state: AppSliceState,
       action: PayloadAction<{
@@ -201,6 +235,10 @@ export const {
   universityListFetchRequest,
   universityListFetchSuccess,
   courseListFetchRequest,
+  courseListFetchRequestHome,
+  courseListFetchSuccessHome,
+  courseListForYouFetchRequestHome,
+  courseListForYouFetchSuccessHome,
   courseListFetchSuccess,
   setSelectedCourse,
   appliedCoursesListFetchRequest,

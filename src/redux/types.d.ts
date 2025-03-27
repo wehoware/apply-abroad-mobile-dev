@@ -86,6 +86,8 @@ export interface AppSliceState {
   selectedCollege: any;
   topCourses: any[];
   categorieIds: any;
+  courseListHome: any[];
+  courseListForYouHome: any[];
 }
 
 export interface CustomerProfileUpdateRequestPayload {

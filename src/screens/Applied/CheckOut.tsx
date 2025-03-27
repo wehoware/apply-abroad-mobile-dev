@@ -290,6 +290,7 @@ const CheckOut = () => {
       justifyContent: 'center',
     },
   });
+
   return (
     <StripeProvider publishableKey={resources.config.stripePublishableKey}>
       <View style={styles.main}>
@@ -305,7 +306,7 @@ const CheckOut = () => {
         </View>
         <View style={styles.box}>
           <Image
-            source={{uri: selectedCourse?.mainImage}}
+            source={{uri: selectedCourse?.mainImageSquare}}
             style={styles.imageStyle}
             resizeMode="stretch"
           />

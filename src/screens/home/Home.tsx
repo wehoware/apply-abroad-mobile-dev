@@ -28,6 +28,8 @@ import {stackProps} from '../../navigation/types';
 import {
   categoriesFetchRequest,
   courseListFetchRequest,
+  courseListFetchRequestHome,
+  courseListForYouFetchRequestHome,
   popularCollegesListFetchRequest,
   setCategoriesId,
   setFromScreen,
@@ -42,9 +44,14 @@ const Home = () => {
   const navigation = useNavigation<any>();
   const dispatch = useAppDispatch();
   const {isLogged, redirect, userData} = useAppSelector(state => state.auth);
-  const {courseList, categories, popularColleges, topCourses} = useAppSelector(
-    state => state.app,
-  );
+  const {
+    courseList,
+    categories,
+    popularColleges,
+    topCourses,
+    courseListHome,
+    courseListForYouHome,
+  } = useAppSelector(state => state.app);
   const {theme, isFetching} = useAppSelector(state => state.common);
   const [orientation, setOrientation] = useState('');
   const [search, setSearch] = useState<string>('');
@@ -106,13 +113,14 @@ const Home = () => {
         countryId: userData?.Country?.id,
       };
 
-      await dispatch(courseListFetchRequest(data));
+      await dispatch(courseListFetchRequestHome(data));
       await dispatch(popularCollegesListFetchRequest(data));
       await dispatch(topCoursesListFetchRequest(data));
+      await dispatch(courseListForYouFetchRequestHome(data));
 
       setCategoriesList(categories);
-      setCourses(courseList);
-      setITCourses(courseList);
+      setCourses(courseListHome);
+      setITCourses(courseListForYouHome);
       setColleges(popularColleges);
       setTopCourse(topCourses);
     };
@@ -123,9 +131,13 @@ const Home = () => {
     if (categories.length > 0 || categories.length === 0) {
       setCategoriesList(categories);
     }
-    if (courseList.length > 0 || courseList.length === 0) {
-      setCourses(courseList);
-      setITCourses(courseList);
+    if (courseListHome.length > 0 || courseListHome.length === 0) {
+      setCourses(courseListHome);
+      // setITCourses(courseListHome);
+    }
+    if (courseListForYouHome.length > 0 || courseListForYouHome.length === 0) {
+      // setCourses(courseListHome);
+      setITCourses(courseListForYouHome);
     }
 
     if (popularColleges.length > 0 || popularColleges.length === 0) {
@@ -137,7 +149,13 @@ const Home = () => {
     if (topCourses.length > 0 || topCourses.length === 0) {
       setTopCourse(topCourses);
     }
-  }, [categories, courseList, popularColleges, topCourses]);
+  }, [
+    categories,
+    courseListHome,
+    popularColleges,
+    topCourses,
+    courseListForYouHome,
+  ]);
   useFocusEffect(
     useCallback(() => {
       var backHandler = BackHandler.addEventListener(
@@ -198,7 +216,7 @@ const Home = () => {
         style={{marginTop: hp('1%')}}
         onPress={() => _courseDetails(item)}>
         <Image
-          source={{uri: item?.mainImage}}
+          source={{uri: item?.mainImageSquare}}
           style={styles.courseImage}
           resizeMode="stretch"
         />
@@ -211,7 +229,7 @@ const Home = () => {
     return (
       <TouchableOpacity onPress={() => _courseDetails(item)}>
         <Image
-          source={{uri: item?.mainImage}}
+          source={{uri: item?.mainImageSquare}}
           style={styles.itCourseImage}
           resizeMode="stretch"
         />
@@ -251,7 +269,10 @@ const Home = () => {
   const _renderColleges = ({item}: any) => {
     return (
       <TouchableOpacity onPress={() => _details(item)}>
-        <Image source={{uri: item.mainImage}} style={styles.collegeImage} />
+        <Image
+          source={{uri: item?.mainImageSquare}}
+          style={styles.collegeImage}
+        />
         <Text style={styles.collegeName} numberOfLines={1}>
           {item.name}
         </Text>

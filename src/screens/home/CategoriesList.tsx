@@ -272,7 +272,7 @@ const CategoriesList = () => {
         />
 
         <Text numberOfLines={1} style={styles.categoriesName}>
-          {item.name}
+          {item?.name}
         </Text>
       </TouchableOpacity>
     );
@@ -432,11 +432,11 @@ const CategoriesList = () => {
               fontSize: hp('2%'),
               fontFamily: resources.fonts.Aregular,
               fontWeight: '400',
-              letterSpacing: 1,
+              letterSpacing: 0.1,
             }}
             value={search}
             placeholderTextColor={resources.colors.ash}
-            placeholder={'Search colleges , courses..'}
+            placeholder={'Search Categories'}
             onChangeText={val => {
               setSearch(val);
             }}

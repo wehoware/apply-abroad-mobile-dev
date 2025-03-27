@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 import React, {useCallback, useState} from 'react';
 import {
@@ -21,6 +22,7 @@ import resources from '../../resources';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import moment from 'moment';
 import SubHeaderComponent from '../../components/SubHeaderComponent';
+import RenderHtml from 'react-native-render-html';
 const CourseDetails = () => {
   const navigation = useNavigation<stackProps>();
   const dispatch = useAppDispatch();
@@ -30,6 +32,9 @@ const CourseDetails = () => {
   const [salaryScaleActive, setSalaryScaleActive] = useState<boolean>(false);
   const {userData} = useAppSelector(state => state.auth);
   const [expanded, setExpanded] = useState(false);
+  const maxLength = 200;
+
+  const {width} = Dimensions.get('window');
   const maxLines = 4; // Limit initial lines
   const goback = () => {
     navigation.goBack();
@@ -40,7 +45,10 @@ const CourseDetails = () => {
     }, []),
   );
   console.log('selectedCourse', selectedCourse);
-
+  const previewHtml =
+    selectedCourse?.description.length > maxLength
+      ? selectedCourse?.description.substring(0, maxLength) + '...'
+      : selectedCourse?.description;
   const styles = StyleSheet.create({
     main: {
       flex: 1,
@@ -176,12 +184,12 @@ const CourseDetails = () => {
         cap={resources.images.cap}
         goBack={() => goback()}
       />
-      <ScrollView>
+      <ScrollView nestedScrollEnabled={true}>
         <Image
-          source={{uri: selectedCourse?.mainImage}}
+          source={{uri: selectedCourse?.mainImageRectangle}}
           style={styles.collegeImage}
           resizeMode="stretch"
-          // resizeMode="contain"
+          // resizeMode="cover"
         />
         <View
           style={{
@@ -219,10 +227,44 @@ const CourseDetails = () => {
         <Text
           style={styles.contentText}
           numberOfLines={expanded ? undefined : maxLines}>
-          {selectedCourse?.description}
-        </Text>
+          <RenderHtml
+            contentWidth={width}
+            source={{
+              html: expanded ? selectedCourse?.description : previewHtml,
+            }}
+          />
+          {/* <RenderHtml
+            contentWidth={width}
+            source={{html: selectedCourse?.description}}
+          /> */}
+          {/* {selectedCourse?.description} */}
 
-        <TouchableOpacity
+          {/* {htmlToText(selectedCourse?.description)} */}
+        </Text>
+        {selectedCourse?.description.length > maxLength && (
+          <TouchableOpacity
+            onPress={() => setExpanded(!expanded)}
+            style={{
+              alignContent: 'flex-end',
+              alignItems: 'flex-end',
+              marginRight: hp('4%'),
+            }}>
+            <Text
+              style={{
+                color: resources.colors.primary,
+                justifyContent: 'flex-end',
+                fontWeight: '400',
+                fontSize: hp('1.8%'),
+                fontFamily: resources.fonts.Aregular,
+                textAlign: 'justify',
+                letterSpacing: 0.4,
+              }}>
+              {expanded ? 'Less...' : 'More...'}
+            </Text>
+          </TouchableOpacity>
+        )}
+
+        {/* <TouchableOpacity
           onPress={() => setExpanded(!expanded)}
           style={{
             marginTop: 5,
@@ -242,7 +284,7 @@ const CourseDetails = () => {
             }}>
             {expanded ? 'less...' : 'more...'}
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <View style={styles.button}>
           <TouchableOpacity
             onPress={() => {
@@ -370,7 +412,6 @@ const CourseDetails = () => {
             {selectedCourse?.applicationFees
               ? '$' + selectedCourse?.applicationFees
               : 'Free'}
-            {/* {'$120'} */}
           </Text>
         </View>
 

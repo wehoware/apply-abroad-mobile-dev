@@ -10,7 +10,11 @@ import {
   countriesFetchRequest,
   countriesFetchSuccess,
   courseListFetchRequest,
+  courseListFetchRequestHome,
   courseListFetchSuccess,
+  courseListFetchSuccessHome,
+  courseListForYouFetchRequestHome,
+  courseListForYouFetchSuccessHome,
   getConfig,
   institutionListFetchRequest,
   institutionListFetchSuccess,
@@ -219,6 +223,54 @@ function* fetchCourseList(data: PayloadAction<any>) {
   }
 }
 
+function* fetchCourseListHome(data: PayloadAction<any>) {
+  try {
+    yield put(setIsFetching(true));
+    var response: AxiosResponse<any, any> = yield call(API.getCourseList, data);
+    if (response.status) {
+      yield put(setIsFetching(false));
+      yield put(setIsError(false));
+      yield put(courseListFetchSuccessHome(response?.data?.data));
+    } else {
+      yield put(setIsFetching(false));
+      yield put(setIsError(true));
+      yield put(courseListFetchSuccessHome([]));
+    }
+  } catch (error: any) {
+    yield put(setIsFetching(false));
+    yield put(setIsError(true));
+    yield put(courseListFetchSuccessHome([]));
+    if (error && error.response) {
+      console.log('error in getting course list ==>', error.response.data);
+    }
+  }
+}
+
+function* fetchCourseListForYouHome(data: PayloadAction<any>) {
+  try {
+    yield put(setIsFetching(true));
+    var response: AxiosResponse<any, any> = yield call(
+      API.getCoursesForYou,
+      data,
+    );
+    if (response.status) {
+      yield put(setIsFetching(false));
+      yield put(setIsError(false));
+      yield put(courseListForYouFetchSuccessHome(response?.data?.data));
+    } else {
+      yield put(setIsFetching(false));
+      yield put(setIsError(true));
+      yield put(courseListForYouFetchSuccessHome([]));
+    }
+  } catch (error: any) {
+    yield put(setIsFetching(false));
+    yield put(setIsError(true));
+    yield put(courseListForYouFetchSuccessHome([]));
+    if (error && error.response) {
+      console.log('error in getting course list ==>', error.response.data);
+    }
+  }
+}
 function* fetchappliedCoursesList(data: PayloadAction<any>) {
   try {
     yield put(setIsFetching(true));
@@ -363,6 +415,11 @@ export function* AppSaga() {
     fetchappliedCoursesList,
   );
   yield takeLatest(courseListFetchRequest.type, fetchCourseList);
+  yield takeLatest(courseListFetchRequestHome.type, fetchCourseListHome);
+  yield takeLatest(
+    courseListForYouFetchRequestHome.type,
+    fetchCourseListForYouHome,
+  );
   yield takeLatest(applyCoursesFetchRequest.type, fetchApplyCourseList);
   yield takeLatest(
     popularCollegesListFetchRequest.type,

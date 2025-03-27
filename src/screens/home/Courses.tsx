@@ -278,7 +278,7 @@ const Courses = () => {
     return (
       <TouchableOpacity style={styles.courseBox} onPress={() => _details(item)}>
         <Image
-          source={{uri: item?.mainImage}}
+          source={{uri: item?.mainImageSquare}}
           style={{
             height: hp('13%'),
             width: wp('30'),

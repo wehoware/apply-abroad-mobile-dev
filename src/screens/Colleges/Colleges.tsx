@@ -104,12 +104,12 @@ const Colleges = () => {
     return (
       <TouchableOpacity style={styles.box} onPress={() => _details(item)}>
         <Image
-          source={{uri: item.mainImage}}
+          source={{uri: item?.mainImageSquare}}
           style={styles.collegeImage}
           resizeMode="cover"
         />
         <Text style={styles.collegeName} numberOfLines={1}>
-          {item.name}
+          {item?.name}
         </Text>
         <View style={{flexDirection: 'row', marginTop: hp('0.5%')}}>
           <EvilIcons
@@ -121,7 +121,7 @@ const Colleges = () => {
           <Text
             numberOfLines={1}
             style={[styles.locationName, {width: wp('25%')}]}>
-            {item?.locations[0].city}
+            {item?.locations[0]?.city}
           </Text>
           <View style={{flexDirection: 'row', marginStart: hp('0.4%')}}>
             <Image
@@ -134,7 +134,7 @@ const Colleges = () => {
                 styles.locationName,
                 {color: resources.colors.black, fontWeight: '600'},
               ]}>
-              {item.rating}
+              {item?.rating}
             </Text>
           </View>
         </View>
@@ -146,13 +146,13 @@ const Colleges = () => {
     return (
       <TouchableOpacity style={styles.box} onPress={() => _details(item)}>
         <Image
-          source={{uri: item.mainImage}}
+          source={{uri: item?.mainImageSquare}}
           style={styles.collegeImage}
-          // resizeMode="cover"
+          resizeMode="cover"
         />
 
         <Text style={styles.collegeName} numberOfLines={1}>
-          {item.name}
+          {item?.name}
         </Text>
 
         <View style={{flexDirection: 'row', marginTop: hp('0.5%')}}>
@@ -165,7 +165,7 @@ const Colleges = () => {
           <Text
             numberOfLines={1}
             style={[styles.locationName, {width: wp('25%')}]}>
-            {item?.locations[0].city}
+            {item?.locations[0]?.city}
           </Text>
           <View style={{flexDirection: 'row', marginStart: hp('0.4%')}}>
             <Image
@@ -178,7 +178,7 @@ const Colleges = () => {
                 styles.locationName,
                 {color: resources.colors.black, fontWeight: '600'},
               ]}>
-              {item.rating}
+              {item?.rating}
             </Text>
           </View>
         </View>

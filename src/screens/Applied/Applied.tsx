@@ -142,7 +142,7 @@ const Applied = () => {
         style={styles.courseBox}
         onPress={() => _details(item.course)}>
         <Image
-          source={{uri: item?.course.mainImage}}
+          source={{uri: item?.course.mainImageSquare}}
           style={{
             height: hp('13%'),
             width: wp('30'),
