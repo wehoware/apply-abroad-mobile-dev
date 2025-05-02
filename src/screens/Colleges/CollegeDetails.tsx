@@ -80,6 +80,7 @@ const CollegeDetails = () => {
   const goback = () => {
     navigation.goBack();
   };
+  console.log('selectedCollege', selectedCollege);
 
   const previewHtml =
     selectedCollege?.about.length > maxLength
@@ -104,12 +105,12 @@ const CollegeDetails = () => {
       fontSize: hp('2%'),
       color: resources.colors.black,
       fontWeight: '700',
-      fontFamily: resources.fonts.regular,
+      fontFamily: resources.fonts.Aregular,
     },
     collegeText: {
       fontSize: hp('2.4%'),
       color: resources.colors.black,
-      fontFamily: resources.fonts.semiBold,
+      fontFamily: resources.fonts.AsemiBold,
       fontWeight: '600',
       width: wp('80%'),
       marginStart: hp('3%'),
@@ -117,18 +118,18 @@ const CollegeDetails = () => {
       letterSpacing: 0.2,
     },
     text: {
-      fontSize: hp('1.8%'),
+      fontSize: hp('2%'),
       color: resources.colors.primary,
-      fontFamily: resources.fonts.medium,
+      fontFamily: resources.fonts.Amedium,
       fontWeight: '500',
       width: wp('50%'),
       letterSpacing: 0.2,
     },
     groupImage: {height: hp('2.8%'), width: wp('8%'), marginStart: hp('1.5%')},
     starText: {
-      fontSize: hp('1.8%'),
+      fontSize: hp('2%'),
       color: resources.colors.black,
-      fontFamily: resources.fonts.medium,
+      fontFamily: resources.fonts.Amedium,
       fontWeight: '500',
       marginStart: hp('1%'),
     },
@@ -141,9 +142,9 @@ const CollegeDetails = () => {
     },
     contentText: {
       marginStart: hp('3%'),
-      marginTop: hp('2%'),
+      // marginTop: hp('2%'),
       fontSize: hp('2%'),
-      fontFamily: resources.fonts.regular,
+      fontFamily: resources.fonts.Aregular,
       fontWeight: '400',
       color: resources.colors.black,
       letterSpacing: 0.4,
@@ -154,8 +155,8 @@ const CollegeDetails = () => {
     textHead: {
       marginStart: hp('3%'),
       marginTop: hp('2%'),
-      fontSize: hp('2.2%'),
-      fontFamily: resources.fonts.semiBold,
+      fontSize: hp('2.3%'),
+      fontFamily: resources.fonts.Amedium,
       fontWeight: '700',
       width: wp('92%'),
       color: resources.colors.black,
@@ -164,13 +165,13 @@ const CollegeDetails = () => {
       marginStart: hp('3%'),
       marginTop: hp('2%'),
       fontSize: hp('2%'),
-      fontFamily: resources.fonts.semiBold,
-      fontWeight: '700',
+      fontFamily: resources.fonts.Amedium,
+      fontWeight: '600',
       width: wp('92%'),
       color: resources.colors.black,
     },
     LocationText1: {
-      marginStart: hp('2%'),
+      marginStart: hp('3%'),
       marginTop: hp('1%'),
       fontSize: hp('2%'),
       fontFamily: resources.fonts.Amedium,
@@ -199,7 +200,7 @@ const CollegeDetails = () => {
       textAlign: 'center',
       fontSize: hp('2%'),
       fontWeight: '600',
-      fontFamily: resources.fonts.medium,
+      fontFamily: resources.fonts.Amedium,
     },
     mainText: {
       marginTop: hp('2%'),
@@ -234,10 +235,10 @@ const CollegeDetails = () => {
     categoriesName: {
       // fontWeight: '700',
       fontSize: hp('1.8%'),
-      fontFamily: resources.fonts.Amedium,
+      fontFamily: resources.fonts.AsemiBold,
       textAlign: 'center',
       padding: 10,
-      letterSpacing: 1,
+      // letterSpacing: 1,
     },
     categoriesBox: {
       height: hp('6%'),
@@ -373,7 +374,8 @@ const CollegeDetails = () => {
               color: item.select
                 ? resources.colors.white
                 : resources.colors.light_ash1,
-              fontWeight: item.select ? '800' : '700',
+              // fontWeight: item.select ? '800' : '700',
+              fontWeight: '700',
             },
           ]}>
           {item.name}
@@ -460,6 +462,20 @@ const CollegeDetails = () => {
     return (
       <View style={styles.empty}>
         <Text style={styles.noData}>No data found</Text>
+      </View>
+    );
+  };
+  const ListEmptyComponent = () => {
+    return (
+      <View
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginTop: hp('1%'),
+          height: hp('20%'),
+          width: wp('90%'),
+        }}>
+        <Text style={styles.noData}>No Data found</Text>
       </View>
     );
   };
@@ -578,13 +594,13 @@ const CollegeDetails = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        <Text style={styles.textHead}>Location</Text>
-        <TouchableOpacity
-          onPress={() => {
-            Linking.openURL(selectedCollege?.website);
-          }}>
-          <Text style={[styles.LocationText]}>
-            {selectedCollege?.locations[0]?.addressOne} {'\n'}
+        {infoActive ? (
+          <>
+            <Text style={styles.textHead}>Location</Text>
+
+            <Text style={[styles.LocationText]}>
+              {selectedCollege?.locations[0]?.addressOne}
+            </Text>
             {selectedCollege?.locations[0]?.addressTwo ? (
               <Text style={[styles.LocationText1]}>
                 {selectedCollege?.locations[0]?.addressTwo}
@@ -594,34 +610,33 @@ const CollegeDetails = () => {
             <Text style={[styles.LocationText1]}>
               {selectedCollege?.locations[0]?.city}
             </Text>
-          </Text>
-        </TouchableOpacity>
-        <Text style={styles.textHead}>Website</Text>
-        <TouchableOpacity
-          onPress={() => {
-            Linking.openURL(selectedCollege?.website);
-          }}>
-          <Text
-            style={[
-              styles.contentText,
-              {color: '#399CFF', marginTop: hp('1%')},
-            ]}>
-            {selectedCollege?.website}
-          </Text>
-        </TouchableOpacity>
-        <Text style={styles.textHead}>About</Text>
-        <Text
-          style={styles.contentText}
-          // numberOfLines={expanded ? undefined : maxLines}
-        >
-          {/* {selectedCollege?.about} */}
 
-          <RenderHtml
-            contentWidth={width}
-            source={{html: expanded ? selectedCollege?.about : previewHtml}}
-          />
-        </Text>
-        {/* <TouchableOpacity
+            <Text style={styles.textHead}>Website</Text>
+            <TouchableOpacity
+              onPress={() => {
+                Linking.openURL(selectedCollege?.website);
+              }}>
+              <Text
+                style={[
+                  styles.contentText,
+                  {color: '#399CFF', marginTop: hp('1%')},
+                ]}>
+                {selectedCollege?.website}
+              </Text>
+            </TouchableOpacity>
+            <Text style={styles.textHead}>About</Text>
+            <Text
+              style={styles.contentText}
+              // numberOfLines={expanded ? undefined : maxLines}
+            >
+              {/* {selectedCollege?.about} */}
+
+              <RenderHtml
+                contentWidth={width}
+                source={{html: expanded ? selectedCollege?.about : previewHtml}}
+              />
+            </Text>
+            {/* <TouchableOpacity
           onPress={() => setExpanded(!expanded)}
           style={{
             marginTop: 5,
@@ -643,27 +658,31 @@ const CollegeDetails = () => {
           </Text>
         </TouchableOpacity> */}
 
-        {selectedCollege?.about.length > maxLength && (
-          <TouchableOpacity
-            onPress={() => setExpanded(!expanded)}
-            style={{
-              alignContent: 'flex-end',
-              alignItems: 'flex-end',
-              marginRight: hp('4%'),
-            }}>
-            <Text
-              style={{
-                color: resources.colors.primary,
-                justifyContent: 'flex-end',
-                fontWeight: '400',
-                fontSize: hp('1.7%'),
-                fontFamily: resources.fonts.regular,
-                textAlign: 'justify',
-                // letterSpacing: 0.4,
-              }}>
-              {expanded ? 'Less...' : 'More...'}
-            </Text>
-          </TouchableOpacity>
+            {selectedCollege?.about.length > maxLength && (
+              <TouchableOpacity
+                onPress={() => setExpanded(!expanded)}
+                style={{
+                  alignContent: 'flex-end',
+                  alignItems: 'flex-end',
+                  marginRight: hp('4%'),
+                }}>
+                <Text
+                  style={{
+                    color: resources.colors.primary,
+                    justifyContent: 'flex-end',
+                    fontWeight: '400',
+                    fontSize: hp('1.7%'),
+                    fontFamily: resources.fonts.regular,
+                    textAlign: 'justify',
+                    // letterSpacing: 0.4,
+                  }}>
+                  {expanded ? 'Less...' : 'More...'}
+                </Text>
+              </TouchableOpacity>
+            )}
+          </>
+        ) : (
+          ListEmptyComponent()
         )}
         <Text style={styles.categoriesText}>Colleges</Text>
         <View style={styles.list}>

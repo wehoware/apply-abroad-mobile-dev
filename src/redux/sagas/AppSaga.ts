@@ -47,7 +47,7 @@ function* fetchConfigObject(data: PayloadAction<ConfigRequestPayload>) {
 
 function* fetchCountries() {
   try {
-    yield put(setIsFetching(true));
+    // yield put(setIsFetching(true));
     var response: AxiosResponse<any, any> = yield call(API.getCountrys);
     if (response.status) {
       yield put(setIsFetching(false));
@@ -80,7 +80,7 @@ function* fetchCountries() {
 
 function* fetchCategories() {
   try {
-    yield put(setIsFetching(true));
+    // yield put(setIsFetching(true));
     var response: AxiosResponse<any, any> = yield call(API.getCategories);
     if (response.status) {
       yield put(setIsFetching(false));
@@ -114,7 +114,7 @@ function* fetchCategories() {
 
 function* fetchScoreTypes() {
   try {
-    yield put(setIsFetching(true));
+    // yield put(setIsFetching(true));
     var response: AxiosResponse<any, any> = yield call(API.getScoreTypes);
     if (response.status) {
       yield put(setIsFetching(false));

@@ -12,6 +12,7 @@ const AsyncConstants = {
   courseIds: '@COURSEIDS',
   eduLevelId: '@EDULEVELID',
   course: '@COURSE',
+  otp: '@OTP',
 };
 
 export default AsyncConstants;

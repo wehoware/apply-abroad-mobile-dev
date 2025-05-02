@@ -43,7 +43,6 @@ const Courses = () => {
   const [search, setSearch] = useState<string>('');
   const [courses, setCourses] = useState<any>([]);
   const [categoriesList, setCategoriesList] = useState<any>([]);
-  console.log('------------------------', categorieIds);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -274,6 +273,26 @@ const Courses = () => {
     dispatch(setCategoriesId(''));
     navigation.goBack();
   };
+
+  const searchCourses = (searchQuery: any) => {
+    console.log('searchQuery', searchQuery);
+    console.log('searchQuery', courses);
+
+    if (searchQuery.length > 2) {
+      const filteredCourse = courses?.filter((course: any) =>
+        course?.institution?.name
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()),
+      );
+      console.log('filteredCourse', filteredCourse);
+      setCourses(filteredCourse);
+    } else {
+      setCourses(courseList);
+    }
+  };
+  const countryChange = () => {
+    navigation.navigate('CountryChange');
+  };
   const _renderCourses = ({item}: any) => {
     return (
       <TouchableOpacity style={styles.courseBox} onPress={() => _details(item)}>
@@ -393,6 +412,7 @@ const Courses = () => {
           name={'Courses'}
           cap={resources.images.cap}
           goBack={() => goback()}
+          countryChange={() => countryChange()}
         />
       </View>
 
@@ -411,17 +431,18 @@ const Courses = () => {
           /> */}
           <TextInput
             style={{
-              color: resources.colors.ash,
+              color: resources.colors.black,
               fontSize: hp('2%'),
-              fontFamily: resources.fonts.Aregular,
+              fontFamily: resources.fonts.Amedium,
               fontWeight: '400',
-              letterSpacing: 1,
+              // letterSpacing: 1,
             }}
-            value={search}
+            // value={search}
             placeholderTextColor={resources.colors.ash}
             placeholder={'Search colleges , courses..'}
             onChangeText={val => {
-              setSearch(val);
+              searchCourses(val);
+              // setSearch(val);
             }}
           />
         </View>

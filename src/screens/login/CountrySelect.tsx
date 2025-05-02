@@ -25,7 +25,7 @@ import {
 import {countriesFetchRequest} from '../../redux/slices/appSlice';
 
 import colors from '../../resources/colors/colors';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Toaster} from '../../services/Toaster';
 import {getDataFromAsync, setDataToAsync} from '../../services/AsyncService';
 import {Image} from 'react-native';
@@ -98,6 +98,10 @@ const CountrySelect = () => {
       bottom: hp('5%'),
       alignSelf: 'center',
       borderRadius: 15,
+      shadowOffset: {width: 0, height: 4},
+      shadowOpacity: 0.2,
+      shadowRadius: 15,
+      elevation: 6,
     },
     boxText: {
       color: '#141B13',
@@ -113,10 +117,11 @@ const CountrySelect = () => {
 
     signIn: {
       color: resources.colors.white,
-      marginTop: 10,
-      fontWeight: '600',
+      // marginTop: 10,
+      fontWeight: '700',
       textAlign: 'center',
       fontSize: hp('2.0%'),
+      fontFamily: resources.fonts.Abold,
     },
     button: {
       marginStart: 20,
@@ -127,6 +132,11 @@ const CountrySelect = () => {
       borderRadius: 5,
       position: 'absolute',
       bottom: hp('5%'),
+      justifyContent: 'center',
+      shadowOffset: {width: 0, height: 4},
+      shadowOpacity: 0.2,
+      shadowRadius: 3,
+      elevation: 6,
     },
     buttonSkip: {
       marginStart: 20,
@@ -148,8 +158,8 @@ const CountrySelect = () => {
     },
     itemSeparate: {
       width: wp('80%'),
-      borderColor: resources.colors.ash,
-      borderWidth: 0.5,
+      borderColor: '#EAEAEA',
+      borderWidth: 1,
       margin: 10,
     },
     circle: {
@@ -177,6 +187,20 @@ const CountrySelect = () => {
       alignItems: 'center',
       marginTop: hp('6%'),
       marginStart: hp('2%'),
+    },
+    countryText: {
+      width: wp('50%'),
+      marginStart: hp('2%'),
+      fontFamily: resources.fonts.Amedium,
+      fontWeight: '700',
+      fontSize: hp('1.8%'),
+    },
+    searchInput: {
+      color: resources.colors.black,
+      fontSize: hp('2%'),
+      marginStart: hp('2%'),
+      fontWeight: '400',
+      fontFamily: resources.fonts.AsemiBold,
     },
   });
 
@@ -209,6 +233,9 @@ const CountrySelect = () => {
           flexDirection: 'row',
           alignContent: 'center',
           alignItems: 'center',
+          height: hp('8%'),
+          // marginTop: hp('1%'),
+          // marginBottom: hp('1%'),
         }}
         onPress={() => {
           selectCountry(item), educationSelection(item);
@@ -216,16 +243,15 @@ const CountrySelect = () => {
         <Image
           source={{uri: item?.flagImage}}
           style={{
-            height: hp('8'),
-            width: wp('16'),
+            height: hp('7%'),
+            width: wp('14%'),
             borderRadius: 10,
+            marginStart: hp('3%'),
           }}
         />
-        <Text style={{width: wp('55%'), marginStart: hp('2%')}}>
-          {item.name}
-        </Text>
+        <Text style={styles.countryText}>{item.name}</Text>
         {item.select ? (
-          <AntDesign name={'checkcircle'} size={20} color={'#33363F'} />
+          <AntDesign name={'checkcircleo'} size={20} color={'#33363F'} />
         ) : (
           <View style={styles.circle} />
         )}
@@ -245,9 +271,9 @@ const CountrySelect = () => {
       />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Entypo
+          <MaterialIcons
             name={'chevron-left'}
-            size={35}
+            size={40}
             color={resources.colors.white}
             style={{
               width: wp('30%'),
@@ -266,11 +292,7 @@ const CountrySelect = () => {
             resizeMode="contain"
           />
           <TextInput
-            style={{
-              color: resources.colors.ash,
-              fontSize: hp('2%'),
-              marginStart: hp('2%'),
-            }}
+            style={styles.searchInput}
             value={search}
             placeholderTextColor={resources.colors.ash}
             placeholder={'Search countries'}
@@ -279,13 +301,24 @@ const CountrySelect = () => {
             }}
           />
         </View>
-        <View
+        {/* <View
           style={{
             marginTop: hp('3%'),
             marginStart: hp('2%'),
             height: hp('60%'),
+          }}> */}
+        <View
+          style={{
+            marginTop: hp('3%'),
+            marginStart: hp('2%'),
+            height: hp('50%'),
+            backgroundColor: 'white',
+            width: wp('84%'),
+            borderRadius: 10,
+            // marginBottom: hp('2%'),
           }}>
           <FlatList
+            style={{marginBottom: hp('2%'), marginTop: hp('1%')}}
             data={countriesList}
             renderItem={_renderItems}
             ItemSeparatorComponent={ItemSeparatorComponent}
@@ -293,7 +326,7 @@ const CountrySelect = () => {
         </View>
 
         <TouchableOpacity style={styles.button} onPress={() => _countrySave()}>
-          <Text style={styles.signIn}>Next</Text>
+          <Text style={styles.signIn}>Finish</Text>
         </TouchableOpacity>
       </View>
     </View>

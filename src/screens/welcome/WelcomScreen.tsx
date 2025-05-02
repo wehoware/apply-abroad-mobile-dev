@@ -73,15 +73,17 @@ const WelcomScreen = () => {
       height: hp('6%'),
       width: wp('85%'),
       backgroundColor: resources.colors.primary,
-      marginTop: hp('5%'),
+      marginTop: hp('6%'),
       borderRadius: 5,
+      justifyContent: 'center',
     },
     signIn: {
       color: resources.colors.white,
-      marginTop: 10,
+      // marginTop: hp('2'),
       fontWeight: '600',
       textAlign: 'center',
-      fontSize: hp('2.0%'),
+      fontSize: hp('2.2%'),
+      fontFamily: resources.fonts.Abold,
     },
     buttonSignUp: {
       marginStart: 20,
@@ -89,8 +91,9 @@ const WelcomScreen = () => {
       width: wp('85%'),
       borderWidth: 1,
       borderColor: resources.colors.olive_green,
-      marginTop: hp('5%'),
+      marginTop: hp('3%'),
       borderRadius: 5,
+      justifyContent: 'center',
     },
     bootomView: {
       flexDirection: 'row',
@@ -184,6 +187,7 @@ const WelcomScreen = () => {
               fontSize: hp('4%'),
               color: resources.colors.black,
               fontFamily: resources.fonts.bold,
+              lineHeight: 42,
             }}>
             Live
             <Text style={{color: resources.colors.orange}}> Support</Text>{' '}

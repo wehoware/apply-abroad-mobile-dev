@@ -119,7 +119,7 @@ const Applied = () => {
               color: item.select
                 ? resources.colors.white
                 : resources.colors.light_ash1,
-              fontWeight: item.select ? '800' : '700',
+              fontWeight: '700',
             },
           ]}>
           {item.name}
@@ -132,6 +132,23 @@ const Applied = () => {
     dispatch(setSelectedCourse(item));
     dispatch(setFromScreen('Applied'));
     navigation.navigate('CourseDetails');
+  };
+
+  const searchCourses = (searchQuery: any) => {
+    console.log('searchQuery', searchQuery);
+    console.log('appliedCourses', appliedCourses);
+
+    if (searchQuery.length > 2) {
+      const filteredCourse = appliedCourses?.filter((appliedCourse: any) =>
+        appliedCourse?.course?.name
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()),
+      );
+      console.log('filteredCourse', filteredCourse);
+      setCourses(filteredCourse);
+    } else {
+      setCourses(appliedCourses);
+    }
   };
   const countryChange = () => {
     navigation.navigate('CountryChange');
@@ -266,10 +283,10 @@ const Applied = () => {
     categoriesName: {
       // fontWeight: '700',
       fontSize: hp('1.8%'),
-      fontFamily: resources.fonts.Amedium,
+      fontFamily: resources.fonts.AsemiBold,
       textAlign: 'center',
       padding: 10,
-      letterSpacing: 1,
+      // letterSpacing: 1,
     },
     categoriesBox: {
       height: hp('6%'),
@@ -279,6 +296,7 @@ const Applied = () => {
       backgroundColor: resources.colors.ash,
       justifyContent: 'center',
       borderRadius: 12,
+      // fontFamily: resources.fonts.Aregular,
     },
     separate: {margin: 10},
     empty: {justifyContent: 'center', marginTop: hp('20%')},
@@ -390,17 +408,18 @@ const Applied = () => {
           />
           <TextInput
             style={{
-              color: resources.colors.ash,
+              color: resources.colors.black,
               fontSize: hp('2%'),
               fontFamily: resources.fonts.Amedium,
-              fontWeight: '600',
-              letterSpacing: 1,
+              fontWeight: '400',
+              // letterSpacing: 1,
             }}
-            value={search}
+            // value={search}
             placeholderTextColor={resources.colors.ash}
             placeholder={'Search colleges , courses..'}
             onChangeText={val => {
-              setSearch(val);
+              searchCourses(val);
+              // setSearch(val);
             }}
           />
         </View>

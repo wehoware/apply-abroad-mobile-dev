@@ -25,14 +25,15 @@ import {
 import {countriesFetchRequest} from '../../redux/slices/appSlice';
 
 import colors from '../../resources/colors/colors';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Toaster} from '../../services/Toaster';
 import {getDataFromAsync, setDataToAsync} from '../../services/AsyncService';
 import {Image} from 'react-native';
 import {updateCountryFetch} from '../../redux/slices/authSlice';
 import useRedirect from '../../hooks/useRedirect';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const CountryChange = () => {
   const navigation = useNavigation<stackProps>();
@@ -54,7 +55,19 @@ const CountryChange = () => {
   };
   useEffect(() => {
     if (countries.length > 0 || countries.length === 0) {
-      setcountriesList(countries);
+      console.log(
+        'serData?.interestedCountryId',
+        userData?.interestedCountryId,
+      );
+
+      // setcountriesList(countries);
+
+      const updatedCountyList = countries.map((item: any) =>
+        item.id === userData?.interestedCountryId
+          ? {...item, select: true}
+          : {...item, select: false},
+      );
+      setcountriesList(updatedCountyList);
     }
   }, [countries]);
   //   const _countrySave = async () => {
@@ -141,11 +154,10 @@ const CountryChange = () => {
 
     signIn: {
       color: resources.colors.white,
-      marginTop: 10,
-      fontWeight: '600',
+      fontWeight: '700',
       textAlign: 'center',
       fontSize: hp('2.0%'),
-      fontFamily: resources.fonts.medium,
+      fontFamily: resources.fonts.Abold,
     },
     button: {
       marginStart: 20,
@@ -156,6 +168,7 @@ const CountryChange = () => {
       borderRadius: 5,
       position: 'absolute',
       bottom: hp('5%'),
+      justifyContent: 'center',
     },
     buttonSkip: {
       marginStart: 20,
@@ -177,14 +190,14 @@ const CountryChange = () => {
     },
     itemSeparate: {
       width: wp('80%'),
-      borderColor: resources.colors.light_ash,
-      borderWidth: 0.5,
+      borderColor: '#EAEAEA',
+      borderWidth: 1,
       margin: 10,
     },
     circle: {
       height: hp('2.5%'),
       borderColor: '#33363F',
-      borderWidth: 2,
+      borderWidth: 1.5,
       width: wp('5%'),
       borderRadius: 100,
     },
@@ -207,6 +220,20 @@ const CountryChange = () => {
       marginTop: hp('6%'),
       marginStart: hp('2%'),
       backgroundColor: resources.colors.white,
+    },
+    countryText: {
+      width: wp('50%'),
+      marginStart: hp('2%'),
+      fontFamily: resources.fonts.Amedium,
+      fontWeight: '700',
+      fontSize: hp('1.8%'),
+    },
+    searchInput: {
+      color: resources.colors.black,
+      fontSize: hp('2%'),
+      marginStart: hp('2%'),
+      fontWeight: '400',
+      fontFamily: resources.fonts.Aregular,
     },
   });
 
@@ -253,17 +280,13 @@ const CountryChange = () => {
             marginStart: hp('3%'),
           }}
         />
-        <Text
-          style={{
-            width: wp('50%'),
-            marginStart: hp('2%'),
-            fontFamily: resources.fonts.Amedium,
-            fontWeight: '700',
-          }}>
-          {item.name}
-        </Text>
+        <Text style={styles.countryText}>{item.name}</Text>
         {item.select ? (
-          <AntDesign name={'checkcircle'} size={20} color={'#33363F'} />
+          <Ionicons
+            name={'checkmark-circle-outline'}
+            size={25}
+            color={resources.colors.primary}
+          />
         ) : (
           <View style={styles.circle} />
         )}
@@ -283,9 +306,9 @@ const CountryChange = () => {
       />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Entypo
+          <MaterialIcons
             name={'chevron-left'}
-            size={35}
+            size={40}
             color={resources.colors.white}
             style={{
               width: wp('30%'),
@@ -310,11 +333,7 @@ const CountryChange = () => {
             style={{marginLeft: hp('2%')}}
           />
           <TextInput
-            style={{
-              color: resources.colors.ash,
-              fontSize: hp('2%'),
-              marginStart: hp('2%'),
-            }}
+            style={styles.searchInput}
             value={search}
             placeholderTextColor={resources.colors.ash}
             placeholder={'Search countries'}
@@ -334,6 +353,7 @@ const CountryChange = () => {
             marginBottom: hp('2%'),
           }}>
           <FlatList
+            style={{marginBottom: hp('2%'), marginTop: hp('1%')}}
             data={countriesList}
             renderItem={_renderItems}
             ItemSeparatorComponent={ItemSeparatorComponent}

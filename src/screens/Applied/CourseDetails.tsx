@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-native/no-inline-styles */
 import {
@@ -176,6 +177,29 @@ const CourseDetails = () => {
       lineHeight: 20,
     },
   });
+  const ListEmptyComponent = () => {
+    return (
+      <View
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginTop: hp('1%'),
+          height: hp('20%'),
+          width: wp('90%'),
+        }}>
+        <Text
+          style={{
+            textAlign: 'center',
+            color: resources.colors.ash,
+            fontSize: hp('2.2%'),
+            fontFamily: resources.fonts.Aregular,
+            fontWeight: '500',
+          }}>
+          No Data found
+        </Text>
+      </View>
+    );
+  };
   return (
     <View style={styles.main}>
       <SubHeaderComponent
@@ -337,85 +361,94 @@ const CourseDetails = () => {
             </Text>
           </TouchableOpacity>
         </View>
+        {infoActive ? (
+          <>
+            <Text
+              style={{
+                marginTop: hp('4%'),
+                marginStart: hp('3%'),
+                fontSize: hp('2.2%'),
+                fontWeight: '700',
+                fontFamily: resources.fonts.Amedium,
+                color: resources.colors.black,
+              }}>
+              Program Overview
+            </Text>
+            <Text style={styles.mainText}>
+              Department/School:
+              <Text style={styles.subText}> {selectedCourse?.department}</Text>
+            </Text>
+            <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
+              Faculty:{' '}
+              <Text style={styles.subText}>{selectedCourse?.faculty}</Text>
+            </Text>
 
-        <Text
-          style={{
-            marginTop: hp('4%'),
-            marginStart: hp('3%'),
-            fontSize: hp('2.2%'),
-            fontWeight: '700',
-            fontFamily: resources.fonts.Amedium,
-            color: resources.colors.black,
-          }}>
-          Program Overview
-        </Text>
-        <Text style={styles.mainText}>
-          Department/School:
-          <Text style={styles.subText}> {selectedCourse?.department}</Text>
-        </Text>
-        <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
-          Faculty: <Text style={styles.subText}>{selectedCourse?.faculty}</Text>
-        </Text>
+            <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
+              Admit term(s):
+              <Text style={styles.subText}>{selectedCourse?.admitTerms}</Text>
+            </Text>
 
-        <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
-          Admit term(s):
-          <Text style={styles.subText}>{selectedCourse?.admitTerms}</Text>
-        </Text>
+            <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
+              Delivery mode:
+              <Text style={styles.subText}> {selectedCourse?.studyMode}</Text>
+            </Text>
 
-        <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
-          Delivery mode:
-          <Text style={styles.subText}> {selectedCourse?.studyMode}</Text>
-        </Text>
+            <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
+              Program type:{' '}
+              <Text style={styles.subText}>
+                {selectedCourse?.educationLevel?.name}
+              </Text>
+            </Text>
 
-        <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
-          Program type:{' '}
-          <Text style={styles.subText}>
-            {selectedCourse?.educationLevel?.name}
-          </Text>
-        </Text>
+            <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
+              Length of program:
+              <Text style={styles.subText}> {selectedCourse?.duration} </Text>
+            </Text>
 
-        <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
-          Length of program:
-          <Text style={styles.subText}> {selectedCourse?.duration} </Text>
-        </Text>
+            <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
+              Registration option(s):
+              <Text style={styles.subText}>
+                {' '}
+                {selectedCourse?.enrollmentType}
+              </Text>
+            </Text>
+            <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
+              Study option(s):
+              <Text style={styles.subText}>
+                {' '}
+                {selectedCourse?.studyOptions}
+              </Text>
+            </Text>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text
+                style={{
+                  marginTop: hp('2%'),
+                  marginStart: hp('3%'),
+                  fontSize: hp('2.2%'),
+                  fontWeight: '700',
+                  fontFamily: resources.fonts.Amedium,
+                  color: resources.colors.black,
+                }}>
+                Application Fee
+              </Text>
+              <Text
+                style={{
+                  marginTop: hp('2%'),
+                  marginStart: hp('2%'),
+                  fontSize: hp('2%'),
+                  fontWeight: '700',
+                  fontFamily: resources.fonts.Amedium,
+                  color: resources.colors.red,
+                  marginRight: hp('3%'),
+                }}>
+                {selectedCourse?.applicationFees
+                  ? '$' + selectedCourse?.applicationFees
+                  : 'Free'}
+              </Text>
+            </View>
 
-        <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
-          Registration option(s):
-          <Text style={styles.subText}> {selectedCourse?.enrollmentType}</Text>
-        </Text>
-        <Text style={[styles.mainText, {marginTop: hp('1%')}]}>
-          Study option(s):
-          <Text style={styles.subText}> {selectedCourse?.studyOptions}</Text>
-        </Text>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text
-            style={{
-              marginTop: hp('2%'),
-              marginStart: hp('3%'),
-              fontSize: hp('2.2%'),
-              fontWeight: '700',
-              fontFamily: resources.fonts.Amedium,
-              color: resources.colors.black,
-            }}>
-            Application Fee
-          </Text>
-          <Text
-            style={{
-              marginTop: hp('2%'),
-              marginStart: hp('2%'),
-              fontSize: hp('2%'),
-              fontWeight: '700',
-              fontFamily: resources.fonts.Amedium,
-              color: resources.colors.red,
-              marginRight: hp('3%'),
-            }}>
-            {selectedCourse?.applicationFees
-              ? '$' + selectedCourse?.applicationFees
-              : 'Free'}
-          </Text>
-        </View>
-
-        {/* {selectedCourse?.programOverView?.map((item: any, index: number) => (
+            {/* {selectedCourse?.programOverView?.map((item: any, index: number) => (
           <Text
             key={index}
             style={{
@@ -431,47 +464,50 @@ const CourseDetails = () => {
             {'\n'}
           </Text>
         ))} */}
-        {selectedCourse?.intakes ? (
-          <Text
-            style={{
-              marginTop: hp('2%'),
-              marginStart: hp('3%'),
-              fontSize: hp('2%'),
-              fontWeight: '700',
-              fontFamily: resources.fonts.Amedium,
-              color: resources.colors.black,
-            }}>
-            Application deadline
-          </Text>
-        ) : null}
+            {selectedCourse?.intakes ? (
+              <Text
+                style={{
+                  marginTop: hp('2%'),
+                  marginStart: hp('3%'),
+                  fontSize: hp('2%'),
+                  fontWeight: '700',
+                  fontFamily: resources.fonts.Amedium,
+                  color: resources.colors.black,
+                }}>
+                Application deadline
+              </Text>
+            ) : null}
 
-        <Text style={styles.subText1}>
-          {selectedCourse?.intakes?.map((item: any, index: number) => (
-            <Text
-              key={index}
-              style={{
-                marginTop: hp('1%'),
-                marginStart: hp('3%'),
-                fontSize: hp('1.8%'),
-                fontWeight: '400',
-                fontFamily: resources.fonts.Amedium,
-                color: resources.colors.black,
-              }}>
-              {moment(item?.applicationEndDate).format('MMMM D')}({item?.name})
-              {'\n'}
+            <Text style={styles.subText1}>
+              {selectedCourse?.intakes?.map((item: any, index: number) => (
+                <Text
+                  key={index}
+                  style={{
+                    marginTop: hp('1%'),
+                    marginStart: hp('3%'),
+                    fontSize: hp('1.8%'),
+                    fontWeight: '400',
+                    fontFamily: resources.fonts.Amedium,
+                    color: resources.colors.black,
+                  }}>
+                  {moment(item?.applicationEndDate).format('MMMM D')}(
+                  {item?.name}){'\n'}
+                </Text>
+              ))}
+
+              {/* March 1(for admission in September) */}
             </Text>
-          ))}
-
-          {/* March 1(for admission in September) */}
-        </Text>
-        {fromScreen === 'Applied' ? null : (
-          <TouchableOpacity
-            onPress={() => navigation.navigate('CheckOut')}
-            style={styles.applyButton}>
-            <Text style={styles.applyText}>Apply Now</Text>
-          </TouchableOpacity>
+            {fromScreen === 'Applied' ? null : (
+              <TouchableOpacity
+                onPress={() => navigation.navigate('CheckOut')}
+                style={styles.applyButton}>
+                <Text style={styles.applyText}>Apply Now</Text>
+              </TouchableOpacity>
+            )}
+          </>
+        ) : (
+          ListEmptyComponent()
         )}
-
         <View style={{height: hp('3%')}} />
       </ScrollView>
     </View>

@@ -26,6 +26,7 @@ import EducationCertificates from '../screens/Settings/EducationCertificates';
 import CollegeDetails from '../screens/Colleges/CollegeDetails';
 import CountryChange from '../screens/home/CountryChange';
 import CategoriesList from '../screens/home/CategoriesList';
+import ForgotPassword1 from '../screens/login/ForgoyPassword1';
 const Stack = createStackNavigator<StackNavigatorList>();
 
 const StackNavigator = () => {
@@ -41,6 +42,7 @@ const StackNavigator = () => {
       <Stack.Screen name={'Login'} component={Login} />
       <Stack.Screen name={'Signup'} component={Signup} />
       <Stack.Screen name={'ForgotPassword'} component={ForgotPassword} />
+      <Stack.Screen name={'ForgotPassword1'} component={ForgotPassword1} />
       <Stack.Screen name={'VerificationCode'} component={VerificationCode} />
       <Stack.Screen name={'Education'} component={Education} />
       <Stack.Screen name={'Certificates'} component={Certificates} />

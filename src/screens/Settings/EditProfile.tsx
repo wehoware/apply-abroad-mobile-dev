@@ -35,6 +35,7 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {updateProfileFetch} from '../../redux/slices/authSlice';
 import {Toaster} from '../../services/Toaster';
 import {ApiEndPoints} from '../../API/ApiEndPoints';
+import SubHeaderComponent from '../../components/SubHeaderComponent';
 const EducationList: any = [
   {
     id: 1,
@@ -83,6 +84,9 @@ const EditProfile = () => {
   ]);
   const [scoreTypeId, setScoreTypeId] = useState<any>();
   const [isFetching, setIsFetching] = useState<boolean>(false);
+  const goback = () => {
+    navigation.goBack();
+  };
   const requestCameraPermission = async () => {
     setModalVisible(false);
     try {
@@ -209,7 +213,8 @@ const EditProfile = () => {
   const styles = StyleSheet.create({
     main: {
       flex: 1,
-      marginStart: hp('2%'),
+      backgroundColor: resources.colors.white,
+      // marginStart: hp('2%'),
     },
     header: {
       height: hp('8%'),
@@ -227,13 +232,14 @@ const EditProfile = () => {
       fontFamily: resources.fonts.regular,
     },
     box: {
-      height: hp('6%'),
+      height: hp('7%'),
       width: wp('90%'),
       borderRadius: 10,
       borderWidth: 1,
       borderColor: resources.colors.ash,
       marginTop: hp('1%'),
       justifyContent: 'center',
+      marginStart: hp('2%'),
     },
     infoText: {
       fontSize: hp('2.5%'),
@@ -241,18 +247,22 @@ const EditProfile = () => {
       color: resources.colors.black,
       fontFamily: resources.fonts.semiBold,
       marginTop: hp('1%'),
+      marginStart: hp('2%'),
     },
     text: {
       color: resources.colors.ash,
-      fontSize: hp('2%'),
+      fontSize: hp('2.2%'),
       marginTop: hp('2%'),
+      marginStart: hp('2%'),
+      fontFamily: resources.fonts.Amedium,
+      fontWeight: '500',
     },
     inputText: {
       color: resources.colors.ash,
       marginStart: hp('1%'),
       fontSize: hp('2%'),
       fontWeight: '500',
-      fontFamily: resources.fonts.medium,
+      fontFamily: resources.fonts.Amedium,
     },
     saveButton: {
       bottom: hp('5%'),
@@ -263,12 +273,14 @@ const EditProfile = () => {
       borderRadius: 10,
       alignItems: 'center',
       justifyContent: 'center',
+      marginStart: hp('2%'),
     },
     saveText: {
-      fontSize: hp('2%'),
+      fontSize: hp('2.2%'),
       color: resources.colors.white,
-      fontFamily: resources.fonts.medium,
+      fontFamily: resources.fonts.Amedium,
       fontWeight: '600',
+      textAlign: 'center',
     },
     centeredView: {
       flex: 1,
@@ -314,10 +326,17 @@ const EditProfile = () => {
       fontSize: hp('2%'),
       fontWeight: '500',
     },
+    modalCamText: {
+      textAlign: 'center',
+      fontSize: hp('2%'),
+      fontWeight: '600',
+      fontFamily: resources.fonts.Amedium,
+      color: resources.colors.light_ash1,
+    },
   });
   return (
     <View style={styles.main}>
-      <View style={styles.header}>
+      {/* <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign
             name={'left'}
@@ -328,13 +347,21 @@ const EditProfile = () => {
         </TouchableOpacity>
 
         <Text style={styles.headerText}>Edit Profile</Text>
-      </View>
+      </View> */}
+      <SubHeaderComponent
+        countryImage={''}
+        name={'Edit Profile'}
+        cap={resources.images.cap}
+        goBack={() => goback()}
+      />
       <Text
         style={{
           fontSize: hp('2.5%'),
           fontWeight: '600',
           color: resources.colors.black,
-          fontFamily: resources.fonts.semiBold,
+          fontFamily: resources.fonts.AsemiBold,
+          marginStart: hp('2%'),
+          marginTop: hp('2%'),
         }}>
         Profile Image
       </Text>
@@ -397,7 +424,7 @@ const EditProfile = () => {
           style={{
             inputIOS: {
               fontSize: hp('1.8%'),
-              color: 'gray', // Customize the text color here
+              color: resources.colors.ash, // Customize the text color here
               paddingVertical: 10,
               paddingHorizontal: 12,
               borderWidth: 1,
@@ -406,21 +433,26 @@ const EditProfile = () => {
               borderRadius: 5,
             },
             inputAndroid: {
-              fontSize: hp('1.8%'),
+              fontSize: hp('2%'),
               color: resources.colors.ash,
               paddingVertical: 10,
               paddingHorizontal: 12,
-              height: hp('6%'),
+              height: hp('7%'),
               width: wp('90%'),
               borderRadius: 5,
               borderWidth: 1,
               borderColor: resources.colors.ash,
               marginTop: hp('1%'),
               justifyContent: 'center',
+              marginStart: hp('2%'),
+              fontFamily: resources.fonts.Amedium,
               // marginStart: hp('2%'),
             },
             placeholder: {
               color: resources.colors.ash,
+              fontFamily: resources.fonts.Amedium,
+              fontSize: hp('2%'),
+              fontWeight: '500',
             },
           }}
           Icon={() => {
@@ -456,10 +488,11 @@ const EditProfile = () => {
         onCancel={() => {
           setOpen(false);
         }}
+        maximumDate={new Date()}
       />
 
       <TouchableOpacity style={styles.saveButton} onPress={() => _save()}>
-        <Text style={styles.saveText}>Save Change</Text>
+        <Text style={styles.saveText}>Update</Text>
       </TouchableOpacity>
       <Modal
         animationType="slide"
@@ -508,7 +541,7 @@ const EditProfile = () => {
                 color={resources.colors.ash}
                 style={{marginStart: hp('2%'), width: wp('10%')}}
               />
-              <Text>Camera</Text>
+              <Text style={styles.modalCamText}>Camera</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -529,7 +562,7 @@ const EditProfile = () => {
                 color={resources.colors.ash}
                 style={{marginStart: hp('2%'), width: wp('10%')}}
               />
-              <Text>Gallrey</Text>
+              <Text style={styles.modalCamText}>Gallery</Text>
             </TouchableOpacity>
           </View>
         </View>

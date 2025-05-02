@@ -197,11 +197,12 @@ const Settings = () => {
     profileText: {
       fontSize: hp('2.3%'),
       color: resources.colors.white,
-      fontWeight: '600',
-      fontFamily: resources.fonts.semiBold,
+      fontWeight: '700',
+      fontFamily: resources.fonts.AsemiBold,
       height: hp('10%'),
       marginTop: hp('5%'),
       marginStart: hp('5%'),
+      letterSpacing: 0.4,
     },
     profileImage: {
       height: hp('12%'),
@@ -233,7 +234,7 @@ const Settings = () => {
     },
     box: {
       marginStart: hp('2%'),
-      height: hp('6%'),
+      height: hp('7%'),
       borderColor: resources.colors.ash,
       borderWidth: 1,
       borderRadius: 10,
@@ -244,9 +245,9 @@ const Settings = () => {
       alignItems: 'center',
     },
     text: {
-      width: wp('60%'),
+      width: wp('65%'),
       fontSize: hp('1.8%'),
-      fontFamily: resources.fonts.medium,
+      fontFamily: resources.fonts.AsemiBold,
       fontWeight: '600',
       color: resources.colors.black,
     },
@@ -322,7 +323,7 @@ const Settings = () => {
         <Text style={styles.nameText}>{userData?.fullName}</Text>
         <Text style={styles.mailText}>{userData?.email}</Text>
       </View>
-      <Text style={styles.themeText}>Theme</Text>
+      {/* <Text style={styles.themeText}>Theme</Text>
       <View style={styles.box}>
         <Ionicons
           name={'moon-outline'}
@@ -345,7 +346,7 @@ const Settings = () => {
           onValueChange={toggleSwitch}
           value={isEnabled}
         />
-      </View>
+      </View> */}
 
       <Text style={styles.themeText}>Setting</Text>
       <View style={styles.box}>
@@ -509,7 +510,7 @@ const Settings = () => {
                 color={resources.colors.ash}
                 style={{marginStart: hp('2%'), width: wp('10%')}}
               />
-              <Text style={styles.modalCamText}>Gallrey</Text>
+              <Text style={styles.modalCamText}>Gallery</Text>
             </TouchableOpacity>
           </View>
         </View>

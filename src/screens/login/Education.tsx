@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/no-unstable-nested-components */
 import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
@@ -95,6 +96,10 @@ const Education = () => {
       bottom: hp('5%'),
       alignSelf: 'center',
       borderRadius: 15,
+      shadowOffset: {width: 0, height: 4},
+      shadowOpacity: 0.2,
+      shadowRadius: 15,
+      elevation: 6,
     },
     box1: {
       height: hp('6%'),
@@ -120,10 +125,13 @@ const Education = () => {
 
     signIn: {
       color: resources.colors.white,
-      marginTop: 10,
-      fontWeight: '600',
+      justifyContent: 'center',
+      // marginTop: 10,
+      // fontWeight: '600',
       textAlign: 'center',
       fontSize: hp('2.0%'),
+      fontFamily: resources.fonts.Abold,
+      fontWeight: '700',
     },
     button: {
       marginStart: 20,
@@ -132,12 +140,17 @@ const Education = () => {
       backgroundColor: resources.colors.primary,
       marginTop: hp('40%'),
       borderRadius: 5,
+      justifyContent: 'center',
+      shadowOffset: {width: 0, height: 4},
+      shadowOpacity: 0.2,
+      shadowRadius: 3,
+      elevation: 6,
     },
     buttonSkip: {
       marginStart: 20,
       height: hp('6%'),
       width: wp('85%'),
-      marginTop: hp('3%'),
+      marginTop: hp('2%'),
       borderRadius: 5,
     },
     boxItem: {
@@ -248,7 +261,7 @@ const Education = () => {
                 borderRadius: 5,
               },
               inputAndroid: {
-                fontSize: hp('1.8%'),
+                fontSize: hp('2%'),
                 color: resources.colors.black,
                 paddingVertical: 10,
                 paddingHorizontal: 12,
@@ -260,20 +273,26 @@ const Education = () => {
                 marginStart: hp('2%'),
                 height: hp('6%'),
                 width: wp('86%'),
+                fontFamily: resources.fonts.Amedium,
+                fontWeight: '400',
               },
               placeholder: {
-                color: resources.colors.ash, // Customize the placeholder color here
+                // Customize the placeholder color here
+                color: resources.colors.black,
+                fontWeight: '400',
+                fontFamily: resources.fonts.Amedium,
+                fontSize: hp('2%'),
               },
             }}
             Icon={() => {
               return (
                 <Ionicons
                   size={25}
-                  color={resources.colors.ash}
+                  color={resources.colors.black}
                   name="chevron-down"
                   style={{
                     paddingRight: hp('4%'),
-                    marginTop: hp('3%'),
+                    marginTop: hp('2.5%'),
                   }}
                 />
               );
@@ -294,7 +313,16 @@ const Education = () => {
         <TouchableOpacity
           style={styles.buttonSkip}
           onPress={() => navigation.navigate('Category')}>
-          <Text style={[styles.signIn, {color: resources.colors.black}]}>
+          <Text
+            style={[
+              styles.signIn,
+              {
+                color: resources.colors.black,
+                fontFamily: resources.fonts.Abold,
+                fontWeight: '600',
+                marginTop: hp('1%'),
+              },
+            ]}>
             Skip
           </Text>
         </TouchableOpacity>

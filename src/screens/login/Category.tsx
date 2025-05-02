@@ -19,6 +19,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Toaster} from '../../services/Toaster';
 import {setDataToAsync} from '../../services/AsyncService';
 import Entypo from 'react-native-vector-icons/Entypo';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const Category = () => {
   const navigation = useNavigation<stackProps>();
@@ -65,6 +66,10 @@ const Category = () => {
       bottom: hp('5%'),
       alignSelf: 'center',
       borderRadius: 15,
+      shadowOffset: {width: 0, height: 4},
+      shadowOpacity: 0.2,
+      shadowRadius: 15,
+      elevation: 6,
     },
     boxText: {
       color: resources.colors.black,
@@ -81,10 +86,13 @@ const Category = () => {
 
     signIn: {
       color: resources.colors.white,
-      marginTop: 10,
-      fontWeight: '600',
+      justifyContent: 'center',
+
+      // marginTop: 10,
+      fontWeight: '700',
       textAlign: 'center',
       fontSize: hp('2.0%'),
+      fontFamily: resources.fonts.Abold,
     },
     button: {
       marginStart: 20,
@@ -95,6 +103,11 @@ const Category = () => {
       borderRadius: 5,
       position: 'absolute',
       bottom: hp('5%'),
+      justifyContent: 'center',
+      shadowOffset: {width: 0, height: 4},
+      shadowOpacity: 0.2,
+      shadowRadius: 5,
+      elevation: 6,
     },
     buttonSkip: {
       marginStart: 20,
@@ -140,9 +153,9 @@ const Category = () => {
       />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Entypo
+          <MaterialIcons
             name={'chevron-left'}
-            size={35}
+            size={40}
             color={resources.colors.white}
             style={{
               width: wp('30%'),
@@ -162,10 +175,17 @@ const Category = () => {
           multi={true}
           selectedItems={selectedItems}
           onItemSelect={(item: any) => {
-            const items = [...selectedItems, item]; // Adding new item to selectedItems
+            const items = [...selectedItems, item];
             setSelectedItems(items); // Update state
           }}
-          containerStyle={{padding: 5, width: wp('90%'), marginStart: hp('1%')}}
+          containerStyle={{
+            // padding: 5,
+            width: wp('88%'),
+            marginStart: hp('2%'),
+            borderColor: '#bbb',
+            borderWidth: 1,
+            borderRadius: 10,
+          }}
           onRemoveItem={(item: any, index: any) => {
             const items = selectedItems.filter(
               (sitem: any) => sitem.id !== item.id,
@@ -175,10 +195,14 @@ const Category = () => {
           itemStyle={{
             padding: 10,
             marginTop: 2,
-            backgroundColor: '#ddd',
-            borderColor: '#bbb',
-            borderWidth: 1,
-            borderRadius: 5,
+            backgroundColor: resources.colors.white,
+            paddingLeft: hp('5%'),
+            fontFamily: resources.fonts.Aregular,
+            fontWeight: '400',
+            fontSize: hp('1.8%'),
+            // borderColor: '#bbb',
+            // borderWidth: 1,
+            // borderRadius: 5,
           }}
           itemTextStyle={{color: '#222'}}
           itemsContainerStyle={{maxHeight: 140}}
@@ -192,17 +216,21 @@ const Category = () => {
             placeholderTextColor: resources.colors.black,
             style: {
               padding: 12,
-              borderWidth: 1,
-              borderColor: '#ccc',
-              borderRadius: 5,
-              colors: resources.colors.black,
+              // borderBottomWidth: 1,
+              // borderBottomColor: '#ccc',
+              color: resources.colors.black,
+              paddingLeft: hp('5%'),
+              fontFamily: resources.fonts.Aregular,
+              fontWeight: '400',
+              fontSize: hp('2%'),
             },
+
             leftIcon: (
               <Icon
                 name="search"
                 size={20}
-                color="#888"
-                style={{marginRight: 10}} // Adjust icon spacing if needed
+                color={resources.colors.black}
+                style={{marginRight: 10}}
               />
             ),
           }}
@@ -216,7 +244,7 @@ const Category = () => {
             flexWrap: 'wrap',
             marginTop: 10,
             height: hp('40%'),
-            width: wp('87%'),
+            width: wp('88%'),
             marginStart: hp('2%'),
             borderColor: resources.colors.ash,
             borderWidth: 1,
@@ -227,8 +255,8 @@ const Category = () => {
             <View
               key={index}
               style={{
-                backgroundColor: '#ddd',
-                borderRadius: 15,
+                // backgroundColor: '#ddd',
+                borderRadius: 10,
                 paddingHorizontal: 10,
                 paddingVertical: 5,
                 marginRight: 5,
@@ -236,9 +264,20 @@ const Category = () => {
                 flexDirection: 'row', // Align icon and text in a row
                 alignItems: 'center',
                 marginTop: hp('1'),
-                marginStart: hp('0.5%'),
+                marginStart: hp('1%'),
+                borderColor: resources.colors.ash,
+                borderWidth: 1,
               }}>
-              <Text style={{color: '#333', marginRight: 5}}>{item.name}</Text>
+              <Text
+                style={{
+                  color: resources.colors.ash,
+                  marginRight: 5,
+                  fontFamily: resources.fonts.AsemiBold,
+                  fontWeight: '500',
+                  fontSize: hp('1.8%'),
+                }}>
+                {item.name}
+              </Text>
 
               {/* Add the remove icon here */}
               <TouchableOpacity
@@ -250,9 +289,9 @@ const Category = () => {
                   setSelectedItems(items);
                 }}>
                 <Icon
-                  name="cancel" // Use the appropriate icon name
-                  size={18}
-                  color="#888"
+                  name="close" // Use the appropriate icon name
+                  size={15}
+                  color={resources.colors.ash}
                 />
               </TouchableOpacity>
             </View>

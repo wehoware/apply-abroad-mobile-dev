@@ -19,9 +19,13 @@ import {
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import useRedirect from '../../hooks/useRedirect';
 import {emailValidator} from '../../services/Validators';
-import {setDataToAsync} from '../../services/AsyncService';
-import {userPasswordOTPFetch} from '../../redux/slices/authSlice';
-const ForgotPassword = () => {
+import {getDataFromAsync, setDataToAsync} from '../../services/AsyncService';
+import {
+  userPasswordOTPFetch,
+  userPasswordUpdateFetch,
+} from '../../redux/slices/authSlice';
+import AsyncConstants from '../../resources/constants/asyncConstants';
+const ForgotPassword1 = () => {
   const navigation = useNavigation<stackProps>();
   const dispatch = useAppDispatch();
   const {theme} = useAppSelector(state => state.common);
@@ -44,7 +48,10 @@ const ForgotPassword = () => {
 
   const {isLogged, redirect} = useAppSelector(state => state.auth);
   useRedirect(redirect, 'replace');
-  const _validateFields = () => {
+  const _validateFields = async () => {
+    var emailCheck = await getDataFromAsync(resources.AsyncConstants.email);
+    console.log('emailCheck', emailCheck);
+
     let isEmailValid =
       email.length > 0
         ? emailValidator(email) === true
@@ -52,27 +59,34 @@ const ForgotPassword = () => {
           : false
         : false;
 
-    let isPasswordValid = password.length > 0 ? true : false;
-    let isRetypePasswordValid = retypePassword.length > 0 ? true : false;
-    if (isEmailValid) {
-      setEmailError(false);
+    let isPasswordValid = password.length >= 6 ? true : false;
+    let isRetypePasswordValid =
+      retypePassword.length >= 6 && password === retypePassword ? true : false;
+
+    if (isPasswordValid && isRetypePasswordValid) {
       setPasswordError(false);
       setRetypePasswordError(false);
-
       handlePassword();
     } else {
-      setEmailError(!isEmailValid);
-      // setPasswordError(!isPasswordValid);
-      // setRetypePasswordError(!isRetypePasswordValid);
+      if (!isPasswordValid) {
+        setPasswordError(true);
+      }
+      if (!isRetypePasswordValid) {
+        setRetypePasswordError(true);
+      }
     }
   };
-  const handlePassword = () => {
+  const handlePassword = async () => {
+    var emailVal = await getDataFromAsync(resources.AsyncConstants.email);
+    var otp = await getDataFromAsync(resources.AsyncConstants.otp);
     var data = {
-      email: email.toLowerCase(),
+      email: emailVal.toLowerCase(),
+      newPassword: password,
+      otp: Number(otp),
     };
-    dispatch(userPasswordOTPFetch(data));
-    setDataToAsync(resources.AsyncConstants.email, email.toLowerCase());
-    setDataToAsync(resources.AsyncConstants.password, password);
+    dispatch(userPasswordUpdateFetch(data));
+    // setDataToAsync(resources.AsyncConstants.email, email.toLowerCase());
+    // setDataToAsync(resources.AsyncConstants.password, password);
     // navigation.navigate('Home');
   };
 
@@ -169,7 +183,7 @@ const ForgotPassword = () => {
       height: hp('6%'),
       width: wp('85%'),
       backgroundColor: resources.colors.primary,
-      marginTop: hp('30%'),
+      marginTop: hp('5%'),
       borderRadius: 5,
     },
     buttonSignUp: {
@@ -203,22 +217,8 @@ const ForgotPassword = () => {
           To keep your account secure, please enter your current password and
           set a new one.
         </Text>
-        <View style={styles.start}>
-          <Text style={styles.inputHeaderText}>E-mail</Text>
-          <TextInput
-            placeholder="Enter your E-mail"
-            placeholderTextColor={'#AFAFAF'}
-            style={styles.inputStyle}
-            keyboardType="email-address"
-            value={email}
-            onChangeText={val => setEmail(val)}
-          />
-          {emailError ? (
-            <Text style={styles.errorText}>{'Please enter email'}</Text>
-          ) : null}
-        </View>
 
-        {/* <View style={styles.start}>
+        <View style={styles.start}>
           <Text style={[styles.inputHeaderText, {marginTop: hp('1%')}]}>
             Password
           </Text>
@@ -264,9 +264,13 @@ const ForgotPassword = () => {
             />
           </View>
           {retypePasswordError ? (
-            <Text style={styles.errorText}>{'Please retype new password'}</Text>
+            <Text style={styles.errorText}>
+              {retypePassword.length < 6
+                ? 'Password must be at least 6 characters'
+                : 'Passwords do not match'}
+            </Text>
           ) : null}
-        </View> */}
+        </View>
 
         <TouchableOpacity
           style={styles.button}
@@ -285,4 +289,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default ForgotPassword1;

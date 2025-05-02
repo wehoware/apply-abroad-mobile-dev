@@ -181,3 +181,11 @@ export interface InstitutionList {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface SubHeader {
+  countryImage?: string;
+  name?: string;
+  cap?: any;
+  goBack?: any;
+  countryChange?: any;
+}

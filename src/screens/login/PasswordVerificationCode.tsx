@@ -22,39 +22,44 @@ import {
 } from '../../services/ResponsiveUIHelpers';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {emailValidator, passwordValidator} from '../../services/Validators';
-import {getDataFromAsync} from '../../services/AsyncService';
+import {getDataFromAsync, setDataToAsync} from '../../services/AsyncService';
 import {
   userOTPValidateFetch,
+  userPasswordOTPFetch,
   userPasswordOTPValidateFetch,
 } from '../../redux/slices/authSlice';
+import {Toaster} from '../../services/Toaster';
+import AsyncConstants from '../../resources/constants/asyncConstants';
+import useRedirect from '../../hooks/useRedirect';
 
 const PasswordVerificationCode = () => {
   const navigation = useNavigation<stackProps>();
-
+  const {isLogged, redirect} = useAppSelector(state => state.auth);
+  useRedirect(redirect, 'replace');
   const dispatch = useAppDispatch();
   const {theme} = useAppSelector(state => state.common);
   const [orientation, setOrientation] = useState('');
   const [otp1, setOtp1] = useState<string>('');
   const [otp1Error, setOtp1Error] = useState<boolean>(false);
 
-  const [otp2, setOtp2] = useState<string>();
+  const [otp2, setOtp2] = useState<string>('');
   const [otp2Error, setOtp2Error] = useState<boolean>(false);
 
-  const [otp3, setOtp3] = useState<string>();
+  const [otp3, setOtp3] = useState<string>('');
   const [otp3Error, setOtp3Error] = useState<boolean>(false);
 
-  const [otp4, setOtp4] = useState<string>();
+  const [otp4, setOtp4] = useState<string>('');
   const [otp4Error, setOtp4Error] = useState<boolean>(false);
 
-  const [otp5, setOtp5] = useState<string>();
+  const [otp5, setOtp5] = useState<string>('');
   const [otp5Error, setOtp5Error] = useState<boolean>(false);
 
-  const [otp6, setOtp6] = useState<string>();
+  const [otp6, setOtp6] = useState<string>('');
   const [otp6Error, setOtp6Error] = useState<boolean>(false);
 
   // const [timeInSeconds, setTimeInSeconds] = useState(60);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
-  const [timeLeft, setTimeLeft] = useState(60); // Initialize at 60 seconds
+  const [timeLeft, setTimeLeft] = useState(120); // Initialize at 60 seconds
   const [isActive, setIsActive] = useState(true); // Timer
   const [userEmail, setUserEmail] = useState<string>('');
   const _validateFields = () => {
@@ -88,7 +93,7 @@ const PasswordVerificationCode = () => {
   //   dispatch(userPasswordOTPValidateFetch(data));
   // };
   const _otpValidate = async (otp: any) => {
-    console.log('otp----------', otp);
+    console.log('otp----------', otp.length);
 
     let email = await getDataFromAsync(resources.AsyncConstants.email);
     let fullname = await getDataFromAsync(resources.AsyncConstants.fullname);
@@ -96,10 +101,27 @@ const PasswordVerificationCode = () => {
     var data = {
       email: email,
       otp: Number(otp),
-      newPassword: password,
+      // newPassword: password,
     };
+    if (timeLeft > 0 && otp.length === 6) {
+      dispatch(userPasswordOTPValidateFetch(data));
+      setDataToAsync(resources.AsyncConstants.otp, otp);
+    } else if (otp.length < 6) {
+      Toaster.error('Please enter all the input');
+    } else {
+      Toaster.error('Please retry');
+    }
+  };
 
-    dispatch(userPasswordOTPValidateFetch(data));
+  const handleResend = async () => {
+    console.log('=========');
+    const email = await getDataFromAsync(resources.AsyncConstants.email);
+    var data = {
+      email: email.toLowerCase(),
+    };
+    dispatch(userPasswordOTPFetch(data));
+    setTimeLeft(120);
+    // navigation.navigate('Home');
   };
 
   useEffect(() => {
@@ -209,6 +231,9 @@ const PasswordVerificationCode = () => {
       bottom: hp('5%'),
       alignSelf: 'center',
       borderRadius: 15,
+      shadowOpacity: 0.2,
+      shadowRadius: 3,
+      elevation: 6,
     },
     inputHeaderText: {
       fontSize: hp('1.9%'),
@@ -219,11 +244,11 @@ const PasswordVerificationCode = () => {
     boxText: {
       color: resources.colors.black,
       fontWeight: '400',
-      fontSize: hp('2.1%'),
+      fontSize: hp('1.8%'),
       marginTop: 20,
       // marginStart: 20,
       padding: 20,
-      fontFamily: resources.fonts.medium,
+      fontFamily: resources.fonts.Amedium,
     },
     start: {marginStart: 20},
     inputStyle: {
@@ -268,9 +293,10 @@ const PasswordVerificationCode = () => {
     signIn: {
       color: resources.colors.white,
       marginTop: 10,
-      fontWeight: '600',
+      fontWeight: '900',
       textAlign: 'center',
       fontSize: hp('1.8%'),
+      fontFamily: resources.fonts.Abold,
     },
     button: {
       marginStart: 20,
@@ -437,6 +463,18 @@ const PasswordVerificationCode = () => {
               {formatTime(timeLeft)}
               {/* {formatTime(timeInSeconds)} */}
             </Text>
+            <TouchableOpacity onPress={() => handleResend()}>
+              <Text
+                onPress={() => handleResend()}
+                style={{
+                  color: resources.colors.primary,
+                  top: hp('1%'),
+                  left: hp('10'),
+                  fontWeight: '700',
+                }}>
+                Resend
+              </Text>
+            </TouchableOpacity>
           </Text>
         </View>
 

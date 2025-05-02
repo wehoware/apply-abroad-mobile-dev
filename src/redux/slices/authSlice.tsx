@@ -68,6 +68,10 @@ const authSlice = createSlice({
       state: AuthSliceState,
       action: PayloadAction<any>,
     ) => {},
+    userPasswordUpdateFetch: (
+      state: AuthSliceState,
+      action: PayloadAction<any>,
+    ) => {},
     userCreateStage2Fetch: (
       state: AuthSliceState,
       action: PayloadAction<any>,
@@ -233,6 +237,7 @@ export const {
   userPasswordOTPFetch,
   userOTPValidateFetch,
   userPasswordOTPValidateFetch,
+  userPasswordUpdateFetch,
   updateProfileFetch,
   updateCountryFetch,
   updateEducationFetch,

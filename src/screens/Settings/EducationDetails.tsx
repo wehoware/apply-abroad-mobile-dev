@@ -399,9 +399,10 @@ const EducationDetails = () => {
     signIn: {
       color: resources.colors.white,
       marginTop: 10,
-      fontWeight: '600',
+      fontWeight: '700',
       textAlign: 'center',
       fontSize: hp('2.0%'),
+      fontFamily: resources.fonts.Abold,
     },
     button: {
       marginStart: 20,
@@ -952,7 +953,7 @@ const EducationDetails = () => {
                 color={resources.colors.ash}
                 style={{marginStart: hp('2%'), width: wp('10%')}}
               />
-              <Text style={styles.modalCamText}>Gallrey</Text>
+              <Text style={styles.modalCamText}>Gallery</Text>
             </TouchableOpacity>
           </View>
         </View>

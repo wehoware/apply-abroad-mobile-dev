@@ -6,6 +6,7 @@ export type StackNavigatorList = {
   Login: undefined;
   Signup: undefined;
   ForgotPassword: undefined;
+  ForgotPassword1: undefined;
   VerificationCode: undefined;
   PasswordVerificationCode: undefined;
   Education: undefined;

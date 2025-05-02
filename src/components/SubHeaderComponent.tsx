@@ -6,7 +6,14 @@ import {
 } from '../services/ResponsiveUIHelpers';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import resources from '../resources';
-const SubHeaderComponent = ({countryImage, name, cap, goBack}: any) => {
+import {SubHeader} from '../redux/types';
+const SubHeaderComponent = ({
+  countryImage,
+  name,
+  cap,
+  goBack,
+  countryChange,
+}: SubHeader) => {
   const styles = StyleSheet.create({
     main: {
       flexDirection: 'row',
@@ -14,27 +21,31 @@ const SubHeaderComponent = ({countryImage, name, cap, goBack}: any) => {
       marginTop: hp('2%'),
       height: hp('5%'),
     },
-    back: {flexDirection: 'row'},
+    back: {
+      flexDirection: 'row',
+      width: wp('100'),
+      alignSelf: 'center',
+      alignContent: 'center',
+      alignItems: 'center',
+    },
     headerText: {
-      fontSize: hp('2.8%'),
-      fontWeight: '700',
+      fontSize: hp('2.6%'),
+      fontWeight: '600',
       // fontFamily: resources.fonts.Aregular,
       fontFamily: resources.fonts.Amedium,
-      color: '#141B13',
-      width: wp('58%'),
+      color: resources.colors.black,
     },
   });
   return (
     <View style={styles.main}>
       <View style={styles.back}>
-        <TouchableOpacity onPress={() => goBack()} style={{width: wp('25%')}}>
+        <TouchableOpacity onPress={() => goBack()} style={{width: wp('15%')}}>
           <AntDesign
             name={'left'}
             size={20}
             color={resources.colors.black}
             style={{
               width: wp('8%'),
-              marginTop: hp('0.6%'),
               marginStart: hp('3%'),
             }}
           />
@@ -52,11 +63,13 @@ const SubHeaderComponent = ({countryImage, name, cap, goBack}: any) => {
       </View>
 
       {countryImage ? (
-        <Image
-          source={{uri: countryImage}}
-          style={{height: hp('5%'), width: wp('10%'), marginRight: hp('5%')}}
-          resizeMode="contain"
-        />
+        <TouchableOpacity onPress={() => countryChange()}>
+          <Image
+            source={{uri: countryImage}}
+            style={{height: hp('5%'), width: wp('10%'), marginRight: hp('5%')}}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
       ) : null}
     </View>
   );

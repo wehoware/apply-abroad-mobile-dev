@@ -124,6 +124,10 @@ const SignUp = () => {
       bottom: hp('5%'),
       alignSelf: 'center',
       borderRadius: 15,
+      shadowOffset: {width: 0, height: 4},
+      shadowOpacity: 0.2,
+      shadowRadius: 15,
+      elevation: 6,
     },
     boxText: {
       color: resources.colors.black,
@@ -177,7 +181,15 @@ const SignUp = () => {
     forgotText: {
       color: resources.colors.primary,
       marginTop: 10,
-      fontWeight: '700',
+      fontWeight: '500',
+      fontFamily: resources.fonts.Abold,
+    },
+    lineMain: {
+      flexDirection: 'row',
+      width: wp('100%'),
+      justifyContent: 'center',
+      marginTop: hp('4%'),
+      marginBottom: hp('2%'),
     },
     signIn: {
       color: resources.colors.white,
@@ -193,6 +205,10 @@ const SignUp = () => {
       backgroundColor: resources.colors.primary,
       marginTop: hp('2%'),
       borderRadius: 5,
+      shadowOffset: {width: 0, height: 4},
+      shadowOpacity: 0.2,
+      shadowRadius: 3,
+      elevation: 6,
     },
     buttonSignUp: {
       marginStart: 20,
@@ -223,7 +239,7 @@ const SignUp = () => {
         barStyle={'light-content'}
       />
       <View style={styles.header}>
-        <Text style={styles.headerText}>Ready to Study!</Text>
+        <Text style={styles.headerText}>Sign Up</Text>
       </View>
       <View style={styles.box}>
         <Text style={styles.boxText}>Fill in the data below to continue</Text>
@@ -313,11 +329,12 @@ const SignUp = () => {
             Forgot Password
           </Text>
         </View>
-        <View style={[styles.start, {marginTop: hp('8%')}]}>
+        <View style={[styles.start, {marginTop: hp('7%')}]}>
           <Text style={styles.termsText}>
             By registering, you agree to the
             <Text style={{color: resources.colors.primary}}>
-              Terms of Service
+              {' '}
+              Terms of Service{' '}
             </Text>
             and{' '}
             <Text style={{color: resources.colors.primary}}>

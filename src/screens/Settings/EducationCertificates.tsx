@@ -327,7 +327,7 @@ const EducationCertificates = () => {
       <View style={styles.box}>
         <View
           style={{
-            marginTop: hp('8%'),
+            marginTop: hp('4%'),
             marginStart: hp('2%'),
             height: hp('60%'),
           }}>

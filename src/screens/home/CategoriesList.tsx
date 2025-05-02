@@ -289,6 +289,26 @@ const CategoriesList = () => {
     dispatch(setCategoriesId(''));
     navigation.goBack();
   };
+
+  const searchCategories = (searchQuery: any) => {
+    console.log('searchQuery', searchQuery);
+    console.log('categories', categories);
+
+    if (searchQuery.length > 2) {
+      const filteredCourse = categories?.filter(
+        (cate: any) =>
+          cate?.name.toLowerCase().includes(searchQuery.toLowerCase()),
+        // console.log('==========', cate.name);
+      );
+      console.log('filteredCourse', filteredCourse);
+      setCategoriesList(filteredCourse);
+    } else {
+      setCategoriesList(categories);
+    }
+  };
+  const countryChange = () => {
+    navigation.navigate('CountryChange');
+  };
   const _renderCourses = ({item}: any) => {
     return (
       <TouchableOpacity style={styles.courseBox} onPress={() => _details(item)}>
@@ -410,6 +430,7 @@ const CategoriesList = () => {
           name={'Categories'}
           cap={resources.images.cap}
           goBack={() => goback()}
+          countryChange={() => countryChange()}
         />
       </View>
 
@@ -428,17 +449,18 @@ const CategoriesList = () => {
           /> */}
           <TextInput
             style={{
-              color: resources.colors.ash,
+              color: resources.colors.black,
               fontSize: hp('2%'),
-              fontFamily: resources.fonts.Aregular,
+              fontFamily: resources.fonts.Amedium,
               fontWeight: '400',
-              letterSpacing: 0.1,
+              // letterSpacing: 0.1,
             }}
-            value={search}
+            // value={search}
             placeholderTextColor={resources.colors.ash}
             placeholder={'Search Categories'}
             onChangeText={val => {
-              setSearch(val);
+              // setSearch(val);
+              searchCategories(val);
             }}
           />
         </View>

@@ -60,7 +60,7 @@ react {
  */
 def enableProguardInReleaseBuilds = false
 project.ext.vectoricons = [
-    iconFontNames: [ 'MaterialIcons.ttf', 'EvilIcons.ttf','FontAwesome.ttf','AntDesign.ttf','Entypo.ttf','MaterialCommunityIcons.ttf','Ionicons.ttf','SimpleLineIcons.ttf','Fontisto.ttf' ] // Specify font files
+    iconFontNames: [ 'MaterialIcons.ttf', 'EvilIcons.ttf','FontAwesome.ttf','AntDesign.ttf','Entypo.ttf','MaterialCommunityIcons.ttf','Ionicons.ttf','SimpleLineIcons.ttf','Fontisto.ttf','FontAwesome6.ttf' ] // Specify font files
 ]
 
 /**

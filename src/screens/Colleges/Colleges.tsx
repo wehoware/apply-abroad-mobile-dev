@@ -69,13 +69,21 @@ const Colleges = () => {
     }, []),
   );
   const searchCollege = (searchQuery: any) => {
+    console.log('colleges', colleges);
+
     if (searchQuery.length > 2) {
-      const filteredColleges = colleges.filter((college: any) =>
-        college.collegeName.toLowerCase().includes(searchQuery.toLowerCase()),
+      const filteredInstitutions = institutionList.filter((college: any) =>
+        college.name.toLowerCase().includes(searchQuery.toLowerCase()),
       );
-      setColleges(filteredColleges);
+      const filteredUniversits = universityList.filter((college: any) =>
+        college.name.toLowerCase().includes(searchQuery.toLowerCase()),
+      );
+      // const [university, setUniversity] = useState<any>(universityList);
+      setColleges(filteredInstitutions);
+      setUniversity(filteredUniversits);
     } else {
-      setColleges(colleges);
+      setColleges(institutionList);
+      setUniversity(universityList);
     }
   };
 
@@ -340,13 +348,19 @@ const Colleges = () => {
             resizeMode="contain"
           /> */}
           <TextInput
-            style={{color: resources.colors.ash, fontSize: hp('2%')}}
-            value={search}
+            style={{
+              color: resources.colors.black,
+              fontSize: hp('2%'),
+              fontFamily: resources.fonts.Amedium,
+              fontWeight: '400',
+              // letterSpacing: 1,
+            }}
+            // value={search}
             placeholderTextColor={resources.colors.ash}
             placeholder={'Search Courses, Colleges'}
             onChangeText={val => {
-              setSearch(val);
-              // searchCollege(val); // Call search as user types
+              // setSearch(val);
+              searchCollege(val); // Call search as user types
             }}
           />
         </View>

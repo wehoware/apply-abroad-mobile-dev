@@ -257,7 +257,7 @@ const Home = () => {
               color: item.select
                 ? resources.colors.white
                 : resources.colors.light_ash1,
-              fontWeight: item.select ? '800' : '700',
+              fontWeight: '700',
             },
           ]}>
           {item?.name}
@@ -313,6 +313,7 @@ const Home = () => {
       flexDirection: 'row',
       marginStart: hp('2%'),
       marginTop: hp('3%'),
+      alignItems: 'center',
     },
     courseText: {
       width: wp('75%'),
@@ -321,12 +322,22 @@ const Home = () => {
       fontWeight: '600',
       color: resources.colors.black,
     },
-    courseImage: {height: hp('15%'), width: wp('30%'), borderRadius: 12},
+    courseImage: {
+      height: hp('15%'),
+      width: wp('30%'),
+      borderRadius: 12,
+      shadowOffset: {width: 0, height: 4},
+      shadowOpacity: 0.6,
+      shadowRadius: 12,
+      elevation: 6,
+    },
     seeMore: {
       fontSize: hp('1.6%'),
       color: resources.colors.primary,
       fontWeight: '600',
       fontFamily: resources.fonts.medium,
+      textAlign: 'center',
+      marginStart: hp('1%'),
     },
     courseName: {
       color: resources.colors.black,
@@ -337,7 +348,15 @@ const Home = () => {
       marginTop: hp('1%'),
     },
     separate: {margin: 10},
-    collegeImage: {height: hp('10%'), aspectRatio: 1, borderRadius: 100},
+    collegeImage: {
+      height: hp('10%'),
+      aspectRatio: 1,
+      borderRadius: 100,
+      shadowOffset: {width: 0, height: 4},
+      shadowOpacity: 0.2,
+      shadowRadius: 100,
+      elevation: 6,
+    },
     collegeName: {
       color: resources.colors.black,
       fontWeight: '600',
@@ -349,7 +368,7 @@ const Home = () => {
     },
     categoriesName: {
       fontSize: hp('1.8%'),
-      fontFamily: resources.fonts.Aregular,
+      fontFamily: resources.fonts.AsemiBold,
       textAlign: 'center',
     },
     categoriesBox: {
@@ -362,7 +381,15 @@ const Home = () => {
       borderRadius: 12,
     },
     // itCourseImage: {height: hp('25%'), width: wp('50%'), borderRadius: 12},
-    itCourseImage: {height: hp('15%'), width: wp('30%'), borderRadius: 12},
+    itCourseImage: {
+      height: hp('15%'),
+      width: wp('30%'),
+      borderRadius: 12,
+      shadowOffset: {width: 0, height: 4},
+      shadowOpacity: 0.2,
+      shadowRadius: 12,
+      elevation: 6,
+    },
 
     list: {marginRight: 10, marginTop: 10, marginStart: hp('2%')},
     loader: {
@@ -422,7 +449,13 @@ const Home = () => {
             resizeMode="contain"
           /> */}
           <TextInput
-            style={{color: resources.colors.ash, fontSize: hp('2%')}}
+            style={{
+              color: resources.colors.black,
+              fontSize: hp('2%'),
+              fontFamily: resources.fonts.Amedium,
+              fontWeight: '400',
+              // letterSpacing: 1,
+            }}
             value={search}
             placeholderTextColor={resources.colors.ash}
             placeholder={'Search Courses, Colleges'}

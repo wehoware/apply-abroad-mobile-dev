@@ -25,6 +25,7 @@ import {
   updateProfileFetch,
   updateEducationFetch,
   updateCountryFetch,
+  userPasswordUpdateFetch,
 } from '../slices/authSlice';
 import {
   resetCommonState,
@@ -335,23 +336,9 @@ function* userPasswordOTPValidate(data: PayloadAction<any>) {
       let _theme: ColorScheme | null = yield getDataFromAsync(
         resources.AsyncConstants.theme,
       );
-      var res: AxiosResponse<any, any> = yield call(
-        API.userPasswordChange,
-        data.payload,
-      );
-      if (res?.status) {
-        yield put(redirectRequest('Login'));
-        yield put(setIsError(false));
-        yield put(setIsFetching(false));
-      } else {
-        yield put(setIsError(true));
-        yield put(setIsLogged(false));
-        yield put(setErrorData(res.data));
-        yield put(redirectRequest('ForgotPassword'));
-        Toaster.error(res.data.message);
-      }
-      // yield put(setIsError(false));
-      // yield put(setIsFetching(false));
+      yield put(redirectRequest('ForgotPassword1'));
+      yield put(setIsError(false));
+      yield put(setIsFetching(false));
 
       if (_theme !== null) {
         yield put(setTheme(_theme));
@@ -414,11 +401,47 @@ function* forgotPassword(data: PayloadAction<any>) {
   }
 }
 
+function* userPasswordUpdate(data: PayloadAction<any>) {
+  console.log('update password==================', data);
+
+  try {
+    yield put(setIsFetching(true));
+
+    var res: AxiosResponse<any, any> = yield call(
+      API.userPasswordChange,
+      data.payload,
+    );
+    if (res?.status) {
+      yield put(redirectRequest('Login'));
+      yield put(setIsError(false));
+      yield put(setIsFetching(false));
+      Toaster.success(res.data.message);
+    } else {
+      yield put(setIsError(true));
+      yield put(setIsLogged(false));
+      yield put(setErrorData(res.data));
+      yield put(redirectRequest('ForgotPassword1'));
+      Toaster.error(res.data.message);
+    }
+    // yield put(setIsError(false));
+    // yield put(setIsFetching(false));
+  } catch (error: any) {
+    yield put(setIsFetching(false));
+    yield put(setIsError(false));
+    console.log('response ==>', error);
+
+    if (error && error.response) {
+      console.log('111111111', error.response);
+      Toaster.error(error.response.data.message);
+    }
+  }
+}
+
 function* logoutUser(data: PayloadAction<any>) {
   console.log('logout data==================', data);
 
   try {
-    yield put(setIsFetching(true));
+    // yield put(setIsFetching(true));
 
     var res: AxiosResponse<any, any> = yield call(API.userLogout, data.payload);
     console.log('res---------', res.data);
@@ -624,6 +647,7 @@ export function* AuthenticationSaga() {
   yield takeLatest(userPasswordOTPFetch.type, userPasswordOTP);
   yield takeLatest(userOTPValidateFetch.type, userOTPValidate);
   yield takeLatest(userPasswordOTPValidateFetch.type, userPasswordOTPValidate);
+  yield takeLatest(userPasswordUpdateFetch.type, userPasswordUpdate);
   yield takeLatest(logoutUserFetch.type, logoutUser);
   yield takeLatest(logoutRequest.type, logoutUser);
   yield takeLatest(forgotPasswordRequest.type, forgotPassword);

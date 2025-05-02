@@ -35,24 +35,24 @@ const VerificationCode = () => {
   const [otp1, setOtp1] = useState<string>('');
   const [otp1Error, setOtp1Error] = useState<boolean>(false);
 
-  const [otp2, setOtp2] = useState<string>();
+  const [otp2, setOtp2] = useState<string>('');
   const [otp2Error, setOtp2Error] = useState<boolean>(false);
 
-  const [otp3, setOtp3] = useState<string>();
+  const [otp3, setOtp3] = useState<string>('');
   const [otp3Error, setOtp3Error] = useState<boolean>(false);
 
-  const [otp4, setOtp4] = useState<string>();
+  const [otp4, setOtp4] = useState<string>('');
   const [otp4Error, setOtp4Error] = useState<boolean>(false);
 
-  const [otp5, setOtp5] = useState<string>();
+  const [otp5, setOtp5] = useState<string>('');
   const [otp5Error, setOtp5Error] = useState<boolean>(false);
 
-  const [otp6, setOtp6] = useState<string>();
+  const [otp6, setOtp6] = useState<string>('');
   const [otp6Error, setOtp6Error] = useState<boolean>(false);
 
   // const [timeInSeconds, setTimeInSeconds] = useState(60);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
-  const [timeLeft, setTimeLeft] = useState(60); // Initialize at 60 seconds
+  const [timeLeft, setTimeLeft] = useState(120); // Initialize at 60 seconds
   const [isActive, setIsActive] = useState(true); // Timer
   const [userEmail, setUserEmail] = useState<string>('');
   const _validateFields = () => {
@@ -193,6 +193,9 @@ const VerificationCode = () => {
       bottom: hp('5%'),
       alignSelf: 'center',
       borderRadius: 15,
+      shadowOpacity: 0.2,
+      shadowRadius: 3,
+      elevation: 6,
     },
     inputHeaderText: {
       fontSize: hp('1.9%'),
@@ -203,11 +206,11 @@ const VerificationCode = () => {
     boxText: {
       color: resources.colors.black,
       fontWeight: '400',
-      fontSize: hp('2%'),
+      fontSize: hp('1.8%'),
       marginTop: hp('2%'),
       // marginStart: 20,
       padding: 20,
-      fontFamily: resources.fonts.regular,
+      fontFamily: resources.fonts.Amedium,
       letterSpacing: 0.4,
     },
     start: {marginStart: 20},
@@ -253,9 +256,10 @@ const VerificationCode = () => {
     signIn: {
       color: resources.colors.white,
       marginTop: 10,
-      fontWeight: '600',
+      fontWeight: '700',
       textAlign: 'center',
       fontSize: hp('1.8%'),
+      fontFamily: resources.fonts.Abold,
     },
     button: {
       marginStart: 20,
@@ -346,7 +350,7 @@ const VerificationCode = () => {
       shadowOffset: {width: 0, height: 4},
       shadowOpacity: 0.2,
       shadowRadius: 3,
-      elevation: 6,
+      elevation: 3,
     },
 
     noButton: {
@@ -372,6 +376,9 @@ const VerificationCode = () => {
       borderRadius: 15,
       marginStart: hp('1%'),
       marginTop: hp('2%'),
+      shadowOpacity: 0.2,
+      shadowRadius: 3,
+      elevation: 5,
     },
   });
 

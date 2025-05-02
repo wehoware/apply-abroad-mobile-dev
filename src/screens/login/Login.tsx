@@ -134,12 +134,30 @@ const Login = () => {
       bottom: hp('5%'),
       alignSelf: 'center',
       borderRadius: 15,
+      shadowOffset: {width: 0, height: 4},
+      shadowOpacity: 0.2,
+      shadowRadius: 15,
+      elevation: 6,
     },
     inputHeaderText: {
       fontSize: hp('1.9%'),
       color: resources.colors.black,
       fontWeight: '500',
       fontFamily: resources.fonts.Abold,
+    },
+    forgotText: {
+      color: resources.colors.primary,
+      marginTop: 10,
+      fontWeight: '500',
+      fontFamily: resources.fonts.Abold,
+    },
+    lineMain: {
+      flexDirection: 'row',
+      width: wp('95%'),
+      justifyContent: 'center',
+      marginTop: hp('4%'),
+      marginBottom: hp('2%'),
+      // backgroundColor: 'red',
     },
     boxText: {
       color: resources.colors.black,
@@ -185,14 +203,10 @@ const Login = () => {
       fontFamily: resources.fonts.Aregular,
       paddingLeft: 15,
     },
-    forgotText: {
-      color: resources.colors.primary,
-      marginTop: 10,
-      fontWeight: '700',
-    },
+
     signIn: {
       color: resources.colors.white,
-      marginTop: 10,
+      // marginTop: 10,
       fontWeight: '900',
       textAlign: 'center',
       fontSize: hp('1.8%'),
@@ -205,6 +219,11 @@ const Login = () => {
       backgroundColor: resources.colors.primary,
       marginTop: hp('3%'),
       borderRadius: 5,
+      shadowOffset: {width: 0, height: 4},
+      shadowOpacity: 0.2,
+      shadowRadius: 5,
+      elevation: 6,
+      justifyContent: 'center',
     },
     buttonSignUp: {
       marginStart: 20,
@@ -212,8 +231,12 @@ const Login = () => {
       width: wp('85%'),
       borderWidth: 1,
       borderColor: resources.colors.primary,
-      marginTop: hp('5%'),
+      marginTop: hp('3%'),
       borderRadius: 5,
+      justifyContent: 'center',
+      // shadowOpacity: 0.2,
+      // shadowRadius: 5,
+      // elevation: 6,
     },
     googleLogin: {
       marginStart: 20,
@@ -221,7 +244,7 @@ const Login = () => {
       width: wp('85%'),
       borderWidth: 1,
       borderColor: resources.colors.primary,
-      marginTop: hp('3%'),
+      marginTop: hp('2%'),
       borderRadius: 5,
       flexDirection: 'row',
       justifyContent: 'center',
@@ -233,15 +256,11 @@ const Login = () => {
       fontFamily: resources.fonts.bold,
       fontWeight: '600',
       marginLeft: hp('1%'),
+      textAlign: 'center',
     },
-    lineMain: {
-      flexDirection: 'row',
-      width: wp('100%'),
-      justifyContent: 'center',
-      marginTop: 10,
-    },
+
     text: {
-      justifyContent: 'center',
+      // justifyContent: 'center',
       textAlign: 'center',
       color: resources.colors.ash,
       paddingStart: 10,
@@ -273,7 +292,8 @@ const Login = () => {
         barStyle={'light-content'}
       />
       <View style={styles.header}>
-        <Text style={styles.headerText}>Hello Welcome!</Text>
+        {/* <Text style={styles.headerText}>Hello Welcome!</Text> */}
+        <Text style={styles.headerText}>Sign In</Text>
       </View>
       <View style={styles.box}>
         <Text style={styles.boxText}>
@@ -367,6 +387,7 @@ const Login = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.buttonSignUp}
+          // onPress={() => navigation.navigate('Certificates')}>
           onPress={() => navigation.navigate('Signup')}>
           <Text style={[styles.signIn, {color: resources.colors.black}]}>
             Create Account
