@@ -21,6 +21,8 @@ import {
   popularCollegesListFetchRequest,
   popularCollegesListFetchSuccess,
   reviewFetchRequest,
+  reviewsListFetchRequest,
+  reviewsListFetchSuccess,
   scoreTypesFetchRequest,
   scoreTypesFetchSuccess,
   topCoursesListFetchRequest,
@@ -202,7 +204,7 @@ function* fetchUniversityList(data: PayloadAction<any>) {
 
 function* fetchCourseList(data: PayloadAction<any>) {
   try {
-    yield put(setIsFetching(true));
+    // yield put(setIsFetching(true));
     var response: AxiosResponse<any, any> = yield call(API.getCourseList, data);
     if (response.status) {
       yield put(setIsFetching(false));
@@ -217,6 +219,31 @@ function* fetchCourseList(data: PayloadAction<any>) {
     yield put(setIsFetching(false));
     yield put(setIsError(true));
     yield put(courseListFetchSuccess([]));
+    if (error && error.response) {
+      console.log('error in getting course list ==>', error.response.data);
+    }
+  }
+}
+function* fetchReviewsList(data: PayloadAction<any>) {
+  try {
+    yield put(setIsFetching(true));
+    var response: AxiosResponse<any, any> = yield call(
+      API.getReviewaList,
+      data,
+    );
+    if (response.status) {
+      yield put(setIsFetching(false));
+      yield put(setIsError(false));
+      yield put(reviewsListFetchSuccess(response?.data?.data));
+    } else {
+      yield put(setIsFetching(false));
+      yield put(setIsError(true));
+      yield put(reviewsListFetchSuccess([]));
+    }
+  } catch (error: any) {
+    yield put(setIsFetching(false));
+    yield put(setIsError(true));
+    yield put(reviewsListFetchSuccess([]));
     if (error && error.response) {
       console.log('error in getting course list ==>', error.response.data);
     }
@@ -415,6 +442,7 @@ export function* AppSaga() {
     fetchappliedCoursesList,
   );
   yield takeLatest(courseListFetchRequest.type, fetchCourseList);
+  yield takeLatest(reviewsListFetchRequest.type, fetchReviewsList);
   yield takeLatest(courseListFetchRequestHome.type, fetchCourseListHome);
   yield takeLatest(
     courseListForYouFetchRequestHome.type,

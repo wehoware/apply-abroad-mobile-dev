@@ -475,7 +475,7 @@ const EducationDetails = () => {
       borderColor: '#AFAFAF',
       borderWidth: 1,
       borderRadius: 5,
-      color: resources.colors.ash,
+      color: resources.colors.black,
       fontSize: hp('1.8%'),
       fontWeight: '500',
       marginTop: hp('1%'),
@@ -489,7 +489,7 @@ const EducationDetails = () => {
       borderColor: '#AFAFAF',
       borderWidth: 1,
       borderRadius: 5,
-      color: resources.colors.ash,
+      color: resources.colors.black,
       fontSize: hp('1.8%'),
       fontWeight: '500',
       marginTop: hp('1%'),
@@ -668,7 +668,7 @@ const EducationDetails = () => {
             {/* <Text style={styles.inputHeaderText}>Institution Name</Text> */}
             <TextInput
               placeholder="Enter Institution Name"
-              placeholderTextColor={'#AFAFAF'}
+              placeholderTextColor={resources.colors.black}
               style={[
                 styles.inputStyle,
                 {
@@ -684,7 +684,7 @@ const EducationDetails = () => {
           <View style={styles.start}>
             <TextInput
               placeholder="Enter Stream Name"
-              placeholderTextColor={'#AFAFAF'}
+              placeholderTextColor={resources.colors.black}
               style={[
                 styles.inputStyle,
                 {
@@ -699,7 +699,7 @@ const EducationDetails = () => {
           </View>
           <View>
             <RNPickerSelect
-              placeholder={{value: '', label: 'Select Score Type'}}
+              placeholder={{value: '', label: 'Score Type'}}
               onValueChange={value => {
                 const selectedItem = items.find(
                   (item: any) => item.value === value,
@@ -713,7 +713,7 @@ const EducationDetails = () => {
               style={{
                 inputIOS: {
                   fontSize: hp('1.8%'),
-                  color: 'gray', // Customize the text color here
+                  color: resources.colors.black, // Customize the text color here
                   paddingVertical: 10,
                   paddingHorizontal: 12,
                   borderWidth: 1,
@@ -740,7 +740,7 @@ const EducationDetails = () => {
                   marginStart: hp('2%'),
                 },
                 placeholder: {
-                  color: resources.colors.ash,
+                  color: resources.colors.black,
                 },
               }}
               Icon={() => {
@@ -763,7 +763,7 @@ const EducationDetails = () => {
               <TextInput
                 placeholder="Score"
                 keyboardType="number-pad"
-                placeholderTextColor={'#AFAFAF'}
+                placeholderTextColor={resources.colors.black}
                 style={[
                   styles.inputStyle1,
                   {
@@ -780,7 +780,7 @@ const EducationDetails = () => {
               <TextInput
                 placeholder="Max Score"
                 keyboardType="number-pad"
-                placeholderTextColor={'#AFAFAF'}
+                placeholderTextColor={resources.colors.black}
                 style={[
                   styles.inputStyle1,
                   {

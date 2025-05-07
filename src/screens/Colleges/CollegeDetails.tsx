@@ -29,13 +29,37 @@ import {
   appliedCoursesListFetchRequest,
   categoriesFetchRequest,
   courseListFetchRequest,
+  reviewsListFetchRequest,
   setFromScreen,
   setSelectedCourse,
 } from '../../redux/slices/appSlice';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import LoaderComponent from '../../components/LoaderComponent';
 import RenderHtml from 'react-native-render-html';
-
+import StarRating from 'react-native-star-rating-widget';
+const reviews = [
+  {
+    id: 1,
+    name: 'Mahesh Reddy',
+    rating: 4,
+    msg: 'Testing content',
+    profile: resources.images.Profile,
+  },
+  {
+    id: 2,
+    name: 'Kousic Lattala',
+    rating: 4.5,
+    msg: 'Testing content',
+    profile: resources.images.Profile,
+  },
+  {
+    id: 3,
+    name: 'Sunny Bhai',
+    rating: 5,
+    msg: 'I need more details for this college',
+    profile: resources.images.Profile,
+  },
+];
 const CollegeDetails = () => {
   const navigation = useNavigation<stackProps>();
   const dispatch = useAppDispatch();
@@ -64,7 +88,11 @@ const CollegeDetails = () => {
         email: userData?.email,
         countryId: userData?.Country?.id,
       };
+      const data1: any = {
+        typeId: selectedCollege.id,
+      };
       await dispatch(courseListFetchRequest(data));
+      await dispatch(reviewsListFetchRequest(data1));
 
       setCourses(courseList);
     };
@@ -299,6 +327,16 @@ const CollegeDetails = () => {
       width: wp('12%'),
     },
     separate: {margin: 10},
+    separate1: {
+      margin: 10,
+      borderBottomWidth: 2,
+      borderColor: resources.colors.light_ash,
+      width: wp('90%'),
+      justifyContent: 'center',
+      alignContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'center',
+    },
     empty: {justifyContent: 'center', marginTop: hp('20%')},
     noData: {
       textAlign: 'center',
@@ -458,6 +496,10 @@ const CollegeDetails = () => {
   const _ItemSeparator = () => {
     return <View style={styles.separate} />;
   };
+
+  const _ItemSeparator1 = () => {
+    return <View style={styles.separate1} />;
+  };
   const _ListEmptyComponent = () => {
     return (
       <View style={styles.empty}>
@@ -473,10 +515,71 @@ const CollegeDetails = () => {
           justifyContent: 'center',
           marginTop: hp('1%'),
           height: hp('20%'),
-          width: wp('90%'),
+          width: wp('100%'),
         }}>
         <Text style={styles.noData}>No Data found</Text>
       </View>
+    );
+  };
+  const reviewsView = ({item}: any) => {
+    return (
+      <>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginStart: hp('2.5%'),
+            alignItems: 'center',
+            marginTop: hp('1%'),
+            marginBottom: hp('1%'),
+          }}>
+          <Image
+            source={item.profile}
+            style={{height: hp('5%'), width: wp('10%')}}
+            resizeMode="contain"
+          />
+          <View>
+            <Text
+              style={{
+                marginStart: hp('2%'),
+                fontSize: hp('2%'),
+                color: resources.colors.black,
+                fontWeight: '600',
+                fontFamily: resources.fonts.AsemiBold,
+              }}>
+              {item.name}
+            </Text>
+            <StarRating
+              rating={Math.round(item?.rating)}
+              color={resources.colors.orange}
+              onChange={() => {
+                console.log('mmm');
+              }}
+              starSize={15}
+              maxStars={5}
+              style={{
+                // alignSelf: 'flex-end',
+                // marginRight: hp('2%'),
+                marginStart: hp('1%'),
+              }}
+              // starStyle={{marginRight: 0}}
+            />
+          </View>
+        </View>
+
+        <Text
+          style={{
+            marginStart: hp('2.5%'),
+            marginBottom: hp('1%'),
+            fontSize: hp('1.8%'),
+            color: resources.colors.black,
+            fontWeight: '500',
+            fontFamily: resources.fonts.Amedium,
+            width: wp('90%'),
+          }}>
+          {item.msg}
+        </Text>
+        <View style={styles.separate1} />
+      </>
     );
   };
   return (
@@ -682,7 +785,16 @@ const CollegeDetails = () => {
             )}
           </>
         ) : (
-          ListEmptyComponent()
+          // ListEmptyComponent()
+          <>
+            <FlatList
+              style={{marginTop: hp('1%')}}
+              data={[]}
+              renderItem={reviewsView}
+              ListEmptyComponent={ListEmptyComponent}
+              // ItemSeparatorComponent={_ItemSeparator1}
+            />
+          </>
         )}
         <Text style={styles.categoriesText}>Colleges</Text>
         <View style={styles.list}>

@@ -107,19 +107,19 @@ const styles = StyleSheet.create({
     fontSize: hp('2%'),
     color: resources.colors.black,
     fontWeight: '700',
-    fontFamily: resources.fonts.regular,
+    fontFamily: resources.fonts.Aregular,
   },
 
   nameText: {
     textAlign: 'center',
-    fontFamily: resources.fonts.semiBold,
+    fontFamily: resources.fonts.AsemiBold,
     fontSize: hp('2.5%'),
     color: resources.colors.black,
     fontWeight: '600',
   },
   mailText: {
     textAlign: 'center',
-    fontFamily: resources.fonts.light,
+    fontFamily: resources.fonts.Aregular,
     fontSize: hp('2%'),
     color: resources.colors.ash,
     fontWeight: '400',
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     color: resources.colors.light_green1,
     fontSize: hp('2%'),
     fontWeight: '600',
-    fontFamily: resources.fonts.bold,
+    fontFamily: resources.fonts.Abold,
     marginTop: hp('2%'),
   },
   box: {
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   text: {
     width: wp('60%'),
     fontSize: hp('1.8%'),
-    fontFamily: resources.fonts.medium,
+    fontFamily: resources.fonts.Amedium,
     fontWeight: '600',
     color: resources.colors.black,
   },

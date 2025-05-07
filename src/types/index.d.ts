@@ -232,7 +232,10 @@ export interface ProductImageCarouselProps {
 export interface ProductItemViewProps {
   category: string;
 }
-
+export interface NodataProps {
+  width?: any;
+  height?: any;
+}
 export interface DropdownProps {
   data: any;
   show: boolean;

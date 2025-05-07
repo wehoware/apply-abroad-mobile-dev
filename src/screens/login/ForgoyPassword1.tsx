@@ -116,6 +116,10 @@ const ForgotPassword1 = () => {
       bottom: hp('5%'),
       alignSelf: 'center',
       borderRadius: 15,
+      shadowOffset: {width: 0, height: 4},
+      shadowOpacity: 0.2,
+      shadowRadius: 15,
+      elevation: 6,
     },
     boxText: {
       color: resources.colors.black,
@@ -172,7 +176,6 @@ const ForgotPassword1 = () => {
     },
     signIn: {
       color: resources.colors.white,
-      marginTop: 10,
       fontWeight: '900',
       textAlign: 'center',
       fontSize: hp('2%'),
@@ -185,6 +188,11 @@ const ForgotPassword1 = () => {
       backgroundColor: resources.colors.primary,
       marginTop: hp('5%'),
       borderRadius: 5,
+      justifyContent: 'center',
+      shadowOffset: {width: 0, height: 4},
+      shadowOpacity: 0.2,
+      shadowRadius: 5,
+      elevation: 6,
     },
     buttonSignUp: {
       marginStart: 20,
@@ -194,6 +202,7 @@ const ForgotPassword1 = () => {
       borderColor: resources.colors.primary,
       marginTop: hp('5%'),
       borderRadius: 5,
+      justifyContent: 'center',
     },
     errorText: {
       color: resources.colors.red,

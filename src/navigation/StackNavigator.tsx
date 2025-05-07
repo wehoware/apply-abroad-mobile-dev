@@ -27,6 +27,7 @@ import CollegeDetails from '../screens/Colleges/CollegeDetails';
 import CountryChange from '../screens/home/CountryChange';
 import CategoriesList from '../screens/home/CategoriesList';
 import ForgotPassword1 from '../screens/login/ForgoyPassword1';
+import Search from '../screens/search/Search';
 const Stack = createStackNavigator<StackNavigatorList>();
 
 const StackNavigator = () => {
@@ -67,6 +68,7 @@ const StackNavigator = () => {
       <Stack.Screen name={'CollegeDetails'} component={CollegeDetails} />
       <Stack.Screen name={'CountryChange'} component={CountryChange} />
       <Stack.Screen name={'CategoriesList'} component={CategoriesList} />
+      <Stack.Screen name={'Search'} component={Search} />
     </Stack.Navigator>
   );
 };

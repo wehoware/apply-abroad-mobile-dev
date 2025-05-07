@@ -77,6 +77,11 @@ const API = {
       `${ApiEndPoints.courses}sortBy=name&sortOrder=ASC&categoryIds=${data.payload.categoryId}&countryId=${data.payload.countryId}`,
     );
   },
+  getReviewaList: async (data: any) => {
+    return await ApiFetch.GET(
+      `${ApiEndPoints.reviewsList}typeId=${data.payload.typeId}`,
+    );
+  },
 
   getHomeData: async () => {
     return await ApiFetch.GET(`${ApiEndPoints.countries}`);

@@ -292,7 +292,6 @@ const PasswordVerificationCode = () => {
     },
     signIn: {
       color: resources.colors.white,
-      marginTop: 10,
       fontWeight: '900',
       textAlign: 'center',
       fontSize: hp('1.8%'),
@@ -305,6 +304,11 @@ const PasswordVerificationCode = () => {
       backgroundColor: resources.colors.primary,
       marginTop: hp('3%'),
       borderRadius: 5,
+      shadowOffset: {width: 0, height: 4},
+      shadowOpacity: 0.2,
+      shadowRadius: 5,
+      elevation: 6,
+      justifyContent: 'center',
     },
     buttonSignUp: {
       marginStart: 20,
@@ -403,6 +407,7 @@ const PasswordVerificationCode = () => {
       fontSize: hp('3%'),
       fontWeight: '600',
       color: resources.colors.black,
+      textAlign: 'center',
     },
     backButton: {
       width: wp('24%'),
@@ -413,6 +418,10 @@ const PasswordVerificationCode = () => {
       borderRadius: 15,
       marginStart: hp('1%'),
       marginTop: hp('2%'),
+      shadowOffset: {width: 0, height: 4},
+      shadowOpacity: 0.2,
+      shadowRadius: 3,
+      elevation: 6,
     },
   });
 

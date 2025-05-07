@@ -78,6 +78,7 @@ export interface AppSliceState {
   institutionList: InstitutionList[];
   universityList: any[];
   courseList: any[];
+  reviewsList: any[];
   selectedCourse: any;
   appliedCourses: any[];
   fromScreen: string;

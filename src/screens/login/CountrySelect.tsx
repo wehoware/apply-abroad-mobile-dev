@@ -33,6 +33,7 @@ import {userCreateFetch} from '../../redux/slices/authSlice';
 import useRedirect from '../../hooks/useRedirect';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const CountrySelect = () => {
   const navigation = useNavigation<stackProps>();
@@ -164,8 +165,8 @@ const CountrySelect = () => {
     },
     circle: {
       height: hp('2.5%'),
-      borderColor: '#33363F',
-      borderWidth: 2,
+      borderColor: resources.colors.black,
+      borderWidth: 1,
       width: wp('5%'),
       borderRadius: 100,
     },
@@ -251,8 +252,15 @@ const CountrySelect = () => {
         />
         <Text style={styles.countryText}>{item.name}</Text>
         {item.select ? (
-          <AntDesign name={'checkcircleo'} size={20} color={'#33363F'} />
+          <>
+            <Ionicons
+              name={'checkmark-circle-outline'}
+              size={25}
+              color={resources.colors.primary}
+            />
+          </>
         ) : (
+          // <AntDesign name={'checkcircleo'} size={20} color={'#33363F'} />
           <View style={styles.circle} />
         )}
         {/* <Text style={{width: wp('60%'), marginStart: hp('2%')}}>0</Text> */}

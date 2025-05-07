@@ -146,27 +146,36 @@ function* userLogin(data: PayloadAction<any>) {
     if (res?.status) {
       var user: UserState = formatUserData(res.data.user);
       console.log('res---------if', user);
+      if (user.role !== 'ADMIN') {
+        setDataToAsync(resources.AsyncConstants.authToken, user.accessToken);
+        setDataToAsync(
+          resources.AsyncConstants.refreshToken,
+          user.refreshToken,
+        );
+        setDataToAsync(resources.AsyncConstants.userData, user);
 
-      setDataToAsync(resources.AsyncConstants.authToken, user.accessToken);
-      setDataToAsync(resources.AsyncConstants.refreshToken, user.refreshToken);
-      setDataToAsync(resources.AsyncConstants.userData, user);
+        let _theme: ColorScheme | null = yield getDataFromAsync(
+          resources.AsyncConstants.theme,
+        );
 
-      let _theme: ColorScheme | null = yield getDataFromAsync(
-        resources.AsyncConstants.theme,
-      );
+        yield put(userLoginSuccess(user));
+        yield call(getProfile);
+        yield put(setIsFetching(false));
+        yield put(setIsError(false));
+        yield put(setIsLogged(true));
+        // yield put(getProfileFetch());
 
-      yield put(userLoginSuccess(user));
-      yield call(getProfile);
-      yield put(setIsFetching(false));
-      yield put(setIsError(false));
-      yield put(setIsLogged(true));
-      // yield put(getProfileFetch());
-
-      if (_theme !== null) {
-        yield put(setTheme(_theme));
+        if (_theme !== null) {
+          yield put(setTheme(_theme));
+        }
+        Toaster.success(res.data.message);
+        yield put(redirectRequest('Home'));
+      } else {
+        Toaster.error('Not authorized');
+        yield put(setIsFetching(false));
+        yield put(setIsError(true));
+        yield put(setIsLogged(false));
       }
-      Toaster.success(res.data.message);
-      yield put(redirectRequest('Home'));
     } else {
       console.log('else==============');
       yield put(setIsFetching(false));

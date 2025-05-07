@@ -36,6 +36,7 @@ import {updateProfileFetch} from '../../redux/slices/authSlice';
 import {Toaster} from '../../services/Toaster';
 import {ApiEndPoints} from '../../API/ApiEndPoints';
 import SubHeaderComponent from '../../components/SubHeaderComponent';
+import LoaderComponent from '../../components/LoaderComponent';
 const EducationList: any = [
   {
     id: 1,
@@ -61,7 +62,7 @@ const EducationList: any = [
 const EditProfile = () => {
   const navigation = useNavigation<stackProps>();
   const dispatch = useAppDispatch();
-  const {theme} = useAppSelector(state => state.common);
+  const {theme, isFetching} = useAppSelector(state => state.common);
   const {isLogged, redirect, userData} = useAppSelector(state => state.auth);
   const [fullName, setFullName] = useState<string>(userData?.fullName);
   const [education, setEducation] = useState<string>('');
@@ -70,6 +71,7 @@ const EditProfile = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [image, setImage] = useState<any>(userData?.profilePhoto);
   const {config, scoreTypes} = useAppSelector(state => state.app);
+
   const [items, setItems] = useState<any>([
     {
       label: 'Masters / Post Graduation',
@@ -83,7 +85,7 @@ const EditProfile = () => {
     {label: 'SSC/CBSC/ICSC', value: '4'},
   ]);
   const [scoreTypeId, setScoreTypeId] = useState<any>();
-  const [isFetching, setIsFetching] = useState<boolean>(false);
+  const [isFetch, setIsFetching] = useState<boolean>(false);
   const goback = () => {
     navigation.goBack();
   };
@@ -229,7 +231,7 @@ const EditProfile = () => {
       fontSize: hp('2%'),
       color: resources.colors.black,
       fontWeight: '700',
-      fontFamily: resources.fonts.regular,
+      fontFamily: resources.fonts.Aregular,
     },
     box: {
       height: hp('7%'),
@@ -245,20 +247,20 @@ const EditProfile = () => {
       fontSize: hp('2.5%'),
       fontWeight: '600',
       color: resources.colors.black,
-      fontFamily: resources.fonts.semiBold,
+      fontFamily: resources.fonts.AsemiBold,
       marginTop: hp('1%'),
       marginStart: hp('2%'),
     },
     text: {
       color: resources.colors.ash,
-      fontSize: hp('2.2%'),
+      fontSize: hp('2%'),
       marginTop: hp('2%'),
       marginStart: hp('2%'),
       fontFamily: resources.fonts.Amedium,
       fontWeight: '500',
     },
     inputText: {
-      color: resources.colors.ash,
+      color: resources.colors.black,
       marginStart: hp('1%'),
       fontSize: hp('2%'),
       fontWeight: '500',
@@ -333,6 +335,11 @@ const EditProfile = () => {
       fontFamily: resources.fonts.Amedium,
       color: resources.colors.light_ash1,
     },
+    loader: {
+      // flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
   });
   return (
     <View style={styles.main}>
@@ -354,6 +361,7 @@ const EditProfile = () => {
         cap={resources.images.cap}
         goBack={() => goback()}
       />
+
       <Text
         style={{
           fontSize: hp('2.5%'),
@@ -365,6 +373,7 @@ const EditProfile = () => {
         }}>
         Profile Image
       </Text>
+
       <TouchableOpacity
         onPress={() => setModalVisible(true)}
         style={{
@@ -389,6 +398,16 @@ const EditProfile = () => {
           <AntDesign name={'plus'} size={25} color={resources.colors.ash} />
         )}
       </TouchableOpacity>
+      {isFetch ? (
+        <View
+          style={{
+            // flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <LoaderComponent size={hp('3.5%')} color={theme.primary} />
+        </View>
+      ) : null}
       <Text style={styles.infoText}>Information</Text>
       <Text style={styles.text}>Full Name</Text>
       <View style={styles.box}>
@@ -424,7 +443,7 @@ const EditProfile = () => {
           style={{
             inputIOS: {
               fontSize: hp('1.8%'),
-              color: resources.colors.ash, // Customize the text color here
+              color: resources.colors.black, // Customize the text color here
               paddingVertical: 10,
               paddingHorizontal: 12,
               borderWidth: 1,
@@ -434,7 +453,7 @@ const EditProfile = () => {
             },
             inputAndroid: {
               fontSize: hp('2%'),
-              color: resources.colors.ash,
+              color: resources.colors.black,
               paddingVertical: 10,
               paddingHorizontal: 12,
               height: hp('7%'),
@@ -449,7 +468,7 @@ const EditProfile = () => {
               // marginStart: hp('2%'),
             },
             placeholder: {
-              color: resources.colors.ash,
+              color: resources.colors.black,
               fontFamily: resources.fonts.Amedium,
               fontSize: hp('2%'),
               fontWeight: '500',
@@ -490,7 +509,11 @@ const EditProfile = () => {
         }}
         maximumDate={new Date()}
       />
-
+      {isFetching ? (
+        <View style={styles.loader}>
+          <LoaderComponent size={hp('3.5%')} color={theme.primary} />
+        </View>
+      ) : null}
       <TouchableOpacity style={styles.saveButton} onPress={() => _save()}>
         <Text style={styles.saveText}>Update</Text>
       </TouchableOpacity>

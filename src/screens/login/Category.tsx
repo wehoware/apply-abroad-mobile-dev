@@ -1,7 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
-import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  FlatList,
+  TextInput,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import CustomStatusbar from '../../components/CustomStatusbar';
 import {useNavigation} from '@react-navigation/native';
@@ -13,16 +21,19 @@ import {
   heightPercentageToDP as hp,
 } from '../../services/ResponsiveUIHelpers';
 import {categoriesFetchRequest} from '../../redux/slices/appSlice';
-import SearchableDropdown from 'react-native-searchable-dropdown';
+// import SearchableDropdown from 'react-native-searchable-dropdown';
 import colors from '../../resources/colors/colors';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Toaster} from '../../services/Toaster';
 import {setDataToAsync} from '../../services/AsyncService';
 import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const Category = () => {
   const navigation = useNavigation<stackProps>();
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState('');
   const dispatch = useAppDispatch();
   const {theme} = useAppSelector(state => state.common);
   const [selectedItems, setSelectedItems] = useState<any>([]);
@@ -39,6 +50,27 @@ const Category = () => {
       setDataToAsync(resources.AsyncConstants.courseIds, idArray);
       navigation.navigate('CountrySelect');
     }
+  };
+  const toggleDropdown = () => {
+    setIsOpen(prev => !prev);
+  };
+
+  // Handle search input change
+  const handleSearchChange = (text: string) => {
+    setSearch(text);
+  };
+
+  // Handle checkbox selection
+  const handleOptionSelect = (optionValue: string) => {
+    let updatedOptions;
+    if (selectedItems.includes(optionValue)) {
+      updatedOptions = selectedItems.filter(
+        (item: any) => item !== optionValue,
+      );
+    } else {
+      updatedOptions = [...selectedItems, optionValue];
+    }
+    selectedItems(updatedOptions);
   };
   const styles = StyleSheet.create({
     main: {
@@ -143,6 +175,64 @@ const Category = () => {
       borderRadius: 100,
       backgroundColor: resources.colors.white,
     },
+
+    searchInput: {
+      padding: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: '#ccc',
+    },
+    option: {
+      // padding: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: '#f0f0f0',
+      flexDirection: 'row',
+      height: hp('5%'),
+      justifyContent: 'center',
+      alignContent: 'center',
+      alignItems: 'center',
+    },
+    optionText: {
+      fontSize: hp('1.8%'),
+      color: resources.colors.black,
+      fontFamily: resources.fonts.Amedium,
+      fontWeight: '400',
+      width: wp('78%'),
+      marginStart: wp('2%'),
+    },
+    selectedOption: {
+      fontWeight: '700',
+      color: resources.colors.black,
+      width: wp('75%'),
+      fontFamily: resources.fonts.Amedium,
+      fontSize: hp('1.8%'),
+    },
+    selectContainer: {
+      width: wp('88%'),
+      marginStart: hp('2%'),
+      borderColor: '#bbb',
+      borderWidth: 1,
+      borderRadius: 10,
+      padding: 10,
+      flexDirection: 'row',
+    },
+    dropdown: {
+      marginTop: 5,
+      borderWidth: 1,
+      borderColor: '#ccc',
+      borderRadius: 5,
+      backgroundColor: '#fff',
+      maxHeight: 200,
+      width: wp('88%'),
+      marginStart: hp('2%'),
+    },
+    selectedValues: {
+      color: resources.colors.black,
+      fontFamily: resources.fonts.Aregular,
+      fontWeight: '400',
+      fontSize: hp('2%'),
+      width: wp('70%'),
+      marginStart: wp('3%'),
+    },
   });
 
   return (
@@ -170,8 +260,72 @@ const Category = () => {
         <Text style={styles.boxText}>
           What is your interested field of Study?
         </Text>
+        <TouchableOpacity
+          style={styles.selectContainer}
+          onPress={toggleDropdown}>
+          <AntDesign
+            name={'search1'}
+            color={resources.colors.black}
+            size={20}
+          />
+          <Text style={styles.selectedValues}>Course name</Text>
+          <AntDesign
+            name={isOpen ? 'up' : 'down'}
+            color={resources.colors.black}
+            size={20}
+          />
+        </TouchableOpacity>
+        {isOpen && (
+          <View style={styles.dropdown}>
+            <FlatList
+              data={categories}
+              keyExtractor={item => item.id.toString()}
+              renderItem={({item}) => {
+                const isSelected = selectedItems.some(
+                  (s: any) => s.id === item.id,
+                );
 
-        <SearchableDropdown
+                return (
+                  <View style={styles.option}>
+                    <Text
+                      onPress={() => {
+                        if (!isSelected) {
+                          // Add item
+                          const updatedItems = [...selectedItems, item];
+                          setSelectedItems(updatedItems);
+                        }
+                      }}
+                      style={[
+                        styles.optionText,
+                        isSelected && styles.selectedOption,
+                      ]}>
+                      {item.name}
+                    </Text>
+                    {isSelected ? (
+                      <TouchableOpacity
+                        onPress={() => {
+                          // Handle removing the item when the icon is clicked
+                          const items = selectedItems.filter(
+                            (sitem: any) => sitem.id !== item.id,
+                          );
+                          setSelectedItems(items);
+                        }}>
+                        <Icon
+                          name="close" // Use the appropriate icon name
+                          size={18}
+                          color={resources.colors.black}
+                        />
+                      </TouchableOpacity>
+                    ) : null}
+                    {/* </TouchableOpacity> */}
+                  </View>
+                );
+              }}
+            />
+          </View>
+        )}
+
+        {/* <SearchableDropdown
           multi={true}
           selectedItems={selectedItems}
           onItemSelect={(item: any) => {
@@ -216,8 +370,6 @@ const Category = () => {
             placeholderTextColor: resources.colors.black,
             style: {
               padding: 12,
-              // borderBottomWidth: 1,
-              // borderBottomColor: '#ccc',
               color: resources.colors.black,
               paddingLeft: hp('5%'),
               fontFamily: resources.fonts.Aregular,
@@ -237,13 +389,13 @@ const Category = () => {
           listProps={{
             nestedScrollEnabled: true,
           }}
-        />
+        /> */}
         <View
           style={{
             flexDirection: 'row',
             flexWrap: 'wrap',
             marginTop: 10,
-            height: hp('40%'),
+            height: hp('25%'),
             width: wp('88%'),
             marginStart: hp('2%'),
             borderColor: resources.colors.ash,
@@ -270,7 +422,7 @@ const Category = () => {
               }}>
               <Text
                 style={{
-                  color: resources.colors.ash,
+                  color: resources.colors.black,
                   marginRight: 5,
                   fontFamily: resources.fonts.AsemiBold,
                   fontWeight: '500',
@@ -291,7 +443,7 @@ const Category = () => {
                 <Icon
                   name="close" // Use the appropriate icon name
                   size={15}
-                  color={resources.colors.ash}
+                  color={resources.colors.black}
                 />
               </TouchableOpacity>
             </View>

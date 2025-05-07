@@ -39,6 +39,7 @@ import {
 } from '../../redux/slices/appSlice';
 import LoaderComponent from '../../components/LoaderComponent';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import NoDataComponent from '../../components/NoDataComponent';
 
 const Home = () => {
   const navigation = useNavigation<any>();
@@ -443,12 +444,27 @@ const Home = () => {
             color={resources.colors.ash}
             style={{marginLeft: hp('1%')}}
           />
+          <Text
+            onPress={() => {
+              navigation.navigate('Search');
+            }}
+            style={{
+              color: resources.colors.black,
+              fontSize: hp('2%'),
+              fontFamily: resources.fonts.Amedium,
+              fontWeight: '400',
+              textAlign: 'center',
+              // letterSpacing: 1,
+            }}>
+            {' '}
+            Search Courses, Colleges
+          </Text>
           {/* <Image
             source={resources.images.Search}
             style={{height: hp('4%'), width: wp('6%'), marginLeft: hp('1%')}}
             resizeMode="contain"
           /> */}
-          <TextInput
+          {/* <TextInput
             style={{
               color: resources.colors.black,
               fontSize: hp('2%'),
@@ -460,7 +476,7 @@ const Home = () => {
             placeholderTextColor={resources.colors.ash}
             placeholder={'Search Courses, Colleges'}
             onChangeText={val => setSearch(val)}
-          />
+          /> */}
         </View>
         <View style={[styles.courseMain, {marginTop: hp('2%')}]}>
           <Text style={styles.courseText}>Top Courses for you</Text>
@@ -475,7 +491,7 @@ const Home = () => {
             horizontal
             ItemSeparatorComponent={_ItemSeparator}
             showsHorizontalScrollIndicator={false}
-            ListEmptyComponent={ListEmptyComponent}
+            ListEmptyComponent={<NoDataComponent />}
           />
         </View>
         <View style={styles.courseMain}>
@@ -487,12 +503,14 @@ const Home = () => {
         </View>
         <View style={[styles.list, {marginTop: hp('2%')}]}>
           <FlatList
-            data={categoriesList?.slice(0, 4)}
+            // data={categoriesList?.slice(0, 4)}
+            data={categoriesList}
             renderItem={_renderCategories}
             horizontal
             ItemSeparatorComponent={_ItemSeparator}
             showsHorizontalScrollIndicator={false}
-            ListEmptyComponent={ListEmptyComponent}
+            ListEmptyComponent={<NoDataComponent />}
+            // ListEmptyComponent={ListEmptyComponent}
           />
         </View>
 
@@ -509,7 +527,10 @@ const Home = () => {
             horizontal
             ItemSeparatorComponent={_ItemSeparator}
             showsHorizontalScrollIndicator={false}
-            ListEmptyComponent={ListEmptyComponent}
+            ListEmptyComponent={
+              <NoDataComponent height={hp('15%')} width={wp('30%')} />
+            }
+            // ListEmptyComponent={ListEmptyComponent}
           />
         </View>
 

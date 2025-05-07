@@ -418,7 +418,7 @@ const Certificates = () => {
       fontSize: hp('1.8%'),
       fontWeight: '500',
       // marginTop: hp('1%'),
-      fontFamily: resources.fonts.regular,
+      fontFamily: resources.fonts.Aregular,
       paddingLeft: 15,
     },
 

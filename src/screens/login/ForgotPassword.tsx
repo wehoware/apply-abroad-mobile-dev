@@ -102,6 +102,10 @@ const ForgotPassword = () => {
       bottom: hp('5%'),
       alignSelf: 'center',
       borderRadius: 15,
+      shadowOffset: {width: 0, height: 4},
+      shadowOpacity: 0.2,
+      shadowRadius: 15,
+      elevation: 6,
     },
     boxText: {
       color: resources.colors.black,
@@ -158,7 +162,6 @@ const ForgotPassword = () => {
     },
     signIn: {
       color: resources.colors.white,
-      marginTop: 10,
       fontWeight: '900',
       textAlign: 'center',
       fontSize: hp('2%'),
@@ -171,6 +174,11 @@ const ForgotPassword = () => {
       backgroundColor: resources.colors.primary,
       marginTop: hp('30%'),
       borderRadius: 5,
+      shadowOffset: {width: 0, height: 4},
+      shadowOpacity: 0.2,
+      shadowRadius: 5,
+      elevation: 6,
+      justifyContent: 'center',
     },
     buttonSignUp: {
       marginStart: 20,
@@ -178,8 +186,9 @@ const ForgotPassword = () => {
       width: wp('85%'),
       borderWidth: 1,
       borderColor: resources.colors.primary,
-      marginTop: hp('5%'),
+      marginTop: hp('4%'),
       borderRadius: 5,
+      justifyContent: 'center',
     },
     errorText: {
       color: resources.colors.red,
@@ -200,8 +209,7 @@ const ForgotPassword = () => {
       </View>
       <View style={styles.box}>
         <Text style={styles.boxText}>
-          To keep your account secure, please enter your current password and
-          set a new one.
+          To change your password, please enter your email
         </Text>
         <View style={styles.start}>
           <Text style={styles.inputHeaderText}>E-mail</Text>

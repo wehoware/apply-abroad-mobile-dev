@@ -24,6 +24,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import moment from 'moment';
 import SubHeaderComponent from '../../components/SubHeaderComponent';
 import RenderHtml from 'react-native-render-html';
+import {FlatList} from 'react-native-gesture-handler';
+
 const CourseDetails = () => {
   const navigation = useNavigation<stackProps>();
   const dispatch = useAppDispatch();
@@ -200,6 +202,7 @@ const CourseDetails = () => {
       </View>
     );
   };
+
   return (
     <View style={styles.main}>
       <SubHeaderComponent

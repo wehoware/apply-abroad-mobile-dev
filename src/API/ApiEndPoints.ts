@@ -23,4 +23,5 @@ export const ApiEndPoints = {
   popularColleges: `/institution/search?page=`,
   topCourses: `/courses/search?`,
   review: `/review/create`,
+  reviewsList: '/review/search?type=COLLEGE&',
 };

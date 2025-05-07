@@ -31,6 +31,7 @@ const initialState: AppSliceState = {
   categorieIds: '',
   courseListHome: [],
   courseListForYouHome: [],
+  reviewsList: [],
 };
 
 const appSlice = createSlice({
@@ -147,6 +148,19 @@ const appSlice = createSlice({
       state.courseList = action.payload;
     },
 
+    reviewsListFetchRequest: (
+      state: AppSliceState,
+      action: PayloadAction<{
+        typeId: number;
+      }>,
+    ) => {},
+    reviewsListFetchSuccess: (
+      state: AppSliceState,
+      action: PayloadAction<any>,
+    ) => {
+      state.reviewsList = action.payload;
+    },
+
     courseListFetchRequestHome: (
       state: AppSliceState,
       action: PayloadAction<{
@@ -237,6 +251,8 @@ export const {
   courseListFetchRequest,
   courseListFetchRequestHome,
   courseListFetchSuccessHome,
+  reviewsListFetchRequest,
+  reviewsListFetchSuccess,
   courseListForYouFetchRequestHome,
   courseListForYouFetchSuccessHome,
   courseListFetchSuccess,

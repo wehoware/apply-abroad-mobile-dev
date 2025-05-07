@@ -23,6 +23,7 @@ const images = {
   GroupMembers: require('./Icons/groupMembers.png'),
   Background: require('./local/Background.png'),
   Profile: require('./local/Profile.png'),
+  Nodata: require('./local/nodata.png'),
 };
 
 export default images;

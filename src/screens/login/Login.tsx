@@ -387,7 +387,7 @@ const Login = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.buttonSignUp}
-          // onPress={() => navigation.navigate('Certificates')}>
+          // onPress={() => navigation.navigate('Category')}>
           onPress={() => navigation.navigate('Signup')}>
           <Text style={[styles.signIn, {color: resources.colors.black}]}>
             Create Account
